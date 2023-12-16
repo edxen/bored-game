@@ -25,4 +25,4 @@ Land on the opposing player by rolling for a number, the last player remaining w
 - **Tailwind CSS:** A utility-first CSS framework for quickly styling web applications.
 
 ## How to Play?
-- **visit https://edxen.github.io/bored_game**
+- **visit https://bored-game.vercel.app/**
