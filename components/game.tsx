@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
-import Tile from './tile';
 import { TTile, TDice, TPlayer } from '@/components/interface';
+import setElementOnFocus from './setElementOnFocus';
+import Tile from './tile';
 
 
 const generateTiles = (columns: number, rows: number): TTile[] => {
@@ -58,6 +59,7 @@ export default function Game() {
     const [dice, setDice] = useState<TDice>({ display: 0, current: 1, done: true, turn: 'human' });
     const [tiles, setTiles] = useState<TTile[]>(generateTiles(10, 10));
     const [players, setPlayers] = useState<TPlayer[]>(initialPlayers);
+    const rollButtonRef = useRef<HTMLButtonElement>(null);
 
     AddPlayers(players, setTiles);
 
@@ -87,6 +89,7 @@ export default function Game() {
                         } else {
                             setDice(prevDice => ({ ...prevDice, done: true, turn: 'human' }));
                         }
+
                         clearInterval(moveInterval);
                         const currentTile = tiles.find(tile => tile.occupants.includes(player.id)) as TTile;
                         // if next path is already occupied, replace occupant with only the active player
@@ -118,6 +121,7 @@ export default function Game() {
         }
     }, [dice.turn]); // eslint-disable-line react-hooks/exhaustive-deps
 
+    setElementOnFocus({ condition: dice.done, elementRef: rollButtonRef });
 
     const playerMove = (player: Pick<TPlayer, 'id'>) => {
         // get current location of active player in tile
@@ -193,7 +197,7 @@ export default function Game() {
                                             dice.done
                                                 ?
                                                 <>
-                                                    <button onClick={() => diceRoll({ id: 'playera' }, 0)} className='text-lg border rounded-md px-4 py-2 w-full'>Roll</button>
+                                                    <button ref={rollButtonRef} onClick={() => diceRoll({ id: 'playera' }, 0)} className='text-lg border rounded-md px-4 py-2 w-full'>Roll</button>
                                                     {/* {Array.from({ length: 6 }).map((_, i) => (
                                                     <button onClick={() => diceRoll({ id: 'playera' }, i + 1)} className='border rounded-md px-2 py-1' key={i}> Move {i + 1}</button>
                                                 ))} */}
@@ -223,7 +227,7 @@ export default function Game() {
                                     {
                                         `${(players.find(player => player.id === (tiles.find(tile => tile.occupants.length) as TTile).occupants[0]) as TPlayer).name} wins!`
                                     }
-                                    < button onClick={handleRestart} className='text-lg border rounded-md px-4 py-2 w-full'>Restart</button>
+                                    <button onClick={handleRestart} className='text-lg border rounded-md px-4 py-2 w-full'>Restart</button>
                                 </>
                         }
                     </div>
