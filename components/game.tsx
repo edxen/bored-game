@@ -1,5 +1,3 @@
-import { useRouter } from 'next/router';
-
 import { TTile } from '@/components/interface';
 import Tile from './tile';
 
@@ -7,15 +5,16 @@ import { TPlayer } from './reducers/playersReducer';
 import RollDiceButton from './rollDiceButton';
 import getData from './getData';
 import addPlayers from './addPlayer';
+import page from './reloadPage';
 
 export default function Game() {
     const { players, tiles } = getData();
+    const { refresh } = page();
 
     addPlayers();
 
-    const router = useRouter();
     const handleRestart = () => {
-        router.reload();
+        refresh();
     };
 
     return (
