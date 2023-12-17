@@ -13,7 +13,7 @@ const rootReducer = combineReducers({
     dice: diceReducer,
     setDice: diceReducer,
     tiles: tilesReducer,
-    setTileProps: tilesReducer,
+    setTile: tilesReducer,
     players: playersReducer,
     setPlayer: playersReducer,
     setPlayers: playersReducer

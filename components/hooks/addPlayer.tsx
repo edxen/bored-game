@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import getData from './getData';
-import { TTile, setTileProps } from '../reducers/tilesReducer';
+import { TTile, setTile } from '../reducers/tilesReducer';
 import { TPlayer } from '../reducers/playersReducer';
 
 const addPlayers = () => {
@@ -15,7 +15,7 @@ const addPlayers = () => {
             const tile = tiles.find((tile) => tile.path === player.path) as TTile;
             if (!tile.occupants.includes(player.id)) {
                 const updatedOccupants = [...tile.occupants, player.id];
-                dispatch(setTileProps({ index: tile.index, key: 'occupants', value: updatedOccupants }));
+                dispatch(setTile({ index: tile.index, key: 'occupants', value: updatedOccupants }));
             }
         };
         players.map((player) => addPlayer(player));

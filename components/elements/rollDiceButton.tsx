@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import { setDice } from '../reducers/diceReducer';
 import { TPlayer, setPlayer, setPlayers } from '../reducers/playersReducer';
-import { TTile, setTileProps } from '../reducers/tilesReducer';
+import { TTile, setTile } from '../reducers/tilesReducer';
 
 import setElementOnFocus from '../hooks/setElementOnFocus';
 import getData from '../hooks/getData';
@@ -60,7 +60,7 @@ const RollDiceButton = () => {
                                 const filteredPlayers = tile.occupants.filter((id: string) => id !== playerData.id);
                                 const removeFilteredPlayers = players.filter(player => !filteredPlayers.includes(player.id));
                                 dispatch(setPlayers(removeFilteredPlayers));
-                                dispatch(setTileProps({ index: tile.index, key: 'occupants', value: [playerData.id] }));
+                                dispatch(setTile({ index: tile.index, key: 'occupants', value: [playerData.id] }));
                             }
                         };
                         removeOtherOccupants(playerTile);
@@ -101,11 +101,11 @@ const RollDiceButton = () => {
         const tile = (tile: Pick<TTile, 'index'>) => tiles[tile.index];
         if (!tile(nextTile).occupants.includes(playerData.id)) {
             let updatedOccupants = [...tile(nextTile).occupants];
-            updatedOccupants.push(playerData.id);
-            dispatch(setTileProps({ index: nextTile.index, key: 'occupants', value: updatedOccupants }));
+            updatedOccupants.unshift(playerData.id);
+            dispatch(setTile({ index: nextTile.index, key: 'occupants', value: updatedOccupants }));
 
             updatedOccupants = tile(playerTile).occupants.filter(id => id !== playerData.id);
-            dispatch(setTileProps({ index: playerTile.index, key: 'occupants', value: updatedOccupants }));
+            dispatch(setTile({ index: playerTile.index, key: 'occupants', value: updatedOccupants }));
         }
     };
 

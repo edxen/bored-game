@@ -58,12 +58,12 @@ const tileSlice = createSlice({
     name: 'tiles',
     initialState: generateTiles(10, 10),
     reducers: {
-        setTileProps: <K extends keyof TTile>(state: TileState, action: PayloadAction<TilePayload<K>>) => {
+        setTile: <K extends keyof TTile>(state: TileState, action: PayloadAction<TilePayload<K>>) => {
             const { index, key, value } = action.payload;
             state[index][key] = value;
         }
     }
 });
 
-export const { setTileProps } = tileSlice.actions;
+export const { setTile } = tileSlice.actions;
 export default tileSlice.reducer;
