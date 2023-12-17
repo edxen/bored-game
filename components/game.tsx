@@ -17,6 +17,16 @@ const initiate = (players: TPlayer[]) => {
     }, []);
 };
 
+const monitorEndTurn = (players: TPlayer[]) => {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (players.length === 1) {
+            dispatch(setTurn(players));
+        }
+    }, [players]);
+};
+
 export default function Game() {
     const { turns, players, tiles } = getData();
     const { refresh } = page();
@@ -27,6 +37,8 @@ export default function Game() {
     const handleRestart = () => {
         refresh();
     };
+
+    monitorEndTurn(players);
 
     return (
         <div className='p-4'>
