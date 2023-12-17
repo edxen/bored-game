@@ -4,18 +4,10 @@ import { useDispatch } from 'react-redux';
 import Tile from './elements/tile';
 import RollDiceButton from './elements/rollDiceButton';
 import getData from './hooks/getData';
-import addPlayers from './hooks/addPlayer';
 import page from './hooks/reloadPage';
 import { setTurn } from './reducers/turnReducer';
 import { TPlayer } from './reducers/playersReducer';
-
-const initiate = (players: TPlayer[]) => {
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(setTurn(players));
-    }, []);
-};
+import initialize from './hooks/initialize';
 
 const monitorEndTurn = (players: TPlayer[]) => {
     const dispatch = useDispatch();
@@ -31,8 +23,7 @@ export default function Game() {
     const { turns, players, tiles } = getData();
     const { refresh } = page();
 
-    initiate(players);
-    addPlayers();
+    initialize();
 
     const handleRestart = () => {
         refresh();
