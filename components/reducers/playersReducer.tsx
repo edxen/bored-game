@@ -16,27 +16,20 @@ const initialState: TPlayer[] = [
     { id: 'playerb', type: 'ai', name: 'A1', path: 19, color: 'bg-blue-700' }
 ];
 
-interface PlayerPayload extends Partial<Pick<TPlayer, 'index' | 'path' | 'last_path' | 'roll'>> {
-    id: string;
-}
-
 const playersSlice = createSlice({
     name: 'players',
     initialState,
     reducers: {
-        setPlayer: (state, action: PayloadAction<PlayerPayload>) => {
+        setPlayer: (state, action: PayloadAction<Partial<TPlayer>>) => {
             const { id, index, path, last_path, roll } = action.payload;
-            const stateIndex = state.findIndex(s => s.id === id);
-            state[stateIndex] = {
-                ...state[stateIndex],
-                ...(index !== undefined && { index }),
-                ...(path !== undefined && { path }),
-                ...(last_path !== undefined && { last_path }),
-                ...(roll !== undefined && { roll })
-            };
+            const player = state.find(s => s.id === id) as TPlayer;
+            player.index = index !== undefined ? index : player.index;
+            player.path = path !== undefined ? path : player.path;
+            player.last_path = last_path !== undefined ? last_path : player.last_path;
+            player.roll = roll !== undefined ? roll : player.roll;
         },
-        setPlayers: (state, action) => {
-            state = action.payload;
+        setPlayers: (state, action: PayloadAction<TPlayer[]>) => {
+            state.splice(0, state.length, ...action.payload);
         }
     }
 });

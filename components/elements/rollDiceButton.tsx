@@ -52,11 +52,13 @@ const RollDiceButton = () => {
                     } else {
                         clearInterval(moveInterval);
                         dispatch(setDice({ id: '', move: false, done: true, turn: dice.turn === 'human' ? 'ai' : 'human' }));
-                        if (playerTile.occupants.length > 1 && playerData.last_path + playerData.roll === playerData.path) {
+
+                        if (playerTile.occupants.length) {
                             const filteredPlayers = playerTile.occupants.filter((id: string) => id !== playerData.id);
-                            dispatch(setPlayers(players.filter(player => !filteredPlayers.includes(player.id))));
+                            const removeFilteredPlayers = players.filter(player => !filteredPlayers.includes(player.id));
+                            dispatch(setPlayers(removeFilteredPlayers));
                             dispatch(setTileProps({ index: playerTile.index, key: 'occupants', value: [playerData.id] }));
-                        }
+                        };
                     }
                 }, 200);
             }
