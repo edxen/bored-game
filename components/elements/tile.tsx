@@ -1,4 +1,4 @@
-import { TPlayer } from "@/components/interface";
+import { TPlayer } from "../reducers/playersReducer";
 
 function Tile({ players, occupants, edge, path }: { players: TPlayer[], occupants: string[], path: number, edge: boolean; }) {
     let tileClass = 'flex justify-center items-center min-w-[2.5rem] w-10 h-10 border border-slate-100';
