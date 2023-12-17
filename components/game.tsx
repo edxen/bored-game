@@ -24,11 +24,6 @@ export default function Game() {
     const { refresh } = page();
 
     initialize();
-
-    const handleRestart = () => {
-        refresh();
-    };
-
     monitorEndTurn(players);
 
     return (
@@ -86,7 +81,7 @@ export default function Game() {
                                     {
                                         `${players[0].name} wins!`
                                     }
-                                    <button onClick={handleRestart} className='text-lg border rounded-md px-4 py-2 w-full'>Restart</button>
+                                    <button onClick={refresh} className='text-lg border rounded-md px-4 py-2 w-full'>Restart</button>
                                 </>
                         }
                     </div>
