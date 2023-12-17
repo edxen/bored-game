@@ -55,18 +55,24 @@ const RollDiceButton = () => {
                     } else {
                         clearInterval(moveInterval);
 
-                        if (playerTile.occupants.length) {
-                            const filteredPlayers = playerTile.occupants.filter((id: string) => id !== playerData.id);
-                            const removeFilteredPlayers = players.filter(player => !filteredPlayers.includes(player.id));
-                            dispatch(setPlayers(removeFilteredPlayers));
-                            dispatch(setTileProps({ index: playerTile.index, key: 'occupants', value: [playerData.id] }));
+                        const removeOtherOccupants = (tile: TTile) => {
+                            if (tile.occupants.length) {
+                                const filteredPlayers = tile.occupants.filter((id: string) => id !== playerData.id);
+                                const removeFilteredPlayers = players.filter(player => !filteredPlayers.includes(player.id));
+                                dispatch(setPlayers(removeFilteredPlayers));
+                                dispatch(setTileProps({ index: tile.index, key: 'occupants', value: [playerData.id] }));
+                            }
                         };
+                        removeOtherOccupants(playerTile);
 
                         if (playerTile.type === 'portal') {
                             const warpTo = (nextPath: TTile['path']) => {
                                 const nextTile = getTile({ path: nextPath });
                                 movePlayerToNextTile(playerData, nextTile.path);
                                 dispatch(setPlayer({ id: playerData.id, index: nextTile.index, path: nextTile.path }));
+
+                                const portalTile = getTile({ path: nextPath });
+                                removeOtherOccupants(portalTile);
                             };
 
                             switch (playerTile.path) {
