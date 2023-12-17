@@ -24,8 +24,6 @@ const diceSlice = createSlice({
             if (display !== undefined) state.display = display;
             if (current !== undefined) state.current = current;
             if (done !== undefined) state.done = done;
-            if (turn !== undefined) state.turn = turn;
-            if (id !== undefined) state.id = id;
             if (move !== undefined) state.move = move;
         }
     }

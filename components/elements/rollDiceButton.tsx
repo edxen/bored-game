@@ -13,7 +13,7 @@ import { nextTurn } from '../reducers/turnReducer';
 
 const RollDiceButton = () => {
     const dispatch = useDispatch();
-    const { dice, players, tiles, getPlayerData, getPlayerTile, getTile } = getData();
+    const { turns, dice, players, tiles, getPlayerData, getPlayerTile, getTile } = getData();
     const rollButtonRef = useRef<HTMLButtonElement>(null);
 
 
@@ -36,7 +36,7 @@ const RollDiceButton = () => {
                 count++;
             } else {
                 clearInterval(rollingInterval);
-                dispatch(setDice({ display: 0, current: rollResult, id: playerData.id, move: true }));
+                dispatch(setDice({ display: 0, current: rollResult, move: true }));
                 dispatch(setPlayer({ id: playerData.id, last_path: playerData.path, roll: rollResult }));
             }
         }, 100);
@@ -47,14 +47,13 @@ const RollDiceButton = () => {
             let moveInterval: NodeJS.Timeout;
 
             if (dice.move) {
-                const playerData = getPlayerData(dice.id);
-                const playerTile = getPlayerTile(dice.id);
+                const playerData = getPlayerData(turns[0].id);
+                const playerTile = getPlayerTile(turns[0].id);
                 moveInterval = setInterval(() => {
                     if (playerData.last_path + playerData.roll !== playerData.path) {
                         playerMove(playerData);
                     } else {
                         clearInterval(moveInterval);
-                        dispatch(setDice({ id: '', move: false, done: true, turn: dice.turn === 'human' ? 'ai' : 'human' }));
 
                         if (playerTile.occupants.length) {
                             const filteredPlayers = playerTile.occupants.filter((id: string) => id !== playerData.id);
@@ -78,13 +77,14 @@ const RollDiceButton = () => {
                             }
                         }
 
+                        dispatch(setDice({ move: false, done: true }));
                         dispatch(nextTurn());
                     }
                 }, 200);
             }
 
             return () => clearInterval(moveInterval);
-        }, [dice.move, players.find(p => p.id === dice.id)]); // eslint-disable-line react-hooks/exhaustive-deps
+        }, [dice.move, players.find(p => p.id === turns[0]?.id)]); // eslint-disable-line react-hooks/exhaustive-deps
     };
     triggerOnMove();
 
@@ -126,10 +126,10 @@ const RollDiceButton = () => {
     };
 
     useEffect(() => {
-        if (players.length > 1 && dice.turn === 'ai') {
-            diceRoll({ id: 'playerb' }, 0);
+        if (turns.length > 1 && turns[0].type === 'ai') {
+            diceRoll({ id: turns[0].id }, 0);
         }
-    }, [dice.turn]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [turns]); // eslint-disable-line react-hooks/exhaustive-deps
 
     setElementOnFocus({ condition: dice.done, elementRef: rollButtonRef });
 
@@ -148,7 +148,7 @@ const RollDiceButton = () => {
                 }
             </div>
             :
-            <p>{dice.display ? `${dice.turn} rolling ${dice.display}` : `${dice.turn} rolled ${dice.current}`}</p>
+            <p>{dice.display ? `${turns[0].name} rolling ${dice.display}` : `${turns[0].name} rolled ${dice.current}`}</p>
 
     );
 };
