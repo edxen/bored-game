@@ -1,10 +1,10 @@
 import Tile from './tile';
 
 import { TPlayer } from './reducers/playersReducer';
-import RollDiceButton from './rollDiceButton';
-import getData from './getData';
-import addPlayers from './addPlayer';
-import page from './reloadPage';
+import RollDiceButton from './hooks/rollDiceButton';
+import getData from './hooks/getData';
+import addPlayers from './hooks/addPlayer';
+import page from './hooks/reloadPage';
 import { TTile } from './reducers/tilesReducer';
 
 export default function Game() {

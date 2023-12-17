@@ -2,9 +2,8 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import getData from './getData';
-import { setTileProps } from './reducers/tilesReducer';
-import { TPlayer } from './reducers/playersReducer';
-import { TTile } from './interface';
+import { TTile, setTileProps } from '../reducers/tilesReducer';
+import { TPlayer } from '../reducers/playersReducer';
 
 const addPlayers = () => {
     const { tiles, players } = getData();

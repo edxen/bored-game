@@ -1,11 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { setDice } from './reducers/diceReducer';
-import { TPlayer, setPlayer, setPlayers } from './reducers/playersReducer';
-import { setTileProps } from './reducers/tilesReducer';
+import { setDice } from '../reducers/diceReducer';
+import { TPlayer, setPlayer, setPlayers } from '../reducers/playersReducer';
+import { TTile, setTileProps } from '../reducers/tilesReducer';
 
-import { TTile } from './interface';
 import setElementOnFocus from './setElementOnFocus';
 import getData from './getData';
 
