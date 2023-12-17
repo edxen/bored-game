@@ -36,44 +36,54 @@ export default function Game() {
 
     const getPlayerData = (id: TPlayer['id']) => players.find(p => p.id === id) as Required<TPlayer>;
     const getPlayerTile = (id: TPlayer['id']) => tiles.find(tile => tile.occupants.includes(id)) as TTile;
+    const randomize = () => Math.floor(Math.random() * 6) + 1;
 
     const diceRoll = (player: Pick<TPlayer, 'id'>, force: number) => {
-        const randomize = () => Math.floor(Math.random() * 6) + 1;
         const rollResult = force ? force : randomize();
-        let count = force ? 10 : 0;
-
+        const countInterval = 10;
+        let count = force ? countInterval : 0;
         dispatch(setDice({ done: false }));
 
         const playerData = getPlayerData(player.id);
-        const playerTile = getPlayerTile(player.id);
 
         const rollingInterval = setInterval(() => {
-            if (count === 10) {
-                clearInterval(rollingInterval);
-                dispatch(setDice({ display: 0, current: rollResult }));
-                dispatch(setPlayer({ id: playerData.id, last_path: playerData.path, roll: rollResult }));
-
-                const moveInterval = setInterval(() => {
-                    if (playerData.last_path + playerData.roll === playerData.path) {
-                        dispatch(setDice({ done: true, turn: dice.turn === 'human' ? 'ai' : 'human' }));
-                        clearInterval(moveInterval);
-                        if (playerTile.occupants.length > 1) {
-                            if (playerData.last_path + playerData.roll === playerData.path) {
-                                const filteredPlayers = playerTile.occupants.filter(id => id !== player.id);
-                                dispatch(setPlayers(players.filter(player => !filteredPlayers.includes(player.id))));
-                                dispatch(setTileProps({ index: playerTile.index, key: 'occupants', value: [player.id] }));
-                            }
-                        }
-                    } else {
-                        playerMove(playerData);
-                    }
-                }, 200);
-            } else {
+            if (count !== countInterval) {
                 dispatch(setDice({ display: randomize() }));
                 count++;
+            } else {
+                clearInterval(rollingInterval);
+                dispatch(setDice({ display: 0, current: rollResult, id: playerData.id, move: true }));
+                dispatch(setPlayer({ id: playerData.id, last_path: playerData.path, roll: rollResult }));
             }
         }, 100);
     };
+
+    const triggerOnMove = () => {
+        useEffect(() => {
+            let moveInterval: NodeJS.Timeout;
+
+            if (dice.move) {
+                const playerData = getPlayerData(dice.id);
+                const playerTile = getPlayerTile(dice.id);
+                moveInterval = setInterval(() => {
+                    if (playerData.last_path + playerData.roll !== playerData.path) {
+                        playerMove(playerData);
+                    } else {
+                        clearInterval(moveInterval);
+                        dispatch(setDice({ id: '', move: false, done: true, turn: dice.turn === 'human' ? 'ai' : 'human' }));
+                        if (playerTile.occupants.length > 1 && playerData.last_path + playerData.roll === playerData.path) {
+                            const filteredPlayers = playerTile.occupants.filter(id => id !== playerData.id);
+                            dispatch(setPlayers(players.filter(player => !filteredPlayers.includes(player.id))));
+                            dispatch(setTileProps({ index: playerTile.index, key: 'occupants', value: [playerData.id] }));
+                        }
+                    }
+                }, 200);
+            }
+
+            return () => clearInterval(moveInterval);
+        }, [dice.move, players.find(p => p.id === dice.id)]); // eslint-disable-line react-hooks/exhaustive-deps
+    };
+    triggerOnMove();
 
     const playerMove = (playerData: Required<TPlayer>) => {
         const playerTile = getPlayerTile(playerData.id);
@@ -167,7 +177,7 @@ export default function Game() {
                                                 <div className='font-bold'>{player.name}</div>
                                                 <div>
                                                     {Object.entries(player).map(([key, value]) => (
-                                                        !['type'].includes(key) &&
+                                                        ['type', 'path'].includes(key) &&
                                                         <div key={key + value}>
                                                             {`${key}: ${value}`}
                                                         </div>
