@@ -9,6 +9,7 @@ import setElementOnFocus from '../hooks/setElementOnFocus';
 import getData from '../hooks/getData';
 
 import config from '../config';
+import { nextTurn } from '../reducers/turnReducer';
 
 const RollDiceButton = () => {
     const dispatch = useDispatch();
@@ -76,6 +77,8 @@ const RollDiceButton = () => {
                                 case 33: warpTo(15); break;
                             }
                         }
+
+                        dispatch(nextTurn());
                     }
                 }, 200);
             }

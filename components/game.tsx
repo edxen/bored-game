@@ -1,13 +1,27 @@
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+
 import Tile from './elements/tile';
 import RollDiceButton from './elements/rollDiceButton';
 import getData from './hooks/getData';
 import addPlayers from './hooks/addPlayer';
 import page from './hooks/reloadPage';
+import { setTurn } from './reducers/turnReducer';
+import { TPlayer } from './reducers/playersReducer';
+
+const initiate = (players: TPlayer[]) => {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(setTurn(players));
+    }, []);
+};
 
 export default function Game() {
-    const { players, tiles } = getData();
+    const { turns, players, tiles } = getData();
     const { refresh } = page();
 
+    initiate(players);
     addPlayers();
 
     const handleRestart = () => {
@@ -16,6 +30,15 @@ export default function Game() {
 
     return (
         <div className='p-4'>
+            <div className='flex justify-center items-center gap-2 my-2'>
+                <div className='font-bold'>Turns:</div>
+                {turns.map((player: TPlayer, i) => (
+                    <div className='flex gap-2' key={player.id}>
+                        <div>{'>>'}</div>
+                        <div className={i === 0 ? `${player} font-bold underline` : ''}>{player.name}</div>
+                    </div>
+                ))}
+            </div>
             <div className='relative grid my-2'>
                 <div className="h-full w-full grid gap-4 grid-cols-10 justify-center items-center">
                     {
