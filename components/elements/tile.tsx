@@ -5,7 +5,7 @@ import { TTile } from "../reducers/tilesReducer";
 function Tile({ occupants, edge, type, path }: { players: TPlayer[], occupants: string[], path: number, edge: boolean, type: TTile['type']; }) {
     const { getPlayerData } = getData();
 
-    let tileClass = 'flex justify-center items-center min-w-[2.5rem] w-10 h-10 border border-slate-100';
+    let tileClass = 'relative flex justify-center items-center min-w-[2.5rem] w-10 h-10 border border-slate-100';
 
     const typeClasses: Record<TTile['type'], string> = {
         plain: 'bg-slate-200',
@@ -21,7 +21,7 @@ function Tile({ occupants, edge, type, path }: { players: TPlayer[], occupants: 
                 const { id, color, name } = playerData;
 
                 return (
-                    <div className={`${tileClass} ${color} text-white`} key={id}>
+                    <div className={`${tileClass} ${color} text-white z-10`} key={id}>
                         {name}
                     </div>
                 );
@@ -35,6 +35,9 @@ function Tile({ occupants, edge, type, path }: { players: TPlayer[], occupants: 
                 {
                     renderOccupants(occupants)
                 }
+                <div className='absolute z-0'>
+                    {path ? path : ''}
+                </div>
             </div>
         </div>
     );
