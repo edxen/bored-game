@@ -18,7 +18,15 @@ const getData = () => {
         return tiles.find(tile => tile.occupants.includes(id)) as TTile;
     };
 
-    return { dice, players, tiles, getPlayerData, getPlayerTile };
+    const getTile = ({ path }: Pick<TTile, 'path'>) => {
+        const found = tiles.find(tile => tile.path === path);
+        if (!found) {
+            throw new Error(`tile with path ${path} not found`);
+        }
+        return found as TTile;
+    };
+
+    return { dice, players, tiles, getPlayerData, getPlayerTile, getTile };
 };
 
 export default getData;

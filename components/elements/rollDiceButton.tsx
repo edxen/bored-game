@@ -10,7 +10,7 @@ import getData from '../hooks/getData';
 
 const RollDiceButton = () => {
     const dispatch = useDispatch();
-    const { dice, players, tiles, getPlayerData, getPlayerTile } = getData();
+    const { dice, players, tiles, getPlayerData, getPlayerTile, getTile } = getData();
     const rollButtonRef = useRef<HTMLButtonElement>(null);
 
 
@@ -61,9 +61,8 @@ const RollDiceButton = () => {
                         };
 
                         if (playerTile.type === 'portal') {
-
                             const warpTo = (nextPath: TTile['path']) => {
-                                const nextTile = tiles.find(tile => tile.path === nextPath) as TTile;
+                                const nextTile = getTile({ path: nextPath });
                                 movePlayerToNextTile(playerData, nextTile.path);
                                 dispatch(setPlayer({ id: playerData.id, index: nextTile.index, path: nextTile.path }));
                             };
@@ -86,7 +85,7 @@ const RollDiceButton = () => {
 
     const movePlayerToNextTile = (playerData: TPlayer, nextPath: TTile['path']) => {
         const playerTile = getPlayerTile(playerData.id);
-        const nextTile = tiles.find(tile => tile.path === nextPath) as TTile;
+        const nextTile = getTile({ path: nextPath });
 
         const tile = (tile: Pick<TTile, 'index'>) => tiles[tile.index];
         if (!tile(nextTile).occupants.includes(playerData.id)) {
@@ -104,7 +103,7 @@ const RollDiceButton = () => {
 
         if (playerTile.index !== -1) {
             const maxPathLength = tiles.filter(tile => tile.edge === true).length;
-            const nextTile = tiles.find(tile => tile.path === (playerTile.path + 1 <= maxPathLength ? playerTile.path + 1 : 1)) as TTile;
+            const nextTile = getTile({ path: (playerTile.path + 1 <= maxPathLength ? playerTile.path + 1 : 1) });
             movePlayerToNextTile(playerData, nextTile.path);
 
             const resetPlayerPathOnEnd = () => {
