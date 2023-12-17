@@ -16,19 +16,18 @@ const RollDiceButton = () => {
     const { turns, dice, players, tiles, getPlayerData, getPlayerTile, getTile } = getData();
     const rollButtonRef = useRef<HTMLButtonElement>(null);
 
-
     const handleClickRoll = () => {
-        diceRoll({ id: 'playera' }, 0);
+        diceRoll();
     };
 
     const randomize = () => Math.floor(Math.random() * 6) + 1;
-    const diceRoll = (player: Pick<TPlayer, 'id'>, force: number) => {
+    const diceRoll = (force: number = 0) => {
         const rollResult = force ? force : randomize();
         const countInterval = 10;
         let count = force ? countInterval : 0;
         dispatch(setDice({ done: false }));
 
-        const playerData = getPlayerData(player.id);
+        const playerData = getPlayerData(turns[0].id);
 
         const rollingInterval = setInterval(() => {
             if (count !== countInterval) {
@@ -133,7 +132,7 @@ const RollDiceButton = () => {
 
     useEffect(() => {
         if (turns.length > 1 && turns[0].type === 'ai') {
-            diceRoll({ id: turns[0].id }, 0);
+            diceRoll();
         }
     }, [turns]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -148,7 +147,7 @@ const RollDiceButton = () => {
                     config.enableSpecificDice &&
                     <div className='mt-2'>
                         {Array.from({ length: 6 }).map((_, i) => (
-                            <button onClick={() => diceRoll({ id: 'playera' }, i + 1)} className='border rounded-md px-2 py-1 mx-1' key={i}> Move {i + 1}</button>
+                            <button onClick={() => diceRoll(i + 1)} className='border rounded-md px-2 py-1 mx-1' key={i}> Move {i + 1}</button>
                         ))}
                     </div>
                 }

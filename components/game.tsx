@@ -81,7 +81,7 @@ export default function Game() {
                                                 <div className='font-bold'>{player.name}</div>
                                                 <div>
                                                     {Object.entries(player).map(([key, value]) => (
-                                                        ['type', 'path'].includes(key) &&
+                                                        !['type'].includes(key) &&
                                                         <div key={key + value}>
                                                             {`${key}: ${value}`}
                                                         </div>
