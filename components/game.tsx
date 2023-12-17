@@ -6,7 +6,7 @@ import setElementOnFocus from './setElementOnFocus';
 import Tile from './tile';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setDisplay, setCurrent, setDone, setTurn } from './reducers/diceReducer';
+import { setDice } from './reducers/diceReducer';
 import { setTileProps } from './reducers/tilesReducer';
 import { RootState } from './reducers';
 import { setPlayer, setPlayers, TPlayer } from './reducers/playersReducer';
@@ -42,25 +42,21 @@ export default function Game() {
         const rollResult = force ? force : randomize();
         let count = force ? 10 : 0;
 
-        dispatch(setDone(false));
+        dispatch(setDice({ done: false }));
 
         const playerData = getPlayerData(player.id);
+        const playerTile = getPlayerTile(player.id);
 
         const rollingInterval = setInterval(() => {
             if (count === 10) {
                 clearInterval(rollingInterval);
-                dispatch(setDisplay(0));
-                dispatch(setCurrent(rollResult));
-
+                dispatch(setDice({ display: 0, current: rollResult }));
                 dispatch(setPlayer({ id: playerData.id, last_path: playerData.path, roll: rollResult }));
 
                 const moveInterval = setInterval(() => {
                     if (playerData.last_path + playerData.roll === playerData.path) {
-                        dispatch(setDone(true));
-                        dispatch(setTurn(dice.turn === 'human' ? 'ai' : 'human'));
-
+                        dispatch(setDice({ done: true, turn: dice.turn === 'human' ? 'ai' : 'human' }));
                         clearInterval(moveInterval);
-                        const playerTile = getPlayerTile(player.id);
                         if (playerTile.occupants.length > 1) {
                             if (playerData.last_path + playerData.roll === playerData.path) {
                                 const filteredPlayers = playerTile.occupants.filter(id => id !== player.id);
@@ -73,7 +69,7 @@ export default function Game() {
                     }
                 }, 200);
             } else {
-                dispatch(setDisplay(randomize()));
+                dispatch(setDice({ display: randomize() }));
                 count++;
             }
         }, 100);

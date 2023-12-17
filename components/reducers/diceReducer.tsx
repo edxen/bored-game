@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { TPlayer } from "../interface";
+import { TPlayer } from "./playersReducer";
 
 export type TDice = {
     display: number;
@@ -16,20 +16,16 @@ const diceSlice = createSlice({
     name: 'dice',
     initialState,
     reducers: {
-        setDisplay: (state, action) => {
-            state.display = action.payload;
-        },
-        setCurrent: (state, action) => {
-            state.current = action.payload;
-        },
-        setDone: (state, action) => {
-            state.done = action.payload;
-        },
-        setTurn: (state, action) => {
-            state.turn = action.payload;
+        setDice: (state, action) => {
+            const { display, current, done, turn }: Partial<TDice> = action.payload;
+
+            if (display !== undefined) state.display = display;
+            if (current !== undefined) state.current = current;
+            if (done !== undefined) state.done = done;
+            if (turn !== undefined) state.turn = turn;
         }
     }
 });
 
-export const { setDisplay, setCurrent, setDone, setTurn } = diceSlice.actions;
+export const { setDice } = diceSlice.actions;
 export default diceSlice.reducer;

@@ -7,10 +7,7 @@ export type RootState = ReturnType<typeof rootReducer>;
 
 const rootReducer = combineReducers({
     dice: diceReducer,
-    setDisplay: diceReducer,
-    setCurrent: diceReducer,
-    setDone: diceReducer,
-    setTurn: diceReducer,
+    setDice: diceReducer,
     tiles: tilesReducer,
     setTileProps: tilesReducer,
     players: playersReducer,
