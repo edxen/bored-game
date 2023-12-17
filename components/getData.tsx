@@ -1,9 +1,9 @@
 import { useSelector } from 'react-redux';
 import { RootState } from './reducers';
 
-import { TTile } from "./interface";
 import { TDice } from './reducers/diceReducer';
 import { TPlayer } from "./reducers/playersReducer";
+import { TTile } from './reducers/tilesReducer';
 
 const getData = () => {
     const dice: TDice = useSelector((state: RootState) => state.dice);

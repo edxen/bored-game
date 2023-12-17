@@ -1,4 +1,3 @@
-import { TTile } from '@/components/interface';
 import Tile from './tile';
 
 import { TPlayer } from './reducers/playersReducer';
@@ -6,6 +5,7 @@ import RollDiceButton from './rollDiceButton';
 import getData from './getData';
 import addPlayers from './addPlayer';
 import page from './reloadPage';
+import { TTile } from './reducers/tilesReducer';
 
 export default function Game() {
     const { players, tiles } = getData();

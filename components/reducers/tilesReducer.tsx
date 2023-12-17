@@ -1,5 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TTile } from "../interface";
+
+export type TTile = {
+    type: 'plain',
+    occupants: string[];
+    edge: boolean;
+    path: number;
+    index: number;
+};
 
 const generateTiles = (columns: number, rows: number): TTile[] => {
     return Array.from({ length: columns * rows }, (_, index) => {
