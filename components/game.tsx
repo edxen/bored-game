@@ -34,6 +34,9 @@ export default function Game() {
 
     AddPlayers(players, tiles, setTileProps);
 
+    const getPlayerData = (id: TPlayer['id']) => players.find(p => p.id === id) as Required<TPlayer>;
+    const getPlayerTile = (id: TPlayer['id']) => tiles.find(tile => tile.occupants.includes(id)) as TTile;
+
     const diceRoll = (player: Pick<TPlayer, 'id'>, force: number) => {
         const randomize = () => Math.floor(Math.random() * 6) + 1;
         const rollResult = force ? force : randomize();
@@ -41,74 +44,74 @@ export default function Game() {
 
         dispatch(setDone(false));
 
-        const displayInterval = setInterval(() => {
+        const playerData = getPlayerData(player.id);
+
+        const rollingInterval = setInterval(() => {
             if (count === 10) {
-                clearInterval(displayInterval);
+                clearInterval(rollingInterval);
                 dispatch(setDisplay(0));
                 dispatch(setCurrent(rollResult));
 
-                const getPlayer = players.find(p => p.id === player.id) as Required<TPlayer>;
-                dispatch(setPlayer({ id: getPlayer.id, last_path: getPlayer.path, roll: rollResult }));
+                dispatch(setPlayer({ id: playerData.id, last_path: playerData.path, roll: rollResult }));
 
                 const moveInterval = setInterval(() => {
-                    const currentPlayer = players.find(_player => _player.id === player.id) as Required<TPlayer>;
-                    if (currentPlayer.last_path + currentPlayer.roll === currentPlayer.path) {
+                    if (playerData.last_path + playerData.roll === playerData.path) {
                         dispatch(setDone(true));
                         dispatch(setTurn(dice.turn === 'human' ? 'ai' : 'human'));
 
                         clearInterval(moveInterval);
-                        const currentTile = tiles.find(tile => tile.occupants.includes(player.id)) as TTile;
-                        if (currentTile.occupants.length > 1) {
-                            if (getPlayer.last_path + getPlayer.roll === getPlayer.path) {
-                                const filteredPlayers = currentTile.occupants.filter(id => id !== player.id);
+                        const playerTile = getPlayerTile(player.id);
+                        if (playerTile.occupants.length > 1) {
+                            if (playerData.last_path + playerData.roll === playerData.path) {
+                                const filteredPlayers = playerTile.occupants.filter(id => id !== player.id);
                                 dispatch(setPlayers(players.filter(player => !filteredPlayers.includes(player.id))));
-                                dispatch(setTileProps({ index: currentTile.index, key: 'occupants', value: [player.id] }));
+                                dispatch(setTileProps({ index: playerTile.index, key: 'occupants', value: [player.id] }));
                             }
                         }
                     } else {
-                        playerMove(player);
+                        playerMove(playerData);
                     }
                 }, 200);
             } else {
                 dispatch(setDisplay(randomize()));
                 count++;
             }
-        }, 100 * 1);
+        }, 100);
     };
 
-    const playerMove = (player: Pick<TPlayer, 'id'>) => {
-        const currentTile = tiles.find(tile => tile.occupants.includes(player.id)) as TTile;
-        if (currentTile.index !== -1) {
+    const playerMove = (playerData: Required<TPlayer>) => {
+        const playerTile = getPlayerTile(playerData.id);
+
+        if (playerTile.index !== -1) {
             const maxPathLength = tiles.filter(tile => tile.edge === true).length;
-            const nextTile = tiles.find(tile => tile.path === (currentTile.path + 1 <= maxPathLength ? currentTile.path + 1 : 1)) as TTile;
+            const nextTile = tiles.find(tile => tile.path === (playerTile.path + 1 <= maxPathLength ? playerTile.path + 1 : 1)) as TTile;
             if (nextTile.index !== -1) {
                 const movePlayerToNextTile = () => {
                     const tile = (tile: Pick<TTile, 'index'>) => tiles[tile.index];
-                    if (!tile(nextTile).occupants.includes(player.id)) {
+                    if (!tile(nextTile).occupants.includes(playerData.id)) {
                         let updatedOccupants = [...tile(nextTile).occupants];
-                        updatedOccupants.push(player.id);
+                        updatedOccupants.push(playerData.id);
                         dispatch(setTileProps({ index: nextTile.index, key: 'occupants', value: updatedOccupants }));
 
-                        updatedOccupants = tile(currentTile).occupants.filter(id => id !== player.id);
-                        dispatch(setTileProps({ index: currentTile.index, key: 'occupants', value: updatedOccupants }));
+                        updatedOccupants = tile(playerTile).occupants.filter(id => id !== playerData.id);
+                        dispatch(setTileProps({ index: playerTile.index, key: 'occupants', value: updatedOccupants }));
                     }
                 };
                 movePlayerToNextTile();
 
-                const getPlayer = players.find(p => p.id === player.id) as Required<TPlayer>;
                 const resetPlayerPathOnEnd = () => {
-                    if (getPlayer.last_path + getPlayer.roll > maxPathLength) {
-                        let remainingRoll = getPlayer.roll - (maxPathLength - getPlayer.last_path);
-                        dispatch(setPlayer({ id: getPlayer.id, last_path: 0, roll: remainingRoll > 0 ? remainingRoll : 0 }));
+                    if (playerData.last_path + playerData.roll > maxPathLength) {
+                        let remainingRoll = playerData.roll - (maxPathLength - playerData.last_path);
+                        dispatch(setPlayer({ id: playerData.id, last_path: 0, roll: remainingRoll > 0 ? remainingRoll : 0 }));
                     }
                 };
-                dispatch(setPlayer({ id: getPlayer.id, index: nextTile.index, path: nextTile.path }));
+                dispatch(setPlayer({ id: playerData.id, index: nextTile.index, path: nextTile.path }));
                 resetPlayerPathOnEnd();
             } else {
                 console.error(`${nextTile.path} not found`);
             }
         } else {
-            console.error(`${player.id} not found`);
+            console.error(`${playerData.id} not found`);
         }
     };
 
