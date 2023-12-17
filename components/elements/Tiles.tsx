@@ -27,14 +27,12 @@ function Tiles() {
     };
 
     return (
-        <div className="h-full w-full grid gap-4 grid-cols-10 justify-center items-center">
+        <>
             {
                 tiles.map((tile, i) => (
                     <div className="w-full flex justify-center items-center" key={i}>
                         <div className={tile.edge ? `${tileClass} ${typeClasses[tile.type]}` : `${tileClass}`}>
-                            {
-                                renderOccupants(tile.occupants)
-                            }
+                            {renderOccupants(tile.occupants)}
                             <div className='absolute z-0'>
                                 {tile.path ? tile.path : ''}
                             </div>
@@ -42,7 +40,7 @@ function Tiles() {
                     </div>
                 ))
             }
-        </div>
+        </>
     );
 }
 

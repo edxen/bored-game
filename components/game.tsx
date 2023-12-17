@@ -31,11 +31,19 @@ export default function Game() {
         <div className='p-4'>
             <Turns />
             <div className='relative grid my-2'>
-                <Tiles />
-
+                <div className="h-full w-full grid gap-4 grid-cols-10 justify-center items-center">
+                    {
+                        players.length === 0 ? '' :
+                            <Tiles />
+                    }
+                </div>
                 <div className="absolute top-0 left-0 h-full w-full flex flex-col justify-center items-center">
                     <div className="bg-white p-4 rounded-md border border-slate-100 flex flex-col justify-center items-center">
-                        {players.length > 1 ? <ControlBox /> : <WinBox />}
+                        {
+                            players.length === 0
+                                ? ''
+                                : players.length === 1 ? <WinBox /> : <ControlBox />
+                        }
                     </div>
                 </div>
             </div>

@@ -7,7 +7,10 @@ const WinBox = () => {
     return (
         <>
             {
-                `${players[0].name} wins!`
+                !players.length ? '' :
+                    <div className='font-bold mb-2'>
+                        {`${players[0].name} Wins!`}
+                    </div>
             }
             <button onClick={refresh} className='text-lg border rounded-md px-4 py-2 w-full'>Restart</button>
         </>

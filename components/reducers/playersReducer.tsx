@@ -13,10 +13,7 @@ export type TPlayer = {
     roll?: number;
 };
 
-const playerState: TPlayer[] = [
-    { id: 'playera', type: 'human', name: 'P1', path: 1, color: 'bg-red-700' },
-    { id: 'playerb', type: 'ai', name: 'A1', path: 19, color: 'bg-blue-700' }
-];
+const playerState: TPlayer[] = [];
 
 const initialState: TPlayer[] = config.customPlayer.enabled ? config.customPlayer.state : playerState;
 
