@@ -1,9 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
-import { TTile, TDice, TPlayer } from '@/components/interface';
+import { TTile, TPlayer } from '@/components/interface';
+import { TDice } from './reducers/diceReducer';
 import setElementOnFocus from './setElementOnFocus';
 import Tile from './tile';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { setDisplay, setCurrent, setDone, setTurn } from './reducers/diceReducer';
+import { RootState } from './reducers';
 
 const generateTiles = (columns: number, rows: number): TTile[] => {
     return Array.from({ length: columns * rows }, (_, index) => {
@@ -56,7 +60,9 @@ const initialPlayers: TPlayer[] = [
 ];
 
 export default function Game() {
-    const [dice, setDice] = useState<TDice>({ display: 0, current: 1, done: true, turn: 'human' });
+    const dice: TDice = useSelector((state: RootState) => state.dice);
+    const dispatch = useDispatch();
+
     const [tiles, setTiles] = useState<TTile[]>(generateTiles(10, 10));
     const [players, setPlayers] = useState<TPlayer[]>(initialPlayers);
     const rollButtonRef = useRef<HTMLButtonElement>(null);
@@ -68,12 +74,14 @@ export default function Game() {
         const rollResult = force ? force : randomize();
         let count = force ? 10 : 0;
 
-        setDice(prevDice => ({ ...prevDice, done: false }));
+        dispatch(setDone(false));
 
         const displayInterval = setInterval(() => {
             if (count === 10) {
                 clearInterval(displayInterval);
-                setDice(prevDice => ({ ...prevDice, display: 0, current: rollResult }));
+                dispatch(setDisplay(0));
+                dispatch(setCurrent(rollResult));
+
                 setPlayers(prevPlayers => {
                     const currentPlayer = prevPlayers.find(prevPlayer => prevPlayer.id === player.id) as TPlayer;
                     currentPlayer.last_path = currentPlayer.path;
@@ -84,11 +92,8 @@ export default function Game() {
                 const moveInterval = setInterval(() => {
                     const currentPlayer = players.find(_player => _player.id === player.id) as Required<TPlayer>;
                     if (currentPlayer.last_path + currentPlayer.roll === currentPlayer.path) {
-                        if (dice.turn === 'human') {
-                            setDice(prevDice => ({ ...prevDice, done: true, turn: 'ai' }));
-                        } else {
-                            setDice(prevDice => ({ ...prevDice, done: true, turn: 'human' }));
-                        }
+                        dispatch(setDone(true));
+                        dispatch(setTurn(dice.turn === 'human' ? 'ai' : 'human'));
 
                         clearInterval(moveInterval);
                         const currentTile = tiles.find(tile => tile.occupants.includes(player.id)) as TTile;
@@ -109,7 +114,7 @@ export default function Game() {
                     }
                 }, 200);
             } else {
-                setDice(prev => ({ ...prev, display: randomize() }));
+                dispatch(setDisplay(randomize()));
                 count++;
             }
         }, 100 * 1);
@@ -124,37 +129,36 @@ export default function Game() {
     setElementOnFocus({ condition: dice.done, elementRef: rollButtonRef });
 
     const playerMove = (player: Pick<TPlayer, 'id'>) => {
-        // get current location of active player in tile
         const currentTile = tiles.find(tile => tile.occupants.includes(player.id)) as TTile;
-        // failsafe if active player is not present
         if (currentTile.index !== -1) {
-            // get total available paths
             const maxPathLength = tiles.filter(tile => tile.edge === true).length;
-            // look for next tile path, if next tile is not found, move to first path
             const nextTile = tiles.find(tile => tile.path === (currentTile.path + 1 <= maxPathLength ? currentTile.path + 1 : 1)) as TTile;
-            // failsafe if active player is not present
             if (nextTile.index !== -1) {
                 setTiles(prevTiles => {
-                    const tile = (tile: Pick<TTile, 'index'>) => prevTiles[tile.index];
-                    // only do when occupant is not yet added as occupant
-                    if (!tile(nextTile).occupants.includes(player.id)) {
-                        // add player as occupant to next tile
-                        tile(nextTile).occupants.push(player.id);
-                        // remove player as occupant from current tile
-                        tile(currentTile).occupants = tile(currentTile).occupants.filter(id => id !== player.id);
-                    }
+                    const movePlayerToNextTile = () => {
+                        const tile = (tile: Pick<TTile, 'index'>) => prevTiles[tile.index];
+                        if (!tile(nextTile).occupants.includes(player.id)) {
+                            tile(nextTile).occupants.push(player.id);
+                            tile(currentTile).occupants = tile(currentTile).occupants.filter(id => id !== player.id);
+                        }
+                    };
+                    movePlayerToNextTile();
                     return [...prevTiles];
                 });
-                setPlayers(prevPlayers => {
-                    const currentPlayer = prevPlayers.find(prevPlayer => prevPlayer.id === player.id) as Required<TPlayer>;
-                    currentPlayer.index = nextTile.index;
-                    currentPlayer.path = nextTile.path;
 
-                    if (currentPlayer.last_path + currentPlayer.roll > maxPathLength) {
-                        let remainingRoll = currentPlayer.roll - (maxPathLength - currentPlayer.last_path);
-                        currentPlayer.last_path = 0;
-                        currentPlayer.roll = remainingRoll > 0 ? remainingRoll : 0;
-                    }
+                setPlayers(prevPlayers => {
+                    let getPlayer = prevPlayers.find(prevPlayer => prevPlayer.id === player.id) as Required<TPlayer>;
+                    const resetPlayerPathOnEnd = () => {
+                        if (getPlayer.last_path + getPlayer.roll > maxPathLength) {
+                            let remainingRoll = getPlayer.roll - (maxPathLength - getPlayer.last_path);
+                            getPlayer.last_path = 0;
+                            getPlayer.roll = remainingRoll > 0 ? remainingRoll : 0;
+                        }
+                    };
+
+                    getPlayer.index = nextTile.index;
+                    getPlayer.path = nextTile.path;
+                    resetPlayerPathOnEnd();
                     return [...prevPlayers];
                 });
             } else {

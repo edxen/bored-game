@@ -1,10 +1,3 @@
-export type TDice = {
-    display: number;
-    current: number;
-    done: boolean;
-    turn: TPlayer['type'];
-};
-
 export type TPlayer = {
     id: string;
     type: 'human' | 'ai';
