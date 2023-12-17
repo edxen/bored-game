@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
-import { TTile, TPlayer } from '@/components/interface';
+import { TTile } from '@/components/interface';
 import { TDice } from './reducers/diceReducer';
 import setElementOnFocus from './setElementOnFocus';
 import Tile from './tile';
@@ -9,10 +9,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setDisplay, setCurrent, setDone, setTurn } from './reducers/diceReducer';
 import { setTileProps } from './reducers/tilesReducer';
 import { RootState } from './reducers';
+import { setPlayer, setPlayers, TPlayer } from './reducers/playersReducer';
 
 const AddPlayers = (players: TPlayer[], tiles: TTile[], setTileProps: any) => { // get back to this
     const dispatch = useDispatch();
-
     useEffect(() => {
         const addPlayer = (player: TPlayer) => {
             const tile = tiles.find((tile) => tile.path === player.path) as TTile;
@@ -25,17 +25,11 @@ const AddPlayers = (players: TPlayer[], tiles: TTile[], setTileProps: any) => { 
     }, []);
 };
 
-const initialPlayers: TPlayer[] = [
-    { id: 'playera', type: 'human', name: 'P1', path: 1, color: 'bg-red-700' },
-    { id: 'playerb', type: 'ai', name: 'A1', path: 19, color: 'bg-blue-700' }
-];
-
 export default function Game() {
+    const dispatch = useDispatch();
     const dice: TDice = useSelector((state: RootState) => state.dice);
     const tiles: TTile[] = useSelector((state: RootState) => state.tiles);
-    const dispatch = useDispatch();
-
-    const [players, setPlayers] = useState<TPlayer[]>(initialPlayers);
+    const players: TPlayer[] = useSelector((state: RootState) => state.players);
     const rollButtonRef = useRef<HTMLButtonElement>(null);
 
     AddPlayers(players, tiles, setTileProps);
@@ -53,12 +47,8 @@ export default function Game() {
                 dispatch(setDisplay(0));
                 dispatch(setCurrent(rollResult));
 
-                setPlayers(prevPlayers => {
-                    const currentPlayer = prevPlayers.find(prevPlayer => prevPlayer.id === player.id) as TPlayer;
-                    currentPlayer.last_path = currentPlayer.path;
-                    currentPlayer.roll = rollResult;
-                    return [...prevPlayers];
-                });
+                const getPlayer = players.find(p => p.id === player.id) as Required<TPlayer>;
+                dispatch(setPlayer({ id: getPlayer.id, last_path: getPlayer.path, roll: rollResult }));
 
                 const moveInterval = setInterval(() => {
                     const currentPlayer = players.find(_player => _player.id === player.id) as Required<TPlayer>;
@@ -69,10 +59,9 @@ export default function Game() {
                         clearInterval(moveInterval);
                         const currentTile = tiles.find(tile => tile.occupants.includes(player.id)) as TTile;
                         if (currentTile.occupants.length > 1) {
-                            const currentPlayer = players.find(_player => _player.id === player.id) as Required<TPlayer>;
-                            if (currentPlayer.last_path + currentPlayer.roll === currentPlayer.path) {
+                            if (getPlayer.last_path + getPlayer.roll === getPlayer.path) {
                                 const filteredPlayers = currentTile.occupants.filter(id => id !== player.id);
-                                setPlayers(prevPlayers => prevPlayers.filter(player => !filteredPlayers.includes(player.id)));
+                                dispatch(setPlayers(players.filter(player => !filteredPlayers.includes(player.id))));
                                 dispatch(setTileProps({ index: currentTile.index, key: 'occupants', value: [player.id] }));
                             }
                         }
@@ -106,21 +95,15 @@ export default function Game() {
                 };
                 movePlayerToNextTile();
 
-                setPlayers(prevPlayers => {
-                    let getPlayer = prevPlayers.find(prevPlayer => prevPlayer.id === player.id) as Required<TPlayer>;
-                    const resetPlayerPathOnEnd = () => {
-                        if (getPlayer.last_path + getPlayer.roll > maxPathLength) {
-                            let remainingRoll = getPlayer.roll - (maxPathLength - getPlayer.last_path);
-                            getPlayer.last_path = 0;
-                            getPlayer.roll = remainingRoll > 0 ? remainingRoll : 0;
-                        }
-                    };
-
-                    getPlayer.index = nextTile.index;
-                    getPlayer.path = nextTile.path;
-                    resetPlayerPathOnEnd();
-                    return [...prevPlayers];
-                });
+                const getPlayer = players.find(p => p.id === player.id) as Required<TPlayer>;
+                const resetPlayerPathOnEnd = () => {
+                    if (getPlayer.last_path + getPlayer.roll > maxPathLength) {
+                        let remainingRoll = getPlayer.roll - (maxPathLength - getPlayer.last_path);
+                        dispatch(setPlayer({ id: getPlayer.id, last_path: 0, roll: remainingRoll > 0 ? remainingRoll : 0 }));
+                    }
+                };
+                dispatch(setPlayer({ id: getPlayer.id, index: nextTile.index, path: nextTile.path }));
+                resetPlayerPathOnEnd();
             } else {
                 console.error(`${nextTile.path} not found`);
             }
