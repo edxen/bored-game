@@ -1,34 +1,17 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
 import { TTile } from '@/components/interface';
 import Tile from './tile';
 
-import { RootState } from './reducers';
-import { setTileProps } from './reducers/tilesReducer';
 import { TPlayer } from './reducers/playersReducer';
 import RollDiceButton from './rollDiceButton';
-
-const AddPlayers = (players: TPlayer[], tiles: TTile[], setTileProps: any) => { // get back to this
-    const dispatch = useDispatch();
-    useEffect(() => {
-        const addPlayer = (player: TPlayer) => {
-            const tile = tiles.find((tile) => tile.path === player.path) as TTile;
-            if (!tile.occupants.includes(player.id)) {
-                const updatedOccupants = [...tile.occupants, player.id];
-                dispatch(setTileProps({ index: tile.index, key: 'occupants', value: updatedOccupants }));
-            }
-        };
-        players.map((player) => addPlayer(player));
-    }, []);
-};
+import getData from './getData';
+import addPlayers from './addPlayer';
 
 export default function Game() {
-    const tiles: TTile[] = useSelector((state: RootState) => state.tiles);
-    const players: TPlayer[] = useSelector((state: RootState) => state.players);
+    const { players, tiles } = getData();
 
-    AddPlayers(players, tiles, setTileProps);
+    addPlayers();
 
     const router = useRouter();
     const handleRestart = () => {

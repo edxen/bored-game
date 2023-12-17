@@ -1,27 +1,24 @@
 import { useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import { RootState } from './reducers';
-import { TDice, setDice } from './reducers/diceReducer';
+import { setDice } from './reducers/diceReducer';
 import { TPlayer, setPlayer, setPlayers } from './reducers/playersReducer';
 import { setTileProps } from './reducers/tilesReducer';
 
 import { TTile } from './interface';
 import setElementOnFocus from './setElementOnFocus';
+import getData from './getData';
 
 const RollDiceButton = () => {
     const dispatch = useDispatch();
-    const dice: TDice = useSelector((state: RootState) => state.dice);
-    const players: TPlayer[] = useSelector((state: RootState) => state.players);
-    const tiles: TTile[] = useSelector((state: RootState) => state.tiles);
+    const { dice, players, tiles, getPlayerData, getPlayerTile } = getData();
     const rollButtonRef = useRef<HTMLButtonElement>(null);
+
 
     const handleClickRoll = () => {
         diceRoll({ id: 'playera' }, 0);
     };
 
-    const getPlayerData = (id: TPlayer['id']) => players.find(p => p.id === id) as Required<TPlayer>;
-    const getPlayerTile = (id: TPlayer['id']) => tiles.find(tile => tile.occupants.includes(id)) as TTile;
     const randomize = () => Math.floor(Math.random() * 6) + 1;
     const diceRoll = (player: Pick<TPlayer, 'id'>, force: number) => {
         const rollResult = force ? force : randomize();
