@@ -1,8 +1,7 @@
 import getData from "../hooks/getData";
-import { TPlayer } from "../reducers/playersReducer";
 import { TTile } from "../reducers/tilesReducer";
 
-function Tile({ occupants, edge, type, path }: { players: TPlayer[], occupants: string[], path: number, edge: boolean, type: TTile['type']; }) {
+function Tile({ tile }: { tile: TTile; }) {
     const { getPlayerData } = getData();
 
     let tileClass = 'relative flex justify-center items-center min-w-[2.5rem] w-10 h-10 border border-slate-100';
@@ -12,7 +11,7 @@ function Tile({ occupants, edge, type, path }: { players: TPlayer[], occupants: 
         portal: 'portal-icon'
     };
 
-    let typeClass = typeClasses[type];
+    let typeClass = typeClasses[tile.type];
 
     const renderOccupants = (occupants: string[]) => {
         return occupants.map((occupant) => {
@@ -31,12 +30,12 @@ function Tile({ occupants, edge, type, path }: { players: TPlayer[], occupants: 
 
     return (
         <div className="w-full flex justify-center items-center">
-            <div className={edge ? `${tileClass} ${typeClass}` : `${tileClass}`}>
+            <div className={tile.edge ? `${tileClass} ${typeClass}` : `${tileClass}`}>
                 {
-                    renderOccupants(occupants)
+                    renderOccupants(tile.occupants)
                 }
                 <div className='absolute z-0'>
-                    {path ? path : ''}
+                    {tile.path ? tile.path : ''}
                 </div>
             </div>
         </div>

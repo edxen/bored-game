@@ -1,4 +1,4 @@
-import Tile from './elements/tile';
+import Tile from './elements/Tile';
 import RollDiceButton from './elements/rollDiceButton';
 import getData from './hooks/getData';
 import page from './hooks/reloadPage';
@@ -20,15 +20,8 @@ export default function Game() {
             <div className='relative grid my-2'>
                 <div className="h-full w-full grid gap-4 grid-cols-10 justify-center items-center">
                     {
-                        tiles.map((e, i) => (
-                            <Tile
-                                key={i}
-                                players={players}
-                                edge={e.edge}
-                                type={e.type}
-                                path={e.path}
-                                occupants={e.occupants}
-                            />
+                        tiles.map((tile, i) => (
+                            <Tile key={i} tile={tile} />
                         ))
                     }
                 </div>
