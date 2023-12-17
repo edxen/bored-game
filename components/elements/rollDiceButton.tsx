@@ -8,6 +8,8 @@ import { TTile, setTileProps } from '../reducers/tilesReducer';
 import setElementOnFocus from '../hooks/setElementOnFocus';
 import getData from '../hooks/getData';
 
+import config from '../config';
+
 const RollDiceButton = () => {
     const dispatch = useDispatch();
     const { dice, players, tiles, getPlayerData, getPlayerTile, getTile } = getData();
@@ -133,11 +135,14 @@ const RollDiceButton = () => {
             ?
             <div className='flex flex-col w-full'>
                 <button ref={rollButtonRef} onClick={handleClickRoll} className='text-lg border rounded-md px-4 py-2 w-full'>Roll</button>
-                <div className='mt-2'>
-                    {Array.from({ length: 6 }).map((_, i) => (
-                        <button onClick={() => diceRoll({ id: 'playera' }, i + 1)} className='border rounded-md px-2 py-1 mx-1' key={i}> Move {i + 1}</button>
-                    ))}
-                </div>
+                {
+                    config.enableSpecificDice &&
+                    <div className='mt-2'>
+                        {Array.from({ length: 6 }).map((_, i) => (
+                            <button onClick={() => diceRoll({ id: 'playera' }, i + 1)} className='border rounded-md px-2 py-1 mx-1' key={i}> Move {i + 1}</button>
+                        ))}
+                    </div>
+                }
             </div>
             :
             <p>{dice.display ? `${dice.turn} rolling ${dice.display}` : `${dice.turn} rolled ${dice.current}`}</p>
