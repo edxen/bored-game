@@ -1,14 +1,13 @@
-import Tile from './elements/Tile';
+import Tiles from './elements/Tiles';
 import RollDiceButton from './elements/rollDiceButton';
 import getData from './hooks/getData';
 import page from './hooks/reloadPage';
-import { TPlayer } from './reducers/playersReducer';
 import initialize from './hooks/initialize';
 import monitorPlayerChange from './hooks/monitorPlayerChange';
 import Turns from './elements/Turns';
 
 export default function Game() {
-    const { players, tiles } = getData();
+    const { players } = getData();
     const { refresh } = page();
 
     initialize();
@@ -18,13 +17,7 @@ export default function Game() {
         <div className='p-4'>
             <Turns />
             <div className='relative grid my-2'>
-                <div className="h-full w-full grid gap-4 grid-cols-10 justify-center items-center">
-                    {
-                        tiles.map((tile, i) => (
-                            <Tile key={i} tile={tile} />
-                        ))
-                    }
-                </div>
+                <Tiles />
 
                 <div className="absolute top-0 left-0 h-full w-full flex flex-col justify-center items-center">
                     <div className="bg-white p-4 rounded-md border border-slate-100 flex flex-col justify-center items-center">

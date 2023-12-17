@@ -1,8 +1,8 @@
 import getData from "../hooks/getData";
 import { TTile } from "../reducers/tilesReducer";
 
-function Tile({ tile }: { tile: TTile; }) {
-    const { getPlayerData } = getData();
+function Tiles() {
+    const { tiles, getPlayerData } = getData();
 
     let tileClass = 'relative flex justify-center items-center min-w-[2.5rem] w-10 h-10 border border-slate-100';
 
@@ -10,8 +10,6 @@ function Tile({ tile }: { tile: TTile; }) {
         plain: 'bg-slate-200',
         portal: 'portal-icon'
     };
-
-    let typeClass = typeClasses[tile.type];
 
     const renderOccupants = (occupants: string[]) => {
         return occupants.map((occupant) => {
@@ -29,17 +27,23 @@ function Tile({ tile }: { tile: TTile; }) {
     };
 
     return (
-        <div className="w-full flex justify-center items-center">
-            <div className={tile.edge ? `${tileClass} ${typeClass}` : `${tileClass}`}>
-                {
-                    renderOccupants(tile.occupants)
-                }
-                <div className='absolute z-0'>
-                    {tile.path ? tile.path : ''}
-                </div>
-            </div>
+        <div className="h-full w-full grid gap-4 grid-cols-10 justify-center items-center">
+            {
+                tiles.map((tile, i) => (
+                    <div className="w-full flex justify-center items-center" key={i}>
+                        <div className={tile.edge ? `${tileClass} ${typeClasses[tile.type]}` : `${tileClass}`}>
+                            {
+                                renderOccupants(tile.occupants)
+                            }
+                            <div className='absolute z-0'>
+                                {tile.path ? tile.path : ''}
+                            </div>
+                        </div>
+                    </div>
+                ))
+            }
         </div>
     );
 }
 
-export default Tile;
+export default Tiles;
