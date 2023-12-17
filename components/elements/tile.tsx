@@ -1,7 +1,10 @@
+import getData from "../hooks/getData";
 import { TPlayer } from "../reducers/playersReducer";
 import { TTile } from "../reducers/tilesReducer";
 
-function Tile({ players, occupants, edge, type, path }: { players: TPlayer[], occupants: string[], path: number, edge: boolean, type: TTile['type']; }) {
+function Tile({ occupants, edge, type, path }: { players: TPlayer[], occupants: string[], path: number, edge: boolean, type: TTile['type']; }) {
+    const { getPlayerData } = getData();
+
     let tileClass = 'flex justify-center items-center min-w-[2.5rem] w-10 h-10 border border-slate-100';
 
     const typeClasses: Record<TTile['type'], string> = {
@@ -11,14 +14,26 @@ function Tile({ players, occupants, edge, type, path }: { players: TPlayer[], oc
 
     let typeClass = typeClasses[type];
 
+    const renderOccupants = (occupants: string[]) => {
+        return occupants.map((occupant) => {
+            const playerData = getPlayerData(occupant);
+            if (playerData) {
+                const { id, color, name } = playerData;
+
+                return (
+                    <div className={`${tileClass} ${color} text-white`} key={id}>
+                        {name}
+                    </div>
+                );
+            }
+        });
+    };
+
     return (
         <div className="w-full flex justify-center items-center">
             <div className={edge ? `${tileClass} ${typeClass}` : `${tileClass}`}>
                 {
-                    players.map(player => (
-                        occupants.includes(player.id) &&
-                        <div className={`${tileClass} ${player.color} text-white`} key={player.id}>{player.name}</div>
-                    ))
+                    renderOccupants(occupants)
                 }
             </div>
         </div>
