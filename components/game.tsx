@@ -1,6 +1,3 @@
-import { TPlayer } from './reducers/playersReducer';
-import { TTile } from './reducers/tilesReducer';
-
 import Tile from './elements/tile';
 import RollDiceButton from './elements/rollDiceButton';
 import getData from './hooks/getData';
@@ -61,7 +58,7 @@ export default function Game() {
                                 </>
                                 : <>
                                     {
-                                        `${(players.find(player => player.id === (tiles.find(tile => tile.occupants.length) as TTile).occupants[0]) as TPlayer).name} wins!`
+                                        `${players[0].name} wins!`
                                     }
                                     <button onClick={handleRestart} className='text-lg border rounded-md px-4 py-2 w-full'>Restart</button>
                                 </>
