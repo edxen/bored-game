@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type TTile = {
-    type: 'plain',
+    type: 'plain' | 'portal',
     occupants: string[];
     edge: boolean;
     path: number;
@@ -27,9 +27,18 @@ const generateTiles = (columns: number, rows: number): TTile[] => {
             return 0;
         };
 
+        let type: TTile['type'] = 'plain';
+
+        const setPortalTiles = () => {
+            if ([6, 15, 24, 33].includes(getPath())) {
+                type = 'portal';
+            }
+        };
+        setPortalTiles();
+
         return {
             index,
-            type: 'plain',
+            type,
             occupants: [],
             edge: isEdge,
             path: isEdge ? getPath() : 0

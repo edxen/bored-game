@@ -27,6 +27,7 @@ export default function Game() {
                                 key={i}
                                 players={players}
                                 edge={e.edge}
+                                type={e.type}
                                 path={e.path}
                                 occupants={e.occupants}
                             />

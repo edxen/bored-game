@@ -21,3 +21,10 @@ html, body {
   margin: 0;
   box-sizing: border-box;
 }
+
+.portal-icon {
+  background-image: url(../public/magic-circle.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}

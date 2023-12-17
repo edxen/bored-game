@@ -59,6 +59,22 @@ const RollDiceButton = () => {
                             dispatch(setPlayers(removeFilteredPlayers));
                             dispatch(setTileProps({ index: playerTile.index, key: 'occupants', value: [playerData.id] }));
                         };
+
+                        if (playerTile.type === 'portal') {
+
+                            const warpTo = (nextPath: TTile['path']) => {
+                                const nextTile = tiles.find(tile => tile.path === nextPath) as TTile;
+                                movePlayerToNextTile(playerData, nextTile.path);
+                                dispatch(setPlayer({ id: playerData.id, index: nextTile.index, path: nextTile.path }));
+                            };
+
+                            switch (playerTile.path) {
+                                case 6: warpTo(24); break;
+                                case 15: warpTo(33); break;
+                                case 24: warpTo(6); break;
+                                case 33: warpTo(15); break;
+                            }
+                        }
                     }
                 }, 200);
             }
@@ -68,37 +84,38 @@ const RollDiceButton = () => {
     };
     triggerOnMove();
 
+    const movePlayerToNextTile = (playerData: TPlayer, nextPath: TTile['path']) => {
+        const playerTile = getPlayerTile(playerData.id);
+        const nextTile = tiles.find(tile => tile.path === nextPath) as TTile;
+
+        const tile = (tile: Pick<TTile, 'index'>) => tiles[tile.index];
+        if (!tile(nextTile).occupants.includes(playerData.id)) {
+            let updatedOccupants = [...tile(nextTile).occupants];
+            updatedOccupants.push(playerData.id);
+            dispatch(setTileProps({ index: nextTile.index, key: 'occupants', value: updatedOccupants }));
+
+            updatedOccupants = tile(playerTile).occupants.filter(id => id !== playerData.id);
+            dispatch(setTileProps({ index: playerTile.index, key: 'occupants', value: updatedOccupants }));
+        }
+    };
+
     const playerMove = (playerData: Required<TPlayer>) => {
         const playerTile = getPlayerTile(playerData.id);
 
         if (playerTile.index !== -1) {
             const maxPathLength = tiles.filter(tile => tile.edge === true).length;
             const nextTile = tiles.find(tile => tile.path === (playerTile.path + 1 <= maxPathLength ? playerTile.path + 1 : 1)) as TTile;
-            if (nextTile.index !== -1) {
-                const movePlayerToNextTile = () => {
-                    const tile = (tile: Pick<TTile, 'index'>) => tiles[tile.index];
-                    if (!tile(nextTile).occupants.includes(playerData.id)) {
-                        let updatedOccupants = [...tile(nextTile).occupants];
-                        updatedOccupants.push(playerData.id);
-                        dispatch(setTileProps({ index: nextTile.index, key: 'occupants', value: updatedOccupants }));
+            movePlayerToNextTile(playerData, nextTile.path);
 
-                        updatedOccupants = tile(playerTile).occupants.filter(id => id !== playerData.id);
-                        dispatch(setTileProps({ index: playerTile.index, key: 'occupants', value: updatedOccupants }));
-                    }
-                };
-                movePlayerToNextTile();
+            const resetPlayerPathOnEnd = () => {
+                if (playerData.last_path + playerData.roll > maxPathLength) {
+                    let remainingRoll = playerData.roll - (maxPathLength - playerData.last_path);
+                    dispatch(setPlayer({ id: playerData.id, last_path: 0, roll: remainingRoll > 0 ? remainingRoll : 0 }));
+                }
+            };
+            dispatch(setPlayer({ id: playerData.id, index: nextTile.index, path: nextTile.path }));
+            resetPlayerPathOnEnd();
 
-                const resetPlayerPathOnEnd = () => {
-                    if (playerData.last_path + playerData.roll > maxPathLength) {
-                        let remainingRoll = playerData.roll - (maxPathLength - playerData.last_path);
-                        dispatch(setPlayer({ id: playerData.id, last_path: 0, roll: remainingRoll > 0 ? remainingRoll : 0 }));
-                    }
-                };
-                dispatch(setPlayer({ id: playerData.id, index: nextTile.index, path: nextTile.path }));
-                resetPlayerPathOnEnd();
-            } else {
-                console.error(`${nextTile.path} not found`);
-            }
         } else {
             console.error(`${playerData.id} not found`);
         }
@@ -117,11 +134,11 @@ const RollDiceButton = () => {
             ?
             <div className='flex flex-col w-full'>
                 <button ref={rollButtonRef} onClick={handleClickRoll} className='text-lg border rounded-md px-4 py-2 w-full'>Roll</button>
-                {/* <div className='mt-2'>
+                <div className='mt-2'>
                     {Array.from({ length: 6 }).map((_, i) => (
                         <button onClick={() => diceRoll({ id: 'playera' }, i + 1)} className='border rounded-md px-2 py-1 mx-1' key={i}> Move {i + 1}</button>
                     ))}
-                </div> */}
+                </div>
             </div>
             :
             <p>{dice.display ? `${dice.turn} rolling ${dice.display}` : `${dice.turn} rolled ${dice.current}`}</p>
