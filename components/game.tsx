@@ -5,9 +5,10 @@ import page from './hooks/reloadPage';
 import { TPlayer } from './reducers/playersReducer';
 import initialize from './hooks/initialize';
 import monitorPlayerChange from './hooks/monitorPlayerChange';
+import Turns from './elements/Turns';
 
 export default function Game() {
-    const { turns, players, tiles } = getData();
+    const { players, tiles } = getData();
     const { refresh } = page();
 
     initialize();
@@ -15,15 +16,7 @@ export default function Game() {
 
     return (
         <div className='p-4'>
-            <div className='flex justify-center items-center gap-2 my-2'>
-                <div className='font-bold'>Turns:</div>
-                {turns.map((player: TPlayer, i) => (
-                    <div className='flex gap-2' key={player.id}>
-                        <div>{'>>'}</div>
-                        <div className={i === 0 ? `${player} font-bold underline` : ''}>{player.name}</div>
-                    </div>
-                ))}
-            </div>
+            <Turns />
             <div className='relative grid my-2'>
                 <div className="h-full w-full grid gap-4 grid-cols-10 justify-center items-center">
                     {
