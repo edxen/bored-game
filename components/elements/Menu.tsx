@@ -11,7 +11,7 @@ export const defaultPlayer: TPlayer = {
     type: 'human',
     name: 'Player 1',
     path: 1,
-    color: 'Red'
+    color: 'red'
 };
 
 const Menu = () => {
@@ -39,7 +39,7 @@ const Menu = () => {
                                 <div className='flex flex-wrap gap-4 p-4 border rounded-md'>
                                     {
                                         countPlayer.map((_, i) => (
-                                            <PlayerCard key={i} setPlayers={setPlayers} displayCard={i == 0 ? true : false} index={i + 1} />
+                                            <PlayerCard key={i} playerState={{ players, setPlayers }} displayCard={i == 0 ? true : false} index={i} />
                                         ))
                                     }
                                 </div>

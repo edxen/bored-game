@@ -1,9 +1,11 @@
+import { TPlayer } from '@/components/reducers/playersReducer';
 import { useState, useEffect, useRef } from 'react';
 
 interface ICustomSelectProps {
     props: {
         label: string;
         list: string[];
+        value: string;
     };
 }
 
@@ -22,7 +24,7 @@ const CaretDown = ({ size = 20 }: Partial<{ size: number; }>) => {
 };
 
 const CustomSelect = ({ props }: ICustomSelectProps) => {
-    const { label, list } = props;
+    const { label, list, value } = props;
     const [items, setItems] = useState<string[]>(list);
     const [display, setDisplay] = useState<boolean>(false);
 
@@ -36,6 +38,10 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
     const optionSelect = (selectedItem: string) => {
         setDisplay(false);
         if (inputRef.current) inputRef.current.value = selectedItem;
+    };
+
+    const getValueFromItems = () => {
+        return items.filter(item => item.toLowerCase() === value);
     };
 
     useEffect(() => {
@@ -57,7 +63,7 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
             <span className='select-none'>{label}</span>
             <div className='relative cursor-pointer'>
                 <div onClick={showOptions} className='flex justify-between border rounded-md ps-4 pe-2 py-2 cursor-pointer hover:bg-slate-300'>
-                    <input ref={inputRef} className='cursor-pointer bg-transparent outline-none' defaultValue={items && items[0]} readOnly={true} />
+                    <input ref={inputRef} className='cursor-pointer bg-transparent outline-none' defaultValue={getValueFromItems()} readOnly={true} />
                     <CaretDown />
                 </div>
                 <div ref={optionsRef} className={`${!display ? 'hidden' : ''} absolute top-0 left-0 w-full bg-white border rounded-md z-10`}>

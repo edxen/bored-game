@@ -9,24 +9,30 @@ import { TPlayer } from '@/components/reducers/playersReducer';
 
 interface IPlayerCardProps {
     index: number;
-    setPlayers: React.Dispatch<React.SetStateAction<TPlayer[]>>,
+    playerState: {
+        players: TPlayer[];
+        setPlayers: React.Dispatch<React.SetStateAction<TPlayer[]>>;
+    };
     displayCard?: boolean,
 }
 
-const PlayerCard = ({ index, setPlayers, displayCard }: IPlayerCardProps) => {
+const PlayerCard = ({ index, playerState, displayCard }: IPlayerCardProps) => {
     const [display, setDisplay] = useState(displayCard);
+    const { players, setPlayers } = playerState;
 
     const name = {
         label: 'Name',
-        value: 'Player ' + index
+        value: players[index]?.name
     };
     const colors = {
         label: 'Color',
-        list: ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Violet', 'Brown', 'Black']
+        list: ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Violet', 'Brown', 'Black'],
+        value: players[index]?.color
     };
     const type = {
         label: 'Type',
-        list: ['Human', 'Computer']
+        list: ['Human', 'Computer'],
+        value: players[index]?.type
     };
 
     const removePlayer = {
@@ -46,10 +52,18 @@ const PlayerCard = ({ index, setPlayers, displayCard }: IPlayerCardProps) => {
     };
 
     const Options = () => {
+        const getUnusedColor = (): string => {
+            const usedColors = players.map(player => player.color);
+            const remainingColors = colors.list.filter(color => !usedColors.includes(color));
+            const randomIndex = Math.floor(Math.random() * remainingColors.length);
+            return remainingColors[randomIndex].toLowerCase();
+        };
+
         const newPlayer: TPlayer = {
             ...defaultPlayer,
-            id: 'player' + index,
-            name: `Player ${index}`,
+            id: 'player' + (index + 1),
+            name: `Player ${index + 1}`,
+            color: getUnusedColor()
         };
 
         const addHuman = {
@@ -87,7 +101,7 @@ const PlayerCard = ({ index, setPlayers, displayCard }: IPlayerCardProps) => {
 
     return (
         <div className='flex flex-col flex-1 gap-4 p-4 justify-center items-center border rounded-md'>
-            {display ? <Card /> : <Options />}
+            {players[index] ? <Card /> : <Options />}
         </div>
     );
 };
