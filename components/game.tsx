@@ -31,9 +31,9 @@ export default function Game() {
     return (
         <div className='flex flex-col h-screen p-4'>
             <div className='w-full flex flex-col justify-center items-center text-sm text-gray-700 font-bold'>
-                <h1 className='text-2xl text-black '>Bored Game</h1>
+                <h1 className='text-2xl text-black rotate-6'>Bored Game</h1>
                 <h4 className='m-[-.50rem]'>by</h4>
-                <h4>Edxen the Bored Developer</h4>
+                <h4 className='-rotate-3'>Edxen the Bored Developer</h4>
             </div>
             <Turns />
             <div className='flex-1 relative grid my-2'>
