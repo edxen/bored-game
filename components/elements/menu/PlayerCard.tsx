@@ -1,6 +1,7 @@
 import { TPlayer } from '@/components/reducers/playersReducer';
 import CardOptions from './card/CardOptions';
 import CardDetails from './card/CardDetails';
+import { maxPlayer } from '../Menu';
 
 export type TPlayerState = {
     playerState: {
@@ -20,7 +21,7 @@ export const getRemainingColors = (players: TPlayer[], colors: string[]): string
 };
 
 const PlayerCard = ({ playerState }: TPlayerState) => {
-    const { index, players, setPlayers } = playerState;
+    const { index, players } = playerState;
     const id = players[index]?.id;
     playerState.id = id;
 
@@ -41,15 +42,27 @@ const PlayerCard = ({ playerState }: TPlayerState) => {
     const bgClass = bgColor[selectedColor as keyof typeof bgColor];
 
     const cardClass = 'min-h-[322px] flex flex-col gap-4 p-4 justify-center items-center border rounded-md';
+    const transitionClass = `
+        ${players.length === 0 || (players.length === 2 && index === 2) ? 'col-span-2' : ''}
+        transition-all
+        ${id
+            ? `${bgClass} flip-360`
+            : 'bg-slate-100'
+        }
+    `;
 
     return (
         <>
-            <div className={`${cardClass} ${bgClass}`}>
-                <CardDetails playerState={playerState} />
-            </div>
-            <div className={`${cardClass}`}>
-                <CardOptions playerState={playerState} />
-            </div>
+            {
+                index < maxPlayer.length &&
+                <div className={`${cardClass} ${transitionClass}`}>
+                    {
+                        id
+                            ? <CardDetails playerState={playerState} />
+                            : <CardOptions playerState={playerState} />
+                    }
+                </div>
+            }
         </>
     );
 };

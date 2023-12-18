@@ -29,7 +29,6 @@ const Menu = () => {
         ]
     );
 
-
     return (
         <>
             {/* <button onClick={() => setNav('menu')} className='fixed left-0 top-0 rounded-md border px-4 py-2'>Reset</button> */}
@@ -72,9 +71,16 @@ const Menu = () => {
                         }
                     `
                     }>
-                        <div className='w-full grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 border rounded-md'>
+                        <div className={`
+                            w-full grid grid-cols-1 sm:grid-cols-2 justify-center items-center gap-4 p-4 border rounded-md
+                            transition-height delay-500 duration-500
+                            ${nav === 'start'
+                                ? 'visible  scale-y-100 origin-top'
+                                : 'invisible opacity-0 scale-y-0 '
+                            }
+                        `}>
                             {
-                                maxPlayer.map((_, i) => (
+                                Array.from({ length: players.length + 1 }).map((_, i) => (
                                     <PlayerCard key={i} playerState={{ index: i, players, setPlayers }} />
                                 ))
                             }
