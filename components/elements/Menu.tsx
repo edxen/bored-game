@@ -1,23 +1,31 @@
 import { useState } from 'react';
 
-import PlayerCard from './menu/PlayerCard';
+import PlayerCard, { colorsList } from './menu/PlayerCard';
 
 import { TPlayer } from '../reducers/playersReducer';
 
 type TNav = 'menu' | 'start';
 
-export const defaultPlayer: TPlayer = {
-    id: 'pl1',
-    type: 'human',
-    name: 'PL1',
-    path: 1,
-    color: 'red'
+type TColors = typeof colorsList[number] extends infer C ? C extends string ? Lowercase<C> : never : never;
+
+interface TDefaultPlayer extends Pick<TPlayer, 'name' | 'type'> {
+    color: TColors;
+}
+
+export const defaultPlayer = ({ name, type, color }: TDefaultPlayer): TPlayer => {
+    const player: TPlayer = { name, type, color, id: name.toLowerCase(), path: 1 };
+    return player;
 };
 
 const Menu = () => {
     const [nav, setNav] = useState<TNav>('start');
 
-    const [players, setPlayers] = useState<TPlayer[]>([defaultPlayer]);
+    const [players, setPlayers] = useState<TPlayer[]>(
+        [
+            defaultPlayer({ name: 'PL1', type: 'human', color: 'red' }),
+            defaultPlayer({ name: 'AI1', type: 'computer', color: 'blue' })
+        ]
+    );
 
     const maxPlayer = 4;
     const countPlayer = Array.from({ length: (players.length + 1 > maxPlayer ? maxPlayer : players.length + 1) });
