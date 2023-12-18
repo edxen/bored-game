@@ -42,7 +42,7 @@ const Menu = () => {
                                 <div className='flex flex-wrap gap-4 p-4 border rounded-md'>
                                     {
                                         countPlayer.map((_, i) => (
-                                            <PlayerCard key={i} playerState={{ players, setPlayers }} displayCard={i == 0 ? true : false} index={i} />
+                                            <PlayerCard key={i} playerState={{ index: i, players, setPlayers }} />
                                         ))
                                     }
                                 </div>

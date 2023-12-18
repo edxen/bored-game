@@ -5,19 +5,19 @@ import { defaultPlayer } from '../Menu';
 
 import { TPlayer } from '@/components/reducers/playersReducer';
 
-interface IPlayerCardProps {
-    index: number;
+export type IPlayerCardProps = {
     playerState: {
+        id?: string;
+        index: number;
         players: TPlayer[];
         setPlayers: React.Dispatch<React.SetStateAction<TPlayer[]>>;
     };
-    displayCard?: boolean,
-}
+};
 
-const PlayerCard = ({ index, playerState }: IPlayerCardProps) => {
-    const { players, setPlayers } = playerState;
-
+const PlayerCard = ({ playerState }: IPlayerCardProps) => {
+    const { index, players, setPlayers } = playerState;
     const id = players[index]?.id;
+    playerState.id = id;
 
     const name = {
         label: 'Name (Max 3 Characters)',
@@ -26,11 +26,13 @@ const PlayerCard = ({ index, playerState }: IPlayerCardProps) => {
     const colors = {
         label: 'Color',
         list: ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Violet', 'Brown', 'Black'],
+        playerState,
         value: players[index]?.color
     };
     const type = {
         label: 'Type',
         list: ['Human', 'Computer'],
+        playerState,
         value: players[index]?.type
     };
 

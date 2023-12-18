@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
+import { IPlayerCardProps } from './PlayerCard';
 
 interface ICustomSelectProps {
     props: {
         label: string;
         list: string[];
         value: string;
+        playerState: IPlayerCardProps['playerState'];
     };
 }
 
@@ -23,7 +25,9 @@ const CaretDown = ({ size = 20 }: Partial<{ size: number; }>) => {
 };
 
 const CustomSelect = ({ props }: ICustomSelectProps) => {
-    const { label, list, value } = props;
+    const { label, list, value, playerState } = props;
+    const { id, setPlayers } = playerState;
+
     const [items, setItems] = useState<string[]>(list);
     const [display, setDisplay] = useState<boolean>(false);
 
@@ -35,8 +39,19 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
     };
 
     const optionSelect = (selectedItem: string) => {
-        setDisplay(false);
         if (inputRef.current) inputRef.current.value = selectedItem;
+        setDisplay(false);
+        setPlayers(prevPlayers =>
+            prevPlayers.map(prevPlayer => {
+                if (prevPlayer.id === id) {
+                    return {
+                        ...prevPlayer,
+                        [label.toLowerCase()]: selectedItem.toLowerCase()
+                    };
+                }
+                return prevPlayer;
+            })
+        );
     };
 
     const getValueFromItems = () => {
@@ -46,7 +61,7 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (optionsRef.current && !optionsRef.current.contains(event.target as Node)) {
-                if (inputRef.current) optionSelect(inputRef.current.value);
+                if (inputRef.current) setDisplay(false);
             }
         };
 
