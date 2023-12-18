@@ -16,13 +16,12 @@ interface IPlayerCardProps {
     displayCard?: boolean,
 }
 
-const PlayerCard = ({ index, playerState, displayCard }: IPlayerCardProps) => {
-    const [display, setDisplay] = useState(displayCard);
+const PlayerCard = ({ index, playerState }: IPlayerCardProps) => {
     const { players, setPlayers } = playerState;
 
     const name = {
         label: 'Name',
-        value: players[index]?.name
+        value: players[index]?.id
     };
     const colors = {
         label: 'Color',
@@ -37,7 +36,9 @@ const PlayerCard = ({ index, playerState, displayCard }: IPlayerCardProps) => {
 
     const removePlayer = {
         label: 'Remove Player',
-        click: () => { setDisplay(false); }
+        click: () => {
+            setPlayers(prevPlayers => prevPlayers.filter(prevPlayer => prevPlayer.id !== `player${index + 1}`));
+        }
     };
 
     const Card = () => {
@@ -59,12 +60,31 @@ const PlayerCard = ({ index, playerState, displayCard }: IPlayerCardProps) => {
             return remainingColors[randomIndex].toLowerCase();
         };
 
+        const getUnusedID = (): string => {
+            const getRandomLetter = () => String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+
+            const usedIds = new Set(players.map(player => player.id));
+            let newId;
+
+            do {
+                newId = Array.from({ length: 3 }, getRandomLetter).join('');
+            } while (usedIds.has(newId));
+
+            return newId;
+        };
+
+
+
         const newPlayer: TPlayer = {
             ...defaultPlayer,
-            id: 'player' + (index + 1),
+            id: getUnusedID(),
             name: `Player ${index + 1}`,
             color: getUnusedColor()
         };
+
+
+
+
 
         const click = (value: TPlayer['type']) => setPlayers(prevPlayers => [...prevPlayers, { ...newPlayer, type: value }]);
 
