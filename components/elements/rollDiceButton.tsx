@@ -131,7 +131,7 @@ const RollDiceButton = () => {
     };
 
     useEffect(() => {
-        if (turns.length > 1 && turns[0].type === 'ai') {
+        if (turns.length > 1 && turns[0].type === 'computer') {
             diceRoll();
         }
     }, [turns]); // eslint-disable-line react-hooks/exhaustive-deps

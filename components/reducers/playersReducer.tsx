@@ -4,7 +4,7 @@ import config from "../config";
 
 export type TPlayer = {
     id: string;
-    type: 'human' | 'ai';
+    type: 'human' | 'computer';
     name: string;
     path: number;
     color: string;

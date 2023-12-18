@@ -26,7 +26,7 @@ const PlayerCard = ({ index, setPlayers, displayCard }: IPlayerCardProps) => {
     };
     const type = {
         label: 'Type',
-        list: ['Human', 'AI']
+        list: ['Human', 'Computer']
     };
 
     const removePlayer = {
@@ -72,7 +72,7 @@ const PlayerCard = ({ index, setPlayers, displayCard }: IPlayerCardProps) => {
                 setPlayers(prevPlayers =>
                     [
                         ...prevPlayers,
-                        { ...newPlayer, type: 'ai' }
+                        { ...newPlayer, type: 'computer' }
                     ]
                 );
             }
