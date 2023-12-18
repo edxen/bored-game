@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { IPlayerCardProps, getRemainingColors } from './PlayerCard';
+import { TPlayerState, getRemainingColors } from './PlayerCard';
 
 interface ICustomSelectProps {
     props: {
         label: string;
         list: string[];
         value: string;
-        playerState: IPlayerCardProps['playerState'];
+        playerState: TPlayerState['playerState'];
     };
 }
 
