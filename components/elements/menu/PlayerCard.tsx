@@ -19,9 +19,11 @@ interface IPlayerCardProps {
 const PlayerCard = ({ index, playerState }: IPlayerCardProps) => {
     const { players, setPlayers } = playerState;
 
+    const id = players[index]?.id;
+
     const name = {
         label: 'Name',
-        value: players[index]?.id
+        value: players[index]?.name
     };
     const colors = {
         label: 'Color',
@@ -37,7 +39,7 @@ const PlayerCard = ({ index, playerState }: IPlayerCardProps) => {
     const removePlayer = {
         label: 'Remove Player',
         click: () => {
-            setPlayers(prevPlayers => prevPlayers.filter(prevPlayer => prevPlayer.id !== `player${index + 1}`));
+            setPlayers(prevPlayers => prevPlayers.filter(prevPlayer => prevPlayer.id !== id));
         }
     };
 
@@ -73,18 +75,12 @@ const PlayerCard = ({ index, playerState }: IPlayerCardProps) => {
             return newId;
         };
 
-
-
         const newPlayer: TPlayer = {
             ...defaultPlayer,
             id: getUnusedID(),
-            name: `Player ${index + 1}`,
             color: getUnusedColor()
         };
-
-
-
-
+        newPlayer.name = newPlayer.id.toUpperCase();
 
         const click = (value: TPlayer['type']) => setPlayers(prevPlayers => [...prevPlayers, { ...newPlayer, type: value }]);
 

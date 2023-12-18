@@ -7,9 +7,9 @@ import { TPlayer } from '../reducers/playersReducer';
 type TNav = 'menu' | 'start';
 
 export const defaultPlayer: TPlayer = {
-    id: 'abc',
+    id: 'pl1',
     type: 'human',
-    name: 'Player 1',
+    name: 'PL1',
     path: 1,
     color: 'red'
 };
