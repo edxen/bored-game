@@ -47,7 +47,7 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
     };
 
     const optionSelect = (selectedItem: string) => {
-        if (inputRef.current) inputRef.current.value = selectedItem;
+        if (inputRef.current) inputRef.current.value = toCapitalize(selectedItem);
         setDisplay(false);
         setPlayers(prevPlayers =>
             prevPlayers.map(prevPlayer => {
@@ -72,9 +72,7 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
                 if (inputRef.current) setDisplay(false);
             }
         };
-
         document.addEventListener('mousedown', handleClickOutside);
-
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
