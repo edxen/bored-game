@@ -18,7 +18,7 @@ export const defaultPlayer = ({ name, type, color }: TDefaultPlayer): TPlayer =>
 };
 
 const Menu = () => {
-    const [nav, setNav] = useState<TNav>('start');
+    const [nav, setNav] = useState<TNav>('menu');
 
     const [players, setPlayers] = useState<TPlayer[]>(
         [
@@ -27,39 +27,62 @@ const Menu = () => {
         ]
     );
 
-    const maxPlayer = 4;
-    const countPlayer = Array.from({ length: (players.length + 1 > maxPlayer ? maxPlayer : players.length + 1) });
+    const maxPlayer = Array.from({ length: 4 });
 
     return (
-        <div className='w-full flex flex-col justify-center items-center'>
-            {
-                nav === 'menu'
-                    ? <button onClick={() => setNav('start')} className='px-4 py-2 border rounded-md'>Start Game</button>
-                    : nav === 'start' ?
-                        <div className={`${countPlayer.length === 1 ? 'w-full sm:w-[50%] ' : 'w-full'} flex flex-col justify-center items-center`}>
-                            <div className='w-full p-4 mb-2 border rounded-md bg-black text-white'>
-                                <div className='flex justify-between items-center font-bold'>
-                                    <div>Players</div>
-                                    {
-                                        players.length > 1 &&
-                                        <div className='rounded px-4 py-2 bg-white text-black hover:bg-slate-100 cursor-pointer'>Start Game</div>
-                                    }
-                                </div>
-                            </div>
-                            <div className='w-full flex gap-4 justify-center items-center'>
-                                <div className='w-full flex flex-wrap gap-4 p-4 border rounded-md'>
-                                    {
-                                        countPlayer.map((_, i) => (
-                                            <PlayerCard key={i} playerState={{ index: i, players, setPlayers }} />
-                                        ))
-                                    }
-                                </div>
-                            </div>
+        <>
+            {/* <button onClick={() => setNav('menu')} className='fixed left-0 top-0 rounded-md border px-4 py-2'>Reset</button> */}
+            <div className='w-full flex flex-col justify-center items-center'>
+                <div className='w-full h-full flex flex-col justify-center items-center'>
+                    <div className={
+                        `
+                        
+                        transition-all delay-250
+                        ${nav === 'start'
+                            ? 'w-full p-4 mb-2 border rounded-md bg-black text-white'
+                            : 'w-0'
+                        }
+                    `
+                    }>
+                        <div className='w-full flex justify-center items-center font-bold'>
+                            <div className={
+                                `
+                            transition-all delay-250
+                            ${nav === 'start'
+                                    ? 'visible opacity-100 px-4 py-2 flex-grow'
+                                    : 'invisible opacity-0 w-0'
+                                }
+                            `
+                            }>Players</div>
+                            {
+                                players.length > 1 &&
+                                <div className='px-4 py-2 bg-white text-black border rounded-md hover:bg-slate-100 cursor-pointer  whitespace-nowrap'
+                                    onClick={() => setNav('start')}>Start Game</div>
+                            }
                         </div>
-                        : ''
-            }
-        </div >
+                    </div>
+                    <div className={
+                        `
+                        flex justify-center items-center gap-4 w-full
+                        transition-height delay-500 duration-500 
+                        ${nav === 'start'
+                            ? 'visible opacity-100 h-full'
+                            : 'invisible opacity-0 h-0'
+                        }
+                    `
+                    }>
+                        <div className='w-full grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 border rounded-md'>
+                            {
+                                maxPlayer.map((_, i) => (
+                                    <PlayerCard key={i} playerState={{ index: i, players, setPlayers }} />
+                                ))
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div >
+        </>
     );
 };
 
-export default Menu;
+export default Menu;;;
