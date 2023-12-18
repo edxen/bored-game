@@ -6,21 +6,18 @@ const players: Partial<TPlayer>[] = [
     { id: '2', color: 'blue' },
 ] as TPlayer[];
 
-const colors: string[] = ['Red', 'Blue', 'Green', 'Yellow', 'Purple'];
+const colors: string[] = ['red', 'blue', 'green', 'yellow', 'purple'];
 
 describe('getRemainingColors function', () => {
     it('should return an array of colors not used by any players', () => {
         const remainingColors = getRemainingColors(players as TPlayer[], colors);
-        const unusedColors = ['Green', 'Yellow', 'Purple'];
+        const unusedColors = ['green', 'yellow', 'purple'];
         expect(remainingColors).toEqual(unusedColors);
     });
 
     it('should return an empty array if all colors are used by players', () => {
         const allUsedColorsPlayers: Partial<TPlayer>[] = colors.map((color, i) => (
-            {
-                id: i.toString(),
-                color: color.toLowerCase()
-            }
+            { id: i.toString(), color }
         ));
 
         const remainingColors = getRemainingColors(allUsedColorsPlayers as TPlayer[], colors);
