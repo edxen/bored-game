@@ -66,30 +66,16 @@ const PlayerCard = ({ index, playerState, displayCard }: IPlayerCardProps) => {
             color: getUnusedColor()
         };
 
+        const click = (value: TPlayer['type']) => setPlayers(prevPlayers => [...prevPlayers, { ...newPlayer, type: value }]);
+
         const addHuman = {
             label: 'Add Human',
-            click: () => {
-                setDisplay(true);
-                setPlayers(prevPlayers =>
-                    [
-                        ...prevPlayers,
-                        { ...newPlayer, type: 'human' }
-                    ]
-                );
-            }
+            click: () => click('human')
         };
 
         const addComputer = {
             label: 'Add Computer',
-            click: () => {
-                setDisplay(true);
-                setPlayers(prevPlayers =>
-                    [
-                        ...prevPlayers,
-                        { ...newPlayer, type: 'computer' }
-                    ]
-                );
-            }
+            click: () => click('computer')
         };
 
         return (
