@@ -11,13 +11,10 @@ describe('getData custom hook: getTile', () => {
         tiles: Partial<TTile>[];
     };
 
+    const tilesArr = [1, 5, 8, 12].map(path => ({ path }));
+
     const mockState = {
-        tiles: [
-            { path: 1 },
-            { path: 5 },
-            { path: 8 },
-            { path: 12 },
-        ],
+        tiles: tilesArr
     };
 
     beforeEach(() => {
