@@ -22,7 +22,7 @@ const PlayerCard = ({ index, playerState }: IPlayerCardProps) => {
     const id = players[index]?.id;
 
     const name = {
-        label: 'Name',
+        label: 'Name (Max 3 Characters)',
         value: players[index]?.name
     };
     const colors = {
