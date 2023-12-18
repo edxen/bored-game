@@ -38,7 +38,7 @@ const PlayerCard = ({ playerState }: TPlayerState) => {
         black: 'bg-black-300',
     };
 
-    const selectedColor = players[index]?.color || '';
+    const selectedColor = players.find(player => player.id === id)?.color || '';
     const bgClass = bgColor[selectedColor as keyof typeof bgColor];
 
     const cardClass = 'min-h-[322px] flex flex-col gap-4 p-4 justify-center items-center border rounded-md';
