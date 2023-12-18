@@ -31,12 +31,12 @@ const Menu = () => {
     const countPlayer = Array.from({ length: (players.length + 1 > maxPlayer ? maxPlayer : players.length + 1) });
 
     return (
-        <div className='flex flex-col justify-center items-center'>
+        <div className='w-full flex flex-col justify-center items-center'>
             {
                 nav === 'menu'
                     ? <button onClick={() => setNav('start')} className='px-4 py-2 border rounded-md'>Start Game</button>
                     : nav === 'start' ?
-                        <div className='flex flex-col justify-center items-center'>
+                        <div className={`${countPlayer.length === 1 ? 'w-full sm:w-[50%] ' : 'w-full'} flex flex-col justify-center items-center`}>
                             <div className='w-full p-4 mb-2 border rounded-md bg-black text-white'>
                                 <div className='flex justify-between items-center font-bold'>
                                     <div>Players</div>
@@ -46,8 +46,8 @@ const Menu = () => {
                                     }
                                 </div>
                             </div>
-                            <div className='flex gap-4 justify-center items-center'>
-                                <div className='flex flex-wrap gap-4 p-4 border rounded-md'>
+                            <div className='w-full flex gap-4 justify-center items-center'>
+                                <div className='w-full flex flex-wrap gap-4 p-4 border rounded-md'>
                                     {
                                         countPlayer.map((_, i) => (
                                             <PlayerCard key={i} playerState={{ index: i, players, setPlayers }} />

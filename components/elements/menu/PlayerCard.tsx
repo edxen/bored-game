@@ -51,7 +51,6 @@ const PlayerCard = ({ playerState }: IPlayerCardProps) => {
         }
     };
 
-    const CardClass = 'flex flex-col flex-1 gap-4 p-4 justify-center items-center border rounded-md';
     const bgColor = {
         red: 'bg-red-300',
         blue: 'bg-blue-300',
@@ -67,6 +66,7 @@ const PlayerCard = ({ playerState }: IPlayerCardProps) => {
 
     const selectedColor = players[index]?.color || '';
     const bgClass = bgColor[selectedColor as keyof typeof bgColor];
+    const CardClass = 'flex flex-col flex-1 gap-4 p-4 justify-center items-center border rounded-md';
 
     const Card = () => {
         return (
