@@ -25,7 +25,7 @@ const PlayerCard = ({ playerState }: IPlayerCardProps) => {
     };
     const colors = {
         label: 'Color',
-        list: ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Violet', 'Brown', 'Black'],
+        list: ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Violet'],
         playerState,
         value: players[index]?.color
     };
@@ -75,7 +75,7 @@ const PlayerCard = ({ playerState }: IPlayerCardProps) => {
     const Options = () => {
         const getUnusedColor = (): string => {
             const usedColors = players.map(player => player.color);
-            const remainingColors = colors.list.filter(color => !usedColors.includes(color));
+            const remainingColors = colors.list.filter(color => !usedColors.includes(color.toLowerCase()));
             const randomIndex = Math.floor(Math.random() * remainingColors.length);
             return remainingColors[randomIndex].toLowerCase();
         };
