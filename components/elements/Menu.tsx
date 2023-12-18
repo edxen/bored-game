@@ -17,6 +17,8 @@ export const defaultPlayer = ({ name, type, color }: TDefaultPlayer): TPlayer =>
     return player;
 };
 
+export const maxPlayer = Array.from({ length: 4 });
+
 const Menu = () => {
     const [nav, setNav] = useState<TNav>('menu');
 
@@ -27,7 +29,6 @@ const Menu = () => {
         ]
     );
 
-    const maxPlayer = Array.from({ length: 4 });
 
     return (
         <>

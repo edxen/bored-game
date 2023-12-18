@@ -1,7 +1,7 @@
 import CustomSelect from './CustomSelect';
 import CustomInput from './CustomInput';
 import CustomButton from './CustomButton';
-import { defaultPlayer } from '../Menu';
+import { defaultPlayer, maxPlayer } from '../Menu';
 
 import { TPlayer } from '@/components/reducers/playersReducer';
 
@@ -108,7 +108,11 @@ const PlayerCard = ({ playerState }: IPlayerCardProps) => {
 
         newPlayer.name = newPlayer.id.toUpperCase();
 
-        const click = (value: TPlayer['type']) => setPlayers(prevPlayers => [...prevPlayers, { ...newPlayer, type: value }]);
+        const click = (value: TPlayer['type']) => {
+            if (players.length < maxPlayer.length) {
+                setPlayers(prevPlayers => [...prevPlayers, { ...newPlayer, type: value }]);
+            }
+        };
 
         const addHuman = {
             label: 'Add Human',
@@ -129,7 +133,8 @@ const PlayerCard = ({ playerState }: IPlayerCardProps) => {
 
     return (
         <>
-            {players[index] ? <Card /> : <Options />}
+            <Card />
+            <Options />
         </>
     );
 };
