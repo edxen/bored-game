@@ -8,6 +8,7 @@ const CardDetails = ({ playerState }: TPlayerState) => {
 
     const name = {
         label: 'Name (Max 3 Characters)',
+        playerState,
         value: players[index]?.name
     };
     const colors = {

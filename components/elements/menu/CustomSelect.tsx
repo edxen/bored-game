@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TPlayerState, getRemainingColors } from './PlayerCard';
 
 interface ICustomSelectProps {
@@ -39,6 +39,14 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const optionsRef = useRef<HTMLInputElement>(null);
 
+    const [inputValue, setInputValue] = useState<string>(value);
+
+    useEffect(() => {
+        if (value !== inputValue) {
+            setInputValue(value);
+        }
+    }, [value]);
+
     const showOptions = () => {
         setDisplay(true);
         if (label.toLowerCase() === 'color') {
@@ -62,10 +70,6 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
         );
     };
 
-    const getValueFromItems = (): string => {
-        return toCapitalize(items.filter(item => item === value)[0] || '');
-    };
-
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (optionsRef.current && !optionsRef.current.contains(event.target as Node)) {
@@ -83,7 +87,7 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
             <span className='select-none'>{label}</span>
             <div className='relative cursor-pointer'>
                 <div onClick={showOptions} className='flex justify-between border rounded-md ps-4 pe-2 py-2 cursor-pointer bg-white hover:bg-slate-100'>
-                    <input ref={inputRef} className='cursor-pointer bg-transparent outline-none' defaultValue={getValueFromItems()} readOnly={true} />
+                    <input ref={inputRef} className='cursor-pointer bg-transparent outline-none' value={toCapitalize(inputValue)} readOnly={true} />
                     <CaretDown />
                 </div>
                 <div ref={optionsRef} className={`${!display ? 'hidden' : ''} absolute top-0 left-0 w-full bg-white border rounded-md z-10`}>
