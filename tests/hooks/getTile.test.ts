@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import getData from '../../components/hooks/getData';
+import getData from '@/components/hooks/getData';
 import { TTile } from '@/components/reducers/tilesReducer';
 
 jest.mock('react-redux', () => ({
