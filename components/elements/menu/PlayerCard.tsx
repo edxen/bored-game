@@ -3,8 +3,17 @@ import { useState } from 'react';
 import CustomSelect from './CustomSelect';
 import CustomInput from './CustomInput';
 import CustomButton from './CustomButton';
+import { defaultPlayer } from '../Menu';
 
-const PlayerCard = ({ displayCard, index }: Partial<{ displayCard: boolean; index: number; }>) => {
+import { TPlayer } from '@/components/reducers/playersReducer';
+
+interface IPlayerCardProps {
+    index: number;
+    setPlayers: React.Dispatch<React.SetStateAction<TPlayer[]>>,
+    displayCard?: boolean,
+}
+
+const PlayerCard = ({ index, setPlayers, displayCard }: IPlayerCardProps) => {
     const [display, setDisplay] = useState(displayCard);
 
     const name = {
@@ -13,11 +22,11 @@ const PlayerCard = ({ displayCard, index }: Partial<{ displayCard: boolean; inde
     };
     const colors = {
         label: 'Color',
-        list: ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Teal', 'Brown', 'Black']
+        list: ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Violet', 'Brown', 'Black']
     };
     const type = {
         label: 'Type',
-        list: ['Human', 'Computer']
+        list: ['Human', 'AI']
     };
 
     const removePlayer = {
@@ -37,17 +46,36 @@ const PlayerCard = ({ displayCard, index }: Partial<{ displayCard: boolean; inde
     };
 
     const Options = () => {
-        const click = () => { setDisplay(true); };
-
+        const newPlayer: TPlayer = {
+            ...defaultPlayer,
+            id: 'player' + index,
+            name: `Player ${index}`,
+        };
 
         const addHuman = {
             label: 'Add Human',
-            click
+            click: () => {
+                setDisplay(true);
+                setPlayers(prevPlayers =>
+                    [
+                        ...prevPlayers,
+                        { ...newPlayer, type: 'human' }
+                    ]
+                );
+            }
         };
 
         const addComputer = {
             label: 'Add Computer',
-            click
+            click: () => {
+                setDisplay(true);
+                setPlayers(prevPlayers =>
+                    [
+                        ...prevPlayers,
+                        { ...newPlayer, type: 'ai' }
+                    ]
+                );
+            }
         };
 
         return (

@@ -6,21 +6,21 @@ import { TPlayer } from '../reducers/playersReducer';
 
 type TNav = 'menu' | 'start';
 
-const Menu = () => {
-    const [nav, setNav] = useState<TNav>('menu');
+export const defaultPlayer: TPlayer = {
+    id: 'player1',
+    type: 'human',
+    name: 'Player 1',
+    path: 1,
+    color: 'Red'
+};
 
-    const defaultPlayer: TPlayer = {
-        id: 'player',
-        type: 'human',
-        name: 'Player',
-        path: 1,
-        color: 'red'
-    };
+const Menu = () => {
+    const [nav, setNav] = useState<TNav>('start');
 
     const [players, setPlayers] = useState<TPlayer[]>([defaultPlayer]);
 
     const maxPlayer = 4;
-    const countPlayer = Array.from({ length: (players.length + 1 === maxPlayer ? maxPlayer : players.length + 1) });
+    const countPlayer = Array.from({ length: (players.length + 1 > maxPlayer ? maxPlayer : players.length + 1) });
 
     return (
         <div className='flex flex-col justify-center items-center'>
@@ -39,7 +39,7 @@ const Menu = () => {
                                 <div className='flex flex-wrap gap-4 p-4 border rounded-md'>
                                     {
                                         countPlayer.map((_, i) => (
-                                            <PlayerCard key={i} displayCard={i == 0 ? true : false} index={i + 1} />
+                                            <PlayerCard key={i} setPlayers={setPlayers} displayCard={i == 0 ? true : false} index={i + 1} />
                                         ))
                                     }
                                 </div>
