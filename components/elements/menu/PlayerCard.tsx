@@ -41,16 +41,34 @@ const PlayerCard = ({ index, playerState }: IPlayerCardProps) => {
         }
     };
 
+    const CardClass = 'flex flex-col flex-1 gap-4 p-4 justify-center items-center border rounded-md';
+    const bgColor = {
+        red: 'bg-red-300',
+        blue: 'bg-blue-300',
+        green: 'bg-green-300',
+        yellow: 'bg-yellow-300',
+        orange: 'bg-orange-300',
+        purple: 'bg-purple-300',
+        pink: 'bg-pink-300',
+        violet: 'bg-violet-300',
+        brown: 'bg-brown-300',
+        black: 'bg-black-300',
+    };
+
+    const selectedColor = players[index]?.color?.toLowerCase() || '';
+    const bgClass = bgColor[selectedColor as keyof typeof bgColor];
+
     const Card = () => {
         return (
-            <>
+            <div className={`${CardClass} ${bgClass}`}>
                 <CustomInput props={name} />
                 <CustomSelect props={colors} />
                 <CustomSelect props={type} />
                 <CustomButton props={removePlayer} />
-            </>
+            </div>
         );
     };
+
 
     const Options = () => {
         const getUnusedColor = (): string => {
@@ -93,16 +111,16 @@ const PlayerCard = ({ index, playerState }: IPlayerCardProps) => {
         };
 
         return (
-            <>
+            <div className={`${CardClass} bg-slate-100`}>
                 {[addHuman, addComputer].map((prop, i) => <CustomButton key={i} props={prop} />)}
-            </>
+            </div>
         );
     };
 
     return (
-        <div className='flex flex-col flex-1 gap-4 p-4 justify-center items-center border rounded-md'>
+        <>
             {players[index] ? <Card /> : <Options />}
-        </div>
+        </>
     );
 };
 

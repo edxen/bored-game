@@ -11,7 +11,7 @@ const CustomInput = ({ props }: ICustomInputProps) => {
     return (
         <label className="flex flex-col w-full">
             <span className='select-none'>{label}</span>
-            <input className='border rounded-md px-4 py-2 hover:bg-slate-300 focus:bg-slate-300' defaultValue={value} maxLength={3} />
+            <input className='border rounded-md px-4 py-2 bg-white hover:bg-slate-100 focus:bg-slate-100' defaultValue={value} maxLength={3} />
         </label>
     );
 };

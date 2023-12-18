@@ -32,7 +32,10 @@ const Menu = () => {
                             <div className='w-full p-4 mb-2 border rounded-md bg-black text-white'>
                                 <div className='flex justify-between items-center font-bold'>
                                     <div>Players</div>
-                                    <div className='rounded px-4 py-2 bg-white text-black cursor-pointer'>Start Game</div>
+                                    {
+                                        players.length > 1 &&
+                                        <div className='rounded px-4 py-2 bg-white text-black hover:bg-slate-100 cursor-pointer'>Start Game</div>
+                                    }
                                 </div>
                             </div>
                             <div className='flex gap-4 justify-center items-center'>
