@@ -14,6 +14,12 @@ export type IPlayerCardProps = {
     };
 };
 
+export const getRemainingColors = (players: TPlayer[], colors: string[]): string[] => {
+    const usedColors = players.map(player => player.color);
+    const remainingColors = colors.filter(color => !usedColors.includes(color.toLowerCase()));
+    return remainingColors;
+};
+
 const PlayerCard = ({ playerState }: IPlayerCardProps) => {
     const { index, players, setPlayers } = playerState;
     const id = players[index]?.id;
@@ -74,8 +80,7 @@ const PlayerCard = ({ playerState }: IPlayerCardProps) => {
 
     const Options = () => {
         const getUnusedColor = (): string => {
-            const usedColors = players.map(player => player.color);
-            const remainingColors = colors.list.filter(color => !usedColors.includes(color.toLowerCase()));
+            const remainingColors = getRemainingColors(players, colors.list);
             const randomIndex = Math.floor(Math.random() * remainingColors.length);
             return remainingColors[randomIndex].toLowerCase();
         };

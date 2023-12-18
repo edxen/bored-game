@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { IPlayerCardProps } from './PlayerCard';
+import { IPlayerCardProps, getRemainingColors } from './PlayerCard';
 
 interface ICustomSelectProps {
     props: {
@@ -26,7 +26,7 @@ const CaretDown = ({ size = 20 }: Partial<{ size: number; }>) => {
 
 const CustomSelect = ({ props }: ICustomSelectProps) => {
     const { label, list, value, playerState } = props;
-    const { id, setPlayers } = playerState;
+    const { id, players, setPlayers } = playerState;
 
     const [items, setItems] = useState<string[]>(list);
     const [display, setDisplay] = useState<boolean>(false);
@@ -36,6 +36,9 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
 
     const showOptions = () => {
         setDisplay(true);
+        if (label.toLowerCase() === 'color') {
+            setItems(getRemainingColors(players, list));
+        }
     };
 
     const optionSelect = (selectedItem: string) => {
