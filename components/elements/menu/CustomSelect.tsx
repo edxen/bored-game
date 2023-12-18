@@ -24,6 +24,11 @@ const CaretDown = ({ size = 20 }: Partial<{ size: number; }>) => {
     );
 };
 
+const toCapitalize = (str: string): string => {
+    const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
+    return capitalized;
+};
+
 const CustomSelect = ({ props }: ICustomSelectProps) => {
     const { label, list, value, playerState } = props;
     const { id, players, setPlayers } = playerState;
@@ -49,7 +54,7 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
                 if (prevPlayer.id === id) {
                     return {
                         ...prevPlayer,
-                        [label.toLowerCase()]: selectedItem.toLowerCase()
+                        [label.toLowerCase()]: selectedItem
                     };
                 }
                 return prevPlayer;
@@ -57,8 +62,8 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
         );
     };
 
-    const getValueFromItems = () => {
-        return items.filter(item => item.toLowerCase() === value);
+    const getValueFromItems = (): string => {
+        return toCapitalize(items.filter(item => item === value)[0] || '');
     };
 
     useEffect(() => {
@@ -86,7 +91,7 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
                 <div ref={optionsRef} className={`${!display ? 'hidden' : ''} absolute top-0 left-0 w-full bg-white border rounded-md z-10`}>
                     {
                         items && items.map((item, i) => (
-                            <div key={i} onClick={() => optionSelect(item)} className='rounded-md px-4 py-2 select-none hover:text-black hover:bg-slate-100 transition-all'>{item}</div>
+                            <div key={i} onClick={() => optionSelect(item)} className='rounded-md px-4 py-2 select-none hover:text-black hover:bg-slate-100 transition-all'>{toCapitalize(item)}</div>
                         ))
                     }
                 </div>

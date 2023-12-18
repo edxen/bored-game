@@ -14,11 +14,11 @@ export type IPlayerCardProps = {
     };
 };
 
-export const colorsList = ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Violet'] as const;
+export const colorsList = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'pink', 'violet'];
 
 export const getRemainingColors = (players: TPlayer[], colors: string[]): string[] => {
     const usedColors = players.map(player => player.color);
-    const remainingColors = colors.filter(color => !usedColors.includes(color.toLowerCase()));
+    const remainingColors = colors.filter(color => !usedColors.includes(color));
     return remainingColors;
 };
 
@@ -39,7 +39,7 @@ const PlayerCard = ({ playerState }: IPlayerCardProps) => {
     };
     const type = {
         label: 'Type',
-        list: ['Human', 'Computer'],
+        list: ['human', 'computer'],
         playerState,
         value: players[index]?.type
     };
@@ -65,7 +65,7 @@ const PlayerCard = ({ playerState }: IPlayerCardProps) => {
         black: 'bg-black-300',
     };
 
-    const selectedColor = players[index]?.color?.toLowerCase() || '';
+    const selectedColor = players[index]?.color || '';
     const bgClass = bgColor[selectedColor as keyof typeof bgColor];
 
     const Card = () => {
@@ -84,7 +84,7 @@ const PlayerCard = ({ playerState }: IPlayerCardProps) => {
         const getUnusedColor = (): string => {
             const remainingColors = getRemainingColors(players, colors.list);
             const randomIndex = Math.floor(Math.random() * remainingColors.length);
-            return remainingColors[randomIndex].toLowerCase();
+            return remainingColors[randomIndex];
         };
 
         const getUnusedID = (): string => {
@@ -104,7 +104,8 @@ const PlayerCard = ({ playerState }: IPlayerCardProps) => {
             ...defaultPlayer,
             id: getUnusedID(),
             color: getUnusedColor()
-        };
+        } as TPlayer;
+
         newPlayer.name = newPlayer.id.toUpperCase();
 
         const click = (value: TPlayer['type']) => setPlayers(prevPlayers => [...prevPlayers, { ...newPlayer, type: value }]);

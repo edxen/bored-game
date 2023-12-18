@@ -6,7 +6,7 @@ import { TPlayer } from '../reducers/playersReducer';
 
 type TNav = 'menu' | 'start';
 
-type TColors = typeof colorsList[number] extends infer C ? C extends string ? Lowercase<C> : never : never;
+type TColors = typeof colorsList[number] extends infer C ? C extends string ? C : never : never;
 
 interface TDefaultPlayer extends Pick<TPlayer, 'name' | 'type'> {
     color: TColors;
