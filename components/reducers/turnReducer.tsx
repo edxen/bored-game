@@ -5,12 +5,14 @@ export type TTurnState = {
     players: TPlayer[];
     round: number;
     turn: number;
+    ranking: string[];
 };
 
 const initialState: TTurnState = {
     players: [],
     round: 1,
     turn: 1,
+    ranking: []
 };
 
 const turnsSlice = createSlice({
@@ -41,9 +43,15 @@ const turnsSlice = createSlice({
                 ...state,
                 round: state.round + 1
             };
+        },
+        setRanking: (state, action: PayloadAction<string>) => {
+            return {
+                ...state,
+                ranking: [action.payload, ...state.ranking]
+            };
         }
     }
 });
 
-export const { setTurnPlayers, nextTurn, increaseTurnCount, increaseRoundCount } = turnsSlice.actions;
+export const { setTurnPlayers, nextTurn, increaseTurnCount, increaseRoundCount, setRanking } = turnsSlice.actions;
 export default turnsSlice.reducer;

@@ -22,11 +22,11 @@ const allcomputers = [
 const config = {
     enableSpecificDice: false,
     customPlayer: {
-        enabled: true,
+        enabled: false,
         state: allcomputers as TPlayer[]
     },
-    moveSpeed: 250, // 100
-    rollSpeed: 100 // 100
+    moveSpeed: 200, // 150 - default
+    rollSpeed: 150 // 150 - default
 };
 
 export default config;

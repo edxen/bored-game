@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { TPlayer } from "./playersReducer";
 
 export type TDice = {
     display: number;

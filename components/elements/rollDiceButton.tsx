@@ -9,7 +9,7 @@ import setElementOnFocus from '../hooks/setElementOnFocus';
 import getData from '../hooks/getData';
 
 import config from '../config';
-import { increaseRoundCount, increaseTurnCount, nextTurn, setTurnPlayers } from '../reducers/turnReducer';
+import { increaseRoundCount, increaseTurnCount, nextTurn, setRanking, setTurnPlayers } from '../reducers/turnReducer';
 
 const RollDiceButton = () => {
     const dispatch = useDispatch();
@@ -61,6 +61,7 @@ const RollDiceButton = () => {
                                     const filteredPlayers = tile.occupants.filter((id: string) => id !== playerData.id);
                                     const removeFilteredPlayers = players.filter(player => !filteredPlayers.includes(player.id));
                                     dispatch(setPlayers(removeFilteredPlayers));
+                                    if (filteredPlayers.length && getPlayerData(filteredPlayers[0])) dispatch(setRanking(getPlayerData(filteredPlayers[0])?.name));
                                     dispatch(setTile({ index: tile.index, key: 'occupants', value: [playerData.id] }));
 
                                     if (tile.occupants.length && tile.type === 'portal') {
