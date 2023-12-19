@@ -1,6 +1,6 @@
-import getData from './hooks/getData';
-import initialize from './hooks/initialize';
-import monitorPlayerChange from './hooks/monitorPlayerChange';
+import getData from './hooks/GetData';
+import Initialize from './hooks/Initialize';
+import MonitorPlayerChange from './hooks/MonitorPlayerChange';
 
 import Turns from './elements/Turns';
 import Tiles from './elements/Tiles';
@@ -12,8 +12,8 @@ import WinBox from './elements/WinBox';
 export default function Game() {
     const { players } = getData();
 
-    initialize();
-    monitorPlayerChange();
+    Initialize();
+    MonitorPlayerChange();
     return (
         <div className='flex flex-col h-screen p-4'>
             <div className='w-full flex flex-col justify-center items-center my-5 text-sm text-gray-700 font-bold'>

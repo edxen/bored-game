@@ -5,15 +5,15 @@ import { setDice } from '../reducers/diceReducer';
 import { TPlayer, setPlayer, setPlayers } from '../reducers/playersReducer';
 import { TTile, setTile } from '../reducers/tilesReducer';
 
-import setElementOnFocus from '../hooks/setElementOnFocus';
-import getData from '../hooks/getData';
+import SetElementOnFocus from '../hooks/SetElementOnFocus';
+import GetData from '../hooks/GetData';
 
 import config from '../config';
 import { increaseRoundCount, increaseTurnCount, nextTurn, setRanking, setTurnPlayers } from '../reducers/turnReducer';
 
 const RollDiceButton = () => {
     const dispatch = useDispatch();
-    const { turns, dice, players, tiles, getPlayerData, getPlayerTile, getTile } = getData();
+    const { turns, dice, players, tiles, getPlayerData, getPlayerTile, getTile } = GetData();
     const rollButtonRef = useRef<HTMLButtonElement>(null);
 
     const handleClickRoll = () => {
@@ -42,7 +42,7 @@ const RollDiceButton = () => {
         }
     };
 
-    const triggerOnMove = () => {
+    const TriggerOnMove = () => {
         useEffect(() => {
             let moveInterval: NodeJS.Timeout;
 
@@ -98,7 +98,7 @@ const RollDiceButton = () => {
             return () => clearInterval(moveInterval);
         }, [dice.move, players.find(p => p.id === turns.players[0]?.id)]); // eslint-disable-line react-hooks/exhaustive-deps
     };
-    triggerOnMove();
+    TriggerOnMove();
 
     const [countTurn, setCountTurn] = useState(1);
 
@@ -112,7 +112,7 @@ const RollDiceButton = () => {
             setCountTurn(prevCount => prevCount + 1);
             dispatch(increaseTurnCount());
         }
-    }, [dice.done]);
+    }, [dice.done]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const movePlayerToNextTile = (playerData: TPlayer, nextPath: TTile['path']) => {
         const playerTile = getPlayerTile(playerData.id);
@@ -161,7 +161,7 @@ const RollDiceButton = () => {
         }
     }, [turns]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    setElementOnFocus({ condition: dice.done, elementRef: rollButtonRef });
+    SetElementOnFocus({ condition: dice.done, elementRef: rollButtonRef });
 
     return (
         dice.done

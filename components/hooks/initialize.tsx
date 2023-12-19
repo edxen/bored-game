@@ -3,11 +3,11 @@ import { useDispatch } from 'react-redux';
 import { setTurnPlayers } from '../reducers/turnReducer';
 import { TPlayer } from '../reducers/playersReducer';
 import { TTile, setTile } from '../reducers/tilesReducer';
-import getData from './getData';
+import GetData from './GetData';
 
-const initialize = () => {
+const Initialize = () => {
     const dispatch = useDispatch();
-    const { players, tiles } = getData();
+    const { players, tiles } = GetData();
 
     const addPlayersToBoard = (players: TPlayer[]) => {
         const addPlayerToTile = (player: TPlayer) => {
@@ -27,7 +27,7 @@ const initialize = () => {
     useEffect(() => {
         addPlayersToBoard(players);
         initializeTurnDisplay(players);
-    }, []);
+    }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 };
 
-export default initialize;
+export default Initialize;

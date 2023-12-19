@@ -1,4 +1,4 @@
-import getData from "../hooks/getData";
+import getData from "../hooks/GetData";
 
 const PlayerInformation = () => {
     const { turns, players } = getData();

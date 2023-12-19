@@ -1,8 +1,8 @@
-import getData from "../hooks/getData";
+import GetData from "../hooks/GetData";
 import { TTile } from "../reducers/tilesReducer";
 
 function Tiles() {
-    const { turns, tiles, getPlayerData } = getData();
+    const { turns, tiles, getPlayerData } = GetData();
 
     let tileClass = 'relative flex justify-center items-center min-w-[2.5rem] w-10 h-10 border border-slate-100';
 

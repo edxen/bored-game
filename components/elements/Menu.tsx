@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import PlayerCard, { TColorsList, bgColors, colorsList } from './menu/PlayerCard';
+import PlayerCard, { TColorsList, bgColors } from './menu/PlayerCard';
 
 import { TPlayer } from '../reducers/playersReducer';
 
+import GetData from '../hooks/GetData';
 import { setPlayers as setGamePlayers } from '../reducers/playersReducer';
 import { setTurnPlayers } from '../reducers/turnReducer';
 import { TTile, setTile } from '../reducers/tilesReducer';
-import getData from '../hooks/getData';
 
 type TNav = 'menu' | 'start';
 
@@ -53,7 +53,7 @@ const Menu = () => {
         }
     };
 
-    const { tiles } = getData();
+    const { tiles } = GetData();
 
     const addPlayersToBoard = (players: TPlayer[]) => {
         const addPlayerToTile = (player: TPlayer) => {
@@ -77,7 +77,7 @@ const Menu = () => {
             initializeTurnDisplay(players);
             setStart(false);
         }
-    }, [start]);
+    }, [start]);  // eslint-disable-line react-hooks/exhaustive-deps
 
     const flexCenter = 'flex justify-center items-center';
     const flexColCenter = `${flexCenter} flex-col`;

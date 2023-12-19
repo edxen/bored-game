@@ -1,9 +1,9 @@
-import getData from "../hooks/getData";
-import renderPage from "../hooks/renderPage";
+import GetData from "../hooks/GetData";
+import RenderPage from "../hooks/RenderPage";
 
 const WinBox = () => {
-    const { turns, players } = getData();
-    const { refresh } = renderPage();
+    const { turns, players } = GetData();
+    const { refresh } = RenderPage();
 
     const rankSuffix = ['nd', 'rd', 'th'];
     return (

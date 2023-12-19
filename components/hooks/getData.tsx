@@ -6,7 +6,7 @@ import { TPlayer } from "../reducers/playersReducer";
 import { TTile } from '../reducers/tilesReducer';
 import { TTurnState } from '../reducers/turnReducer';
 
-const getData = () => {
+const GetData = () => {
     const turns: TTurnState = useSelector((state: RootState) => state.turns);
     const dice: TDice = useSelector((state: RootState) => state.dice);
     const players: TPlayer[] = useSelector((state: RootState) => state.players);
@@ -35,4 +35,4 @@ const getData = () => {
     return { turns, dice, players, tiles, getPlayerData, getPlayerTile, getTile };
 };
 
-export default getData;
+export default GetData;

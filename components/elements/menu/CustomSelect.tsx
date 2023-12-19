@@ -45,7 +45,7 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
         if (value !== inputValue) {
             setInputValue(value);
         }
-    }, [value]);
+    }, [value, inputValue]);
 
     const showOptions = () => {
         setDisplay(true);

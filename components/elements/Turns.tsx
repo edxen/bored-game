@@ -1,8 +1,8 @@
-import getData from "../hooks/getData";
+import GetData from "../hooks/GetData";
 import { TPlayer } from "../reducers/playersReducer";
 
 const Turns = () => {
-    const { turns } = getData();
+    const { turns } = GetData();
 
     return (
         <>

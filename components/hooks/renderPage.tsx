@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 
-const renderPage = () => {
+const RenderPage = () => {
     const router = useRouter();
 
     const refresh = () => {
@@ -10,4 +10,4 @@ const renderPage = () => {
     return { refresh };
 };
 
-export default renderPage;
+export default RenderPage;

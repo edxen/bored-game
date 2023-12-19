@@ -28,7 +28,7 @@ const CustomInput = ({ props }: ICustomInputProps) => {
         if (value !== inputValue) {
             setInputValue(value);
         }
-    }, [value]);
+    }, [value, inputValue]);
 
     return (
         <label className="flex flex-col w-full">

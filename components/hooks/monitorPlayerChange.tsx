@@ -1,17 +1,16 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { TPlayer } from "../reducers/playersReducer";
 import { setTurnPlayers } from '../reducers/turnReducer';
-import getData from './getData';
+import GetData from './GetData';
 
-const monitorPlayerChange = () => {
+const MonitorPlayerChange = () => {
     const dispatch = useDispatch();
-    const { players } = getData();
+    const { players } = GetData();
 
     useEffect(() => {
         players.length === 1 && dispatch(setTurnPlayers(players));
-    }, [players]);
+    }, [players]);  // eslint-disable-line react-hooks/exhaustive-deps
 };
 
-export default monitorPlayerChange;
+export default MonitorPlayerChange;
