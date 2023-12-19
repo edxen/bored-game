@@ -39,7 +39,7 @@ const Menu = () => {
         if (nav === 'menu') {
             setNav('start');
         } else {
-            let availablePath = [1, 10, 19, 28];
+            let availablePath = [1, 10, 19, 28].sort(() => Math.random() - 0.5);
             setPlayers(prevPlayers => (
                 prevPlayers.map((prevPlayer, i) => (
                     {
