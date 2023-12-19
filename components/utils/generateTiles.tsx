@@ -17,10 +17,21 @@ const getPath = ({ row, rows, column, columns }: TNumberParams): number => { // 
     const isLeft = () => column === 0;
 
     let path = 0;
-    if (isTop()) path = column + 1;
-    else if (isRight()) path = columns + row;
-    else if (isBottom()) path = columns * 2 + (columns - column) - 2;
-    else if (isLeft()) path = (columns * 3) + (rows - row) - 3;
+
+    switch (true) {
+        case isTop():
+            path = column;
+            break;
+        case isRight():
+            path = columns + row;
+            break;
+        case isBottom():
+            path = columns * 2 + (columns - column);
+            break;
+        case isLeft():
+            path = (columns * 3) + (rows - row);
+            break;
+    }
     return path;
 };
 

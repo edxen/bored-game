@@ -30,7 +30,7 @@ function Tiles() {
                             <GenerateTileWithIcon type={tile.type} />
                             {renderOccupants(tile.occupants)}
                             <div className='absolute z-0'>
-                                {tile.path ? tile.path : ''}
+                                {tile.edge ? tile.path : ''}
                             </div>
                         </div>
                     </div>
