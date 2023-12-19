@@ -35,15 +35,20 @@ const dynamicallyAssignPathSet = () => {
     const { columns } = config.tiles.size;
 
     Array.from({ length: 4 }).map((_, i) => {
-        const addTypePerLine = (key: Exclude<TTileType, 'plain'>, index: number) => {
+        const addTypeEachLine = (key: Exclude<TTileType, 'plain'>, targetPaths: number[]) => {
             if (!tilePath[key]) tilePath[key] = [];
-            tilePath[key]?.push((((columns * i) - i)) + index);
+            targetPaths.forEach((targetPath) => tilePath[key]?.push((((columns * i) - i)) + targetPath));
         };
         // add below using addPathToSet | check TTileType for allowed types
-        // first arg: type id, second arg: tile location per line 1 - 10
+        // first arg: type id | second arg: array for tile location per line 1 - 10, add to repeat
         // added type will mirror on all sides
 
-        addTypePerLine('flag', 1);
+        addTypeEachLine('flag', [1]);
+        addTypeEachLine('portal', [6]);
+        addTypeEachLine('dice', [2, 5, 7, 10]);
+        addTypeEachLine('stop', [3, 9]);
+        addTypeEachLine('safe', [4, 8]);
+
     });
 };
 

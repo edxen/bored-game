@@ -4,7 +4,7 @@ import GenerateTileWithIcon from "./tiles/GenerateTileWithIcon";
 function Tiles() {
     const { turns, tiles, getPlayerData } = GetData();
 
-    let tileClass = 'relative flex justify-center items-center min-w-[2.5rem] w-10 h-10 border';
+    let tileClass = 'p-4 relative flex justify-center items-center min-w-[2.5rem] w-10 h-10 rounded-md border';
 
     const renderOccupants = (occupants: string[]) => {
         return occupants.map((occupant) => {
@@ -26,12 +26,12 @@ function Tiles() {
             {
                 tiles.map((tile, i) => (
                     <div className="w-full flex justify-center items-center" key={i}>
-                        <div className={`${tileClass} ${tile.edge ? 'bg-slate-200' : ''}`}>
+                        <div className={`${tileClass} ${tile.edge ? 'bg-slate-100' : ''}`}>
                             <GenerateTileWithIcon type={tile.type} />
                             {renderOccupants(tile.occupants)}
-                            <div className='absolute z-0'>
+                            {/* <div className='absolute z-0'>
                                 {tile.edge ? tile.path : ''}
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 ))
