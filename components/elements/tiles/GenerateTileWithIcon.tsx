@@ -5,7 +5,11 @@ import { TTile } from "@/components/reducers/tilesReducer";
 type TImageRefArr = Partial<{ [key in TTile['type']]: string; }>;
 
 const iconsList: TImageRefArr = {
-    portal: 'wormhole'
+    portal: 'portal',
+    dice: 'dice',
+    flag: 'flag',
+    safe: 'safe',
+    stop: 'stop'
 };
 
 interface IGenerateTileWithIcon {

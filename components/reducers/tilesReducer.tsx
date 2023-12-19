@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import generateTiles from "../utils/generateTiles";
 
 export type TTile = {
-    type: 'plain' | 'portal',
+    type: 'plain' | 'portal' | 'dice' | 'flag' | 'safe' | 'stop';
     occupants: string[];
     edge: boolean;
     path: number;
