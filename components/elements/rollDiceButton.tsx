@@ -25,7 +25,7 @@ const RollDiceButton = () => {
         const rollResult = force ? force : randomize();
         const countInterval = 10;
         let count = force ? countInterval : 0;
-        dispatch(setDice({ done: false }));
+        dispatch(setDice({ started: true, done: false }));
 
         const playerData = getPlayerData(turns.players[0].id);
         if (playerData) {
@@ -102,7 +102,7 @@ const RollDiceButton = () => {
     const [countTurn, setCountTurn] = useState(1);
 
     useEffect(() => {
-        if (dice.done) {
+        if (dice.started && dice.done) {
             dispatch(nextTurn());
             if (countTurn >= players.length) {
                 setCountTurn(1);
