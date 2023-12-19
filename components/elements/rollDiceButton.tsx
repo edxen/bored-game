@@ -28,17 +28,18 @@ const RollDiceButton = () => {
         dispatch(setDice({ done: false }));
 
         const playerData = getPlayerData(turns[0].id);
-
-        const rollingInterval = setInterval(() => {
-            if (count !== countInterval) {
-                dispatch(setDice({ display: randomize() }));
-                count++;
-            } else {
-                clearInterval(rollingInterval);
-                dispatch(setDice({ display: 0, current: rollResult, move: true }));
-                dispatch(setPlayer({ id: playerData.id, last_path: playerData.path, roll: rollResult }));
-            }
-        }, 100);
+        if (playerData) {
+            const rollingInterval = setInterval(() => {
+                if (count !== countInterval) {
+                    dispatch(setDice({ display: randomize() }));
+                    count++;
+                } else {
+                    clearInterval(rollingInterval);
+                    dispatch(setDice({ display: 0, current: rollResult, move: true }));
+                    dispatch(setPlayer({ id: playerData.id, last_path: playerData.path, roll: rollResult }));
+                }
+            }, 100);
+        }
     };
 
     const triggerOnMove = () => {
@@ -48,55 +49,61 @@ const RollDiceButton = () => {
             if (dice.move) {
                 const playerData = getPlayerData(turns[0].id);
                 const playerTile = getPlayerTile(turns[0].id);
-                moveInterval = setInterval(() => {
-                    if (playerData.last_path + playerData.roll !== playerData.path) {
-                        playerMove(playerData);
-                    } else {
-                        clearInterval(moveInterval);
+                if (playerData && playerTile) {
+                    moveInterval = setInterval(() => {
+                        if (playerData.last_path + playerData.roll !== playerData.path) {
+                            playerMove(playerData);
+                        } else {
+                            clearInterval(moveInterval);
 
-                        const removeOtherOccupants = (tile: TTile) => {
-                            if (tile.occupants.length > 1 || (tile.occupants.length && tile.type === 'portal')) {
-                                const filteredPlayers = tile.occupants.filter((id: string) => id !== playerData.id);
-                                const removeFilteredPlayers = players.filter(player => !filteredPlayers.includes(player.id));
-                                dispatch(setPlayers(removeFilteredPlayers));
-                                dispatch(setTurn(removeFilteredPlayers));
-                                dispatch(setTile({ index: tile.index, key: 'occupants', value: [playerData.id] }));
+                            const removeOtherOccupants = (tile: TTile) => {
+                                if (tile.occupants.length > 1 || (tile.occupants.length && tile.type === 'portal')) {
+                                    const filteredPlayers = tile.occupants.filter((id: string) => id !== playerData.id);
+                                    const removeFilteredPlayers = players.filter(player => !filteredPlayers.includes(player.id));
+                                    dispatch(setPlayers(removeFilteredPlayers));
+                                    dispatch(setTile({ index: tile.index, key: 'occupants', value: [playerData.id] }));
 
-                                if (tile.occupants.length && tile.type === 'portal') {
-                                    dispatch(setPlayer({ id: playerData.id, path: tile.path }));
+                                    if (tile.occupants.length && tile.type === 'portal') {
+                                        dispatch(setPlayer({ id: playerData.id, path: tile.path }));
+                                    }
+                                }
+                            };
+                            removeOtherOccupants(playerTile);
+
+                            if (playerTile.type === 'portal') {
+                                const warpTo = (nextPath: TTile['path']) => {
+                                    const nextTile = getTile({ path: nextPath });
+                                    movePlayerToNextTile(playerData, nextTile.path);
+                                    dispatch(setPlayer({ id: playerData.id, index: nextTile.index, path: nextTile.path }));
+
+                                    const portalTile = getTile({ path: nextPath });
+                                    removeOtherOccupants(portalTile);
+                                };
+
+                                switch (playerTile.path) {
+                                    case 6: warpTo(24); break;
+                                    case 15: warpTo(33); break;
+                                    case 24: warpTo(6); break;
+                                    case 33: warpTo(15); break;
                                 }
                             }
-                        };
-                        removeOtherOccupants(playerTile);
 
-                        if (playerTile.type === 'portal') {
-                            const warpTo = (nextPath: TTile['path']) => {
-                                const nextTile = getTile({ path: nextPath });
-                                movePlayerToNextTile(playerData, nextTile.path);
-                                dispatch(setPlayer({ id: playerData.id, index: nextTile.index, path: nextTile.path }));
-
-                                const portalTile = getTile({ path: nextPath });
-                                removeOtherOccupants(portalTile);
-                            };
-
-                            switch (playerTile.path) {
-                                case 6: warpTo(24); break;
-                                case 15: warpTo(33); break;
-                                case 24: warpTo(6); break;
-                                case 33: warpTo(15); break;
-                            }
+                            dispatch(setDice({ move: false, done: true }));
                         }
-
-                        dispatch(setDice({ move: false, done: true }));
-                        dispatch(nextTurn());
-                    }
-                }, 200);
+                    }, 200);
+                }
             }
 
             return () => clearInterval(moveInterval);
         }, [dice.move, players.find(p => p.id === turns[0]?.id)]); // eslint-disable-line react-hooks/exhaustive-deps
     };
     triggerOnMove();
+
+    useEffect(() => {
+        if (dice.done) {
+            dispatch(nextTurn());
+        }
+    }, [dice.done]);
 
     const movePlayerToNextTile = (playerData: TPlayer, nextPath: TTile['path']) => {
         const playerTile = getPlayerTile(playerData.id);
@@ -139,6 +146,10 @@ const RollDiceButton = () => {
         if (turns.length > 1 && turns[0].type === 'computer') {
             diceRoll();
         }
+        if (turns.length !== players.length) {
+            const remainingPlayers = turns.filter(turn => players.some(player => player.id === turn.id));
+            dispatch(setTurn(remainingPlayers));
+        }
     }, [turns]); // eslint-disable-line react-hooks/exhaustive-deps
 
     setElementOnFocus({ condition: dice.done, elementRef: rollButtonRef });
@@ -159,7 +170,7 @@ const RollDiceButton = () => {
             </div>
             :
             <div className='text-center text-lg border rounded-md px-4 py-2 w-full'>
-                {dice.display ? `${turns[0].name} rolling ${dice.display}` : `${turns[0].name} rolled ${dice.current}`}
+                {dice.display ? `${turns[0].name} rolling ${dice.display}` : `${turns.length && turns[0].name} rolled ${dice.current}`}
             </div>
 
     );

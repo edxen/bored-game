@@ -14,10 +14,10 @@ const allhumans = [
 ];
 
 const config = {
-    enableSpecificDice: true,
+    enableSpecificDice: false,
     customPlayer: {
-        enabled: true,
-        state: humanvscpu as TPlayer[]
+        enabled: false,
+        state: allhumans as TPlayer[]
     }
 };
 
