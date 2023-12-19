@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { setDice } from '../reducers/diceReducer';
@@ -9,7 +9,7 @@ import setElementOnFocus from '../hooks/setElementOnFocus';
 import getData from '../hooks/getData';
 
 import config from '../config';
-import { nextTurn, setTurn } from '../reducers/turnReducer';
+import { nextTurn, setTurnPlayers } from '../reducers/turnReducer';
 
 const RollDiceButton = () => {
     const dispatch = useDispatch();
@@ -27,7 +27,7 @@ const RollDiceButton = () => {
         let count = force ? countInterval : 0;
         dispatch(setDice({ done: false }));
 
-        const playerData = getPlayerData(turns[0].id);
+        const playerData = getPlayerData(turns.players[0].id);
         if (playerData) {
             const rollingInterval = setInterval(() => {
                 if (count !== countInterval) {
@@ -47,8 +47,8 @@ const RollDiceButton = () => {
             let moveInterval: NodeJS.Timeout;
 
             if (dice.move) {
-                const playerData = getPlayerData(turns[0].id);
-                const playerTile = getPlayerTile(turns[0].id);
+                const playerData = getPlayerData(turns.players[0].id);
+                const playerTile = getPlayerTile(turns.players[0].id);
                 if (playerData && playerTile) {
                     moveInterval = setInterval(() => {
                         if (playerData.last_path + playerData.roll !== playerData.path) {
@@ -95,7 +95,7 @@ const RollDiceButton = () => {
             }
 
             return () => clearInterval(moveInterval);
-        }, [dice.move, players.find(p => p.id === turns[0]?.id)]); // eslint-disable-line react-hooks/exhaustive-deps
+        }, [dice.move, players.find(p => p.id === turns.players[0]?.id)]); // eslint-disable-line react-hooks/exhaustive-deps
     };
     triggerOnMove();
 
@@ -143,12 +143,12 @@ const RollDiceButton = () => {
     };
 
     useEffect(() => {
-        if (turns.length > 1 && turns[0].type === 'computer') {
+        if (turns.players.length > 1 && turns.players[0].type === 'computer') {
             diceRoll();
         }
-        if (turns.length !== players.length) {
-            const remainingPlayers = turns.filter(turn => players.some(player => player.id === turn.id));
-            dispatch(setTurn(remainingPlayers));
+        if (turns.players.length !== players.length) {
+            const remainingPlayers = turns.players.filter(turn => players.some(player => player.id === turn.id));
+            dispatch(setTurnPlayers(remainingPlayers));
         }
     }, [turns]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -170,9 +170,8 @@ const RollDiceButton = () => {
             </div>
             :
             <div className='text-center text-lg border rounded-md px-4 py-2 w-full'>
-                {dice.display ? `${turns[0].name} rolling ${dice.display}` : `${turns.length && turns[0].name} rolled ${dice.current}`}
+                {dice.display ? `${turns.players[0].name} rolling ${dice.display}` : `${turns.players.length && turns.players[0].name} rolled ${dice.current}`}
             </div>
-
     );
 };
 

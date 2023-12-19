@@ -1,21 +1,49 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TPlayer } from "./playersReducer";
 
-const initialState: TPlayer[] = [];
+export type TTurnState = {
+    players: TPlayer[];
+    rounds: number;
+    count: number;
+};
+
+const initialState: TTurnState = {
+    players: [],
+    rounds: 0,
+    count: 0,
+};
 
 const turnsSlice = createSlice({
     name: 'turns',
     initialState,
     reducers: {
-        setTurn: (state, action) => {
-            return [...action.payload];
-        },
         nextTurn: (state) => {
-            const [first, ...rest] = state;
-            return [...rest, first];
+            const [first, ...rest] = state.players;
+            return {
+                ...state,
+                players: [...rest, first]
+            };
+        },
+        setTurnPlayers: (state, action: PayloadAction<TPlayer[]>) => {
+            return {
+                ...state,
+                players: action.payload
+            };
+        },
+        increaseTurnCount: (state) => {
+            return {
+                ...state,
+                count: state.count + 1
+            };
+        },
+        increaseRoundCount: (state) => {
+            return {
+                ...state,
+                round: state.count + 1
+            };
         }
     }
 });
 
-export const { setTurn, nextTurn } = turnsSlice.actions;
+export const { setTurnPlayers, nextTurn, increaseTurnCount } = turnsSlice.actions;
 export default turnsSlice.reducer;

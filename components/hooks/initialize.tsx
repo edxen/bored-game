@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setTurn } from '../reducers/turnReducer';
+import { setTurnPlayers } from '../reducers/turnReducer';
 import { TPlayer } from '../reducers/playersReducer';
 import { TTile, setTile } from '../reducers/tilesReducer';
 import getData from './getData';
@@ -21,7 +21,7 @@ const initialize = () => {
     };
 
     const initializeTurnDisplay = (players: TPlayer[]) => {
-        dispatch(setTurn(players));
+        dispatch(setTurnPlayers(players));
     };
 
     useEffect(() => {

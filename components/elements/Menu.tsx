@@ -5,7 +5,7 @@ import PlayerCard, { TColorsList, bgColors, colorsList } from './menu/PlayerCard
 import { TPlayer } from '../reducers/playersReducer';
 
 import { setPlayers as setGamePlayers } from '../reducers/playersReducer';
-import { setTurn } from '../reducers/turnReducer';
+import { setTurnPlayers } from '../reducers/turnReducer';
 import { TTile, setTile } from '../reducers/tilesReducer';
 import getData from '../hooks/getData';
 
@@ -67,7 +67,7 @@ const Menu = () => {
     };
 
     const initializeTurnDisplay = (players: TPlayer[]) => {
-        dispatch(setTurn(players));
+        dispatch(setTurnPlayers(players));
     };
 
     useEffect(() => {
