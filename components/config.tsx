@@ -22,8 +22,8 @@ const allcomputers = [
 const config = {
     enableSpecificDice: false,
     customPlayer: {
-        enabled: false,
-        state: allcomputers as TPlayer[]
+        enabled: true,
+        state: humanvscpu as TPlayer[]
     },
     moveSpeed: 200, // 150 - default
     rollSpeed: 150 // 150 - default
