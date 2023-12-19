@@ -2,7 +2,7 @@ import getData from "../hooks/getData";
 import { TTile } from "../reducers/tilesReducer";
 
 function Tiles() {
-    const { tiles, getPlayerData } = getData();
+    const { turns, tiles, getPlayerData } = getData();
 
     let tileClass = 'relative flex justify-center items-center min-w-[2.5rem] w-10 h-10 border border-slate-100';
 
@@ -18,7 +18,7 @@ function Tiles() {
                 const { id, color, name } = playerData;
 
                 return (
-                    <div className={`${tileClass} ${color} text-white z-10`} key={id}>
+                    <div className={`${tileClass} ${color} ${turns[0].id === id ? 'border-4 border-red-800' : ''} text-white z-10`} key={id}>
                         {name}
                     </div>
                 );

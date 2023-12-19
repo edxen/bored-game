@@ -39,11 +39,12 @@ const Menu = () => {
         if (nav === 'menu') {
             setNav('start');
         } else {
+            let availablePath = [1, 10, 19, 28];
             setPlayers(prevPlayers => (
                 prevPlayers.map((prevPlayer, i) => (
                     {
                         ...prevPlayer,
-                        path: (i === 0 ? 1 : (i * 9) - i),
+                        path: availablePath[i],
                         color: bgColors[prevPlayer.color]
                     }
                 ))

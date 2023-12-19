@@ -1,13 +1,13 @@
 import getData from "../hooks/getData";
 
 const PlayerInformation = () => {
-    const { players } = getData();
+    const { turns, players } = getData();
 
     return (
         <>
             {
                 players.map((player, i) => (
-                    <div className={`${player.color} flex flex-col justify-center items-center border p-3`} key={i}>
+                    <div className={`${player.color} flex flex-col justify-center items-center border p-3 ${turns[0].id === player.id ? 'border-4 border-black' : ''}`} key={i}>
                         <div className='font-bold'>{player.name}</div>
                         <div>
                             {Object.entries(player).map(([key, value]) => (
