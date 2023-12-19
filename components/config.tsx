@@ -12,11 +12,18 @@ const allhumans = [
     { id: 'playerd', type: 'human', name: 'P4', path: 28, color: 'bg-green-300' },
 ];
 
+const allcomputers = [
+    { id: 'playera', type: 'computer', name: 'P1', path: 1, color: 'bg-red-300' },
+    { id: 'playerb', type: 'computer', name: 'P2', path: 10, color: 'bg-blue-300' },
+    { id: 'playerc', type: 'computer', name: 'P3', path: 19, color: 'bg-orange-300' },
+    { id: 'playerd', type: 'computer', name: 'P4', path: 28, color: 'bg-green-300' },
+];
+
 const config = {
     enableSpecificDice: false,
     customPlayer: {
-        enabled: false,
-        state: allhumans as TPlayer[]
+        enabled: true,
+        state: allcomputers as TPlayer[]
     },
     moveSpeed: 0, // 100
     rollSpeed: 0 // 100
