@@ -13,7 +13,7 @@ const PlayerInformation = () => {
                             {Object.entries(player).map(([key, value]) => (
                                 ['type', 'color', 'path', 'roll', 'last_path'].includes(key) &&
                                 <div key={key + value}>
-                                    {`${key}: ${value.toString().replace('bg-', '').replace('-300', '')}`}
+                                    {`${key}: ${value && value.toString().replace('bg-', '').replace('-300', '')}`}
                                 </div>
                             ))}
                         </div>
