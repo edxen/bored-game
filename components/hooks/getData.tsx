@@ -12,10 +12,6 @@ const GetData = () => {
     const players: TPlayer[] = useSelector((state: RootState) => state.players);
     const tiles: TTile[] = useSelector((state: RootState) => state.tiles);
 
-    const getTurns = () => {
-        return turns;
-    };
-
     const getPlayerData = (id: string) => {
         return players.find(p => p.id === id) as Required<TPlayer>;
     };
