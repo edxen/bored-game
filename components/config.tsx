@@ -26,7 +26,16 @@ const config = {
         state: humanvscpu as TPlayer[]
     },
     moveSpeed: 200, // 150 - default
-    rollSpeed: 150 // 150 - default
+    rollSpeed: 150, // 150 - default,
+    tiles: {
+        gridColumns: 'grid-cols-11', // only update the number to change column size
+        size: {
+            columns: 0,
+            rows: 11
+        }
+    }
 };
+const updateColumnsBasedOnGridColumns = () => config.tiles.size.columns = Number(config.tiles.gridColumns.replace('grid-cols-', ''));
+updateColumnsBasedOnGridColumns();
 
 export default config;

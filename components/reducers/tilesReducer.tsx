@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import generateTiles from "../utils/generateTiles";
+import config from "../config";
 
 export type TTile = {
     type: 'plain' | 'portal' | 'dice' | 'flag' | 'safe' | 'stop';
@@ -19,7 +20,7 @@ export type TilePayload<K extends keyof TTile> = {
 
 const tileSlice = createSlice({
     name: 'tiles',
-    initialState: generateTiles({ columns: 10, rows: 10 }),
+    initialState: generateTiles({ ...config.tiles.size }),
     reducers: {
         setTile: <K extends keyof TTile>(state: TileState, action: PayloadAction<TilePayload<K>>) => {
             const { index, key, value } = action.payload;

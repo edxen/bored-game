@@ -8,6 +8,7 @@ import Menu from './elements/Menu';
 import RollDiceButton from './elements/RollDiceButton';
 import PlayerInformation from './elements/PlayerInformation';
 import WinBox from './elements/WinBox';
+import config from './config';
 
 export default function Game() {
     const { players } = getData();
@@ -31,7 +32,7 @@ export default function Game() {
                         </div>
                         :
                         <>
-                            <div className="h-full w-full grid gap-4 grid-cols-10 justify-center items-center">
+                            <div className={`h-full w-full grid gap-4 ${config.tiles.gridColumns} justify-center items-center`}>
                                 <Tiles />
                             </div>
                             <div className="absolute top-0 left-0 h-full w-full flex flex-col justify-center items-center">
