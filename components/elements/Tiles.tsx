@@ -1,15 +1,10 @@
 import GetData from "../hooks/GetData";
-import { TTile } from "../reducers/tilesReducer";
+import GenerateTileWithIcon from "./tiles/GenerateTileWithIcon";
 
 function Tiles() {
     const { turns, tiles, getPlayerData } = GetData();
 
     let tileClass = 'relative flex justify-center items-center min-w-[2.5rem] w-10 h-10 border border-slate-100';
-
-    const typeClasses: Record<TTile['type'], string> = {
-        plain: 'bg-slate-200',
-        portal: 'portal-icon'
-    };
 
     const renderOccupants = (occupants: string[]) => {
         return occupants.map((occupant) => {
@@ -31,7 +26,8 @@ function Tiles() {
             {
                 tiles.map((tile, i) => (
                     <div className="w-full flex justify-center items-center" key={i}>
-                        <div className={tile.edge ? `${tileClass} ${typeClasses[tile.type]}` : `${tileClass}`}>
+                        <div className={`${tileClass} ${tile.edge ? 'bg-slate-200' : ''}`}>
+                            <GenerateTileWithIcon type={tile.type} />
                             {renderOccupants(tile.occupants)}
                             <div className='absolute z-0'>
                                 {tile.path ? tile.path : ''}

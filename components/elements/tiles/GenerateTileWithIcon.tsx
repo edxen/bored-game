@@ -1,29 +1,34 @@
+import React from 'react';
 import Image from "next/image";
-
 import { TTile } from "@/components/reducers/tilesReducer";
 
-type TTileTypeExcludePlain = Exclude<TTile['type'], 'plain'>;
-type TImageRefArr = {
-    [key in TTileTypeExcludePlain]: string;
-};
+type TImageRefArr = Partial<{ [key in TTile['type']]: string; }>;
 
-const imageRefArr: TImageRefArr = {
+const iconsList: TImageRefArr = {
     portal: 'wormhole'
 };
 
-export const hasIconForTileType = (tile: TTile): boolean => {
-    return Object.keys(imageRefArr).includes(tile.type);
-};
+interface IGenerateTileWithIcon {
+    type: TTile['type'],
+    iconsListRef?: TImageRefArr;
+}
+const GenerateTileWithIcon = ({ type, iconsListRef = iconsList }: IGenerateTileWithIcon) => {
+    if (!iconsListRef.hasOwnProperty(type)) {
+        if (type !== 'plain') { // plain is expected to not have icon at the time of writing
+            console.error(`icon not found for type: ${type}`);
+        }
+        return null;
+    }
 
-const GenerateTileWithIcon = ({ tile }: { tile: TTile; }) => {
+    const typeRef = iconsList[type];
+
     return (
-        <>
-            {
-                hasIconForTileType(tile) &&
-                <Image className="absolute" src={`/images/icons/icon-${imageRefArr[tile.type as TTileTypeExcludePlain]}.png`} alt={tile.type} width="150" height="150"></Image>
-            }
-        </>
-
+        <Image
+            className="absolute"
+            src={`/images/icons/icon-${typeRef}.png`}
+            alt={type} width="150"
+            height="150"
+        />
     );
 };
 
