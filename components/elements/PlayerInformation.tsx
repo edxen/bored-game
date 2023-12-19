@@ -7,7 +7,7 @@ const PlayerInformation = () => {
         <>
             {
                 players.map((player, i) => (
-                    <div className={`${player.color} border p-3`} key={i}>
+                    <div className={`${player.color} flex flex-col justify-center items-center border p-3`} key={i}>
                         <div className='font-bold'>{player.name}</div>
                         <div>
                             {Object.entries(player).map(([key, value]) => (
