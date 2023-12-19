@@ -1,15 +1,19 @@
-import { useState } from 'react';
-
-import PlayerCard, { colorsList } from './menu/PlayerCard';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import PlayerCard, { TColorsList, bgColors, colorsList } from './menu/PlayerCard';
 
 import { TPlayer } from '../reducers/playersReducer';
 
+import { setPlayers as setGamePlayers } from '../reducers/playersReducer';
+import { setTurn } from '../reducers/turnReducer';
+import { TTile, setTile } from '../reducers/tilesReducer';
+import getData from '../hooks/getData';
+
 type TNav = 'menu' | 'start';
 
-type TColors = typeof colorsList[number] extends infer C ? C extends string ? C : never : never;
 
 interface TDefaultPlayer extends Pick<TPlayer, 'name' | 'type'> {
-    color: TColors;
+    color: TColorsList;
 }
 
 export const defaultPlayer = ({ name, type, color }: TDefaultPlayer): TPlayer => {
@@ -20,14 +24,59 @@ export const defaultPlayer = ({ name, type, color }: TDefaultPlayer): TPlayer =>
 export const maxPlayer = Array.from({ length: 4 });
 
 const Menu = () => {
+    const dispatch = useDispatch();
     const [nav, setNav] = useState<TNav>('menu');
-
     const [players, setPlayers] = useState<TPlayer[]>(
         [
             defaultPlayer({ name: 'PL1', type: 'human', color: 'red' }),
             defaultPlayer({ name: 'AI1', type: 'computer', color: 'blue' })
         ]
     );
+
+    const [start, setStart] = useState(false);
+
+    const handleStart = () => {
+        if (nav === 'menu') {
+            setNav('start');
+        } else {
+            setPlayers(prevPlayers => (
+                prevPlayers.map((prevPlayer, i) => (
+                    {
+                        ...prevPlayer,
+                        path: (i === 0 ? 1 : (i * 9) - i),
+                        color: bgColors[prevPlayer.color]
+                    }
+                ))
+            ));
+            setStart(true);
+        }
+    };
+
+    const { tiles } = getData();
+
+    const addPlayersToBoard = (players: TPlayer[]) => {
+        const addPlayerToTile = (player: TPlayer) => {
+            const tile = tiles.find((tile) => tile.path === player.path) as TTile;
+            if (!tile.occupants.includes(player.id)) {
+                const updatedOccupants = [...tile.occupants, player.id];
+                dispatch(setTile({ index: tile.index, key: 'occupants', value: updatedOccupants }));
+            }
+        };
+        players.map((player) => addPlayerToTile(player));
+    };
+
+    const initializeTurnDisplay = (players: TPlayer[]) => {
+        dispatch(setTurn(players));
+    };
+
+    useEffect(() => {
+        if (start) {
+            dispatch(setGamePlayers(players));
+            addPlayersToBoard(players);
+            initializeTurnDisplay(players);
+            setStart(false);
+        }
+    }, [start]);
 
     const flexCenter = 'flex justify-center items-center';
     const flexColCenter = `${flexCenter} flex-col`;
@@ -40,7 +89,7 @@ const Menu = () => {
                         <div className={`transition-all delay-250 font-bold ${nav === 'start' ? 'visible opacity-100 px-4 py-2 flex-grow' : 'invisible opacity-0 w-0'}`}>Players</div>
                         {
                             players.length > 1 &&
-                            <div className='px-4 py-2 bg-white text-black font-bold border rounded-md hover:bg-slate-100 cursor-pointer whitespace-nowrap' onClick={() => setNav(nav === 'menu' ? 'start' : 'menu')}>Start Game</div>
+                            <div className='px-4 py-2 bg-white text-black font-bold border rounded-md hover:bg-slate-100 cursor-pointer whitespace-nowrap' onClick={handleStart}>Start Game</div>
                         }
                     </div>
                 </div>

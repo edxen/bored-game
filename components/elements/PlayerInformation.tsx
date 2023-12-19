@@ -11,9 +11,9 @@ const PlayerInformation = () => {
                         <div className='font-bold'>{player.name}</div>
                         <div>
                             {Object.entries(player).map(([key, value]) => (
-                                !['type'].includes(key) &&
+                                ['type', 'color', 'path', 'roll'].includes(key) &&
                                 <div key={key + value}>
-                                    {`${key}: ${value}`}
+                                    {`${key}: ${value.toString().replace('bg-', '').replace('-300', '')}`}
                                 </div>
                             ))}
                         </div>

@@ -9,7 +9,7 @@ import setElementOnFocus from '../hooks/setElementOnFocus';
 import getData from '../hooks/getData';
 
 import config from '../config';
-import { nextTurn } from '../reducers/turnReducer';
+import { nextTurn, setTurn } from '../reducers/turnReducer';
 
 const RollDiceButton = () => {
     const dispatch = useDispatch();
