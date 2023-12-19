@@ -1,3 +1,4 @@
+import config from "../config";
 import { TTile } from "../reducers/tilesReducer";
 
 type TNumberParams = { [key: string]: number; };
@@ -25,14 +26,32 @@ const getPath = (vector: TNumberParams): number => {
 };
 
 type TTileType = TTile['type'];
+const tilePath: Partial<Record<Exclude<TTileType, 'plain'>, number[]>> = {
+    // add manually here
+    // can manually add using dynamicallyAssignPathSet
+};
+
+const dynamicallyAssignPathSet = () => {
+    const { columns } = config.tiles.size;
+
+    Array.from({ length: 4 }).map((_, i) => {
+        const addTypePerLine = (key: Exclude<TTileType, 'plain'>, index: number) => {
+            if (!tilePath[key]) tilePath[key] = [];
+            tilePath[key]?.push((((columns * i) - i)) + index);
+        };
+        // add below using addPathToSet | check TTileType for allowed types
+        // first arg: type id, second arg: tile location per line 1 - 10
+        // added type will mirror on all sides
+
+        addTypePerLine('flag', 1);
+    });
+};
+
 const assignTypeToPath = (path: number): TTileType => {
     let type: Partial<TTileType> = 'plain';
+    dynamicallyAssignPathSet();
 
-    const pathSet: Record<Exclude<TTileType, 'plain'>, number[]> = {
-        portal: [6, 15, 24, 33]
-    };
-
-    Object.entries(pathSet).forEach(([key, value]) => value.includes(path) && (type = key as TTileType));
+    Object.entries(tilePath).forEach(([key, value]) => value.includes(path) && (type = key as TTileType));
 
     return type;
 };
