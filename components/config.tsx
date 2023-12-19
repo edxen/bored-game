@@ -1,7 +1,7 @@
 import { TPlayer } from "./reducers/playersReducer";
 
 const config = {
-    enableSpecificDice: true,
+    enableSpecificDice: false,
     customPlayer: {
         enabled: false,
         state: [

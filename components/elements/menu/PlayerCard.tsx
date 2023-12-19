@@ -37,14 +37,12 @@ const PlayerCard = ({ playerState }: TPlayerState) => {
     const id = players[index]?.id;
     playerState.id = id;
 
-
-
     const selectedColor = players.find(player => player.id === id)?.color || '';
     const bgClass = bgColors[selectedColor as keyof typeof bgColors];
 
     const cardClass = 'min-h-[322px] flex flex-col gap-4 p-4 justify-center items-center border rounded-md';
     const transitionClass = `
-        ${players.length === 0 || (players.length === 2 && index === 2) ? 'col-span-2' : ''}
+        ${players.length === 0 || (players.length === 2 && index === 2) ? 'sm:col-span-2' : ''}
         transition-all
         ${id
             ? `${bgClass} flip-360`
