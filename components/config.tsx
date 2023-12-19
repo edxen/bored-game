@@ -25,8 +25,8 @@ const config = {
         enabled: true,
         state: allcomputers as TPlayer[]
     },
-    moveSpeed: 0, // 100
-    rollSpeed: 0 // 100
+    moveSpeed: 250, // 100
+    rollSpeed: 100 // 100
 };
 
 export default config;

@@ -18,7 +18,7 @@ function Tiles() {
                 const { id, color, name } = playerData;
 
                 return (
-                    <div className={`${tileClass} ${color} ${turns.players[0].id === id ? 'border-4 border-red-800' : ''} text-white z-10`} key={id}>
+                    <div className={`${tileClass} ${color} ${turns.players.length && turns.players[0].id === id ? 'border-4 border-red-800' : ''} text-white z-10`} key={id}>
                         {name}
                     </div>
                 );

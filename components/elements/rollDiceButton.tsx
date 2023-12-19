@@ -9,7 +9,7 @@ import setElementOnFocus from '../hooks/setElementOnFocus';
 import getData from '../hooks/getData';
 
 import config from '../config';
-import { nextTurn, setTurnPlayers } from '../reducers/turnReducer';
+import { increaseRoundCount, increaseTurnCount, nextTurn, setTurnPlayers } from '../reducers/turnReducer';
 
 const RollDiceButton = () => {
     const dispatch = useDispatch();
@@ -99,9 +99,17 @@ const RollDiceButton = () => {
     };
     triggerOnMove();
 
+    const [countTurn, setCountTurn] = useState(1);
+
     useEffect(() => {
         if (dice.done) {
             dispatch(nextTurn());
+            if (countTurn >= players.length) {
+                setCountTurn(1);
+                dispatch(increaseRoundCount());
+            }
+            setCountTurn(prevCount => prevCount + 1);
+            dispatch(increaseTurnCount());
         }
     }, [dice.done]);
 

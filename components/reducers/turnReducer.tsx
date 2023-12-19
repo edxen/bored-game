@@ -3,14 +3,14 @@ import { TPlayer } from "./playersReducer";
 
 export type TTurnState = {
     players: TPlayer[];
-    rounds: number;
-    count: number;
+    round: number;
+    turn: number;
 };
 
 const initialState: TTurnState = {
     players: [],
-    rounds: 0,
-    count: 0,
+    round: 1,
+    turn: 1,
 };
 
 const turnsSlice = createSlice({
@@ -33,17 +33,17 @@ const turnsSlice = createSlice({
         increaseTurnCount: (state) => {
             return {
                 ...state,
-                count: state.count + 1
+                turn: state.turn + 1
             };
         },
         increaseRoundCount: (state) => {
             return {
                 ...state,
-                round: state.count + 1
+                round: state.round + 1
             };
         }
     }
 });
 
-export const { setTurnPlayers, nextTurn, increaseTurnCount } = turnsSlice.actions;
+export const { setTurnPlayers, nextTurn, increaseTurnCount, increaseRoundCount } = turnsSlice.actions;
 export default turnsSlice.reducer;

@@ -9,7 +9,7 @@ const Turns = () => {
             {
                 !turns.players.length ? '' :
                     <div className='flex justify-center items-center gap-2 my-2'>
-                        <div className='font-bold'>Turns :</div>
+                        <div className='font-bold'>Round {turns.round} | Turns {turns.turn} :</div>
                         {turns.players.map((player: TPlayer, i) => (
                             <div className='flex gap-2' key={player.id}>
                                 <div>{'>>'}</div>
