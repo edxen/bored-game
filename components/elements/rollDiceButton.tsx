@@ -158,7 +158,9 @@ const RollDiceButton = () => {
                 }
             </div>
             :
-            <p>{dice.display ? `${turns[0].name} rolling ${dice.display}` : `${turns[0].name} rolled ${dice.current}`}</p>
+            <div className='text-center text-lg border rounded-md px-4 py-2 w-full'>
+                {dice.display ? `${turns[0].name} rolling ${dice.display}` : `${turns[0].name} rolled ${dice.current}`}
+            </div>
 
     );
 };
