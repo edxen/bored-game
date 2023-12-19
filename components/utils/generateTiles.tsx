@@ -2,37 +2,26 @@ import { TTile } from "../reducers/tilesReducer";
 
 type TNumberParams = { [key: string]: number; };
 
-// in a setting where columns is 10 and rows is 10, i get 100 tiles
-// tile line will be decided from first to last minus 1
-// for ex. 
-// top edge     = 1-9
-// right edge   = 10-18
-// bottom edge  = 19-27
-// left edge    = 28-36
+const getEdge = ({ row, rows, column, columns }: TNumberParams) => {
+    const top = () => row === 0;
+    const right = () => column === columns - 1 && row !== rows - 1;
+    const bottom = () => row === rows - 1 && column !== 0;
+    const left = () => column === 0;
+    const all = () => top() || right() || bottom() || left();
 
-const getPath = ({ row, rows, column, columns }: TNumberParams): number => { // Get back here to refactor for accomodate different vector size
-    const isTop = () => row === 0;
-    const isRight = () => column === columns - 1 && row !== rows - 1;
-    const isBottom = () => row === rows - 1 && column !== 0;
-    const isLeft = () => column === 0;
+    return { top, right, bottom, left, all };
+};
 
-    let path = 0;
+const getPath = (vector: TNumberParams): number => {
+    const { row, rows, column, columns } = vector;
 
     switch (true) {
-        case isTop():
-            path = column;
-            break;
-        case isRight():
-            path = columns + row;
-            break;
-        case isBottom():
-            path = columns * 2 + (columns - column);
-            break;
-        case isLeft():
-            path = (columns * 3) + (rows - row);
-            break;
+        case getEdge(vector).top(): return column + 1;
+        case getEdge(vector).right(): return columns + row;
+        case getEdge(vector).bottom(): return ((columns * 2) + rows) - column - 2;
+        case getEdge(vector).left(): return (columns * 2) + (rows * 2) - row - 3;
     }
-    return path;
+    return 0;
 };
 
 type TTileType = TTile['type'];
@@ -43,9 +32,7 @@ const assignTypeToPath = (path: number): TTileType => {
         portal: [6, 15, 24, 33]
     };
 
-    Object.entries(pathSet).forEach(([key, value]) => {
-        if (value.includes(path)) type = key as TTileType;
-    });
+    Object.entries(pathSet).forEach(([key, value]) => value.includes(path) && (type = key as TTileType));
 
     return type;
 };
@@ -54,8 +41,9 @@ const generateTiles = ({ columns, rows }: TNumberParams): TTile[] => {
     return Array.from({ length: columns * rows }, (_, index) => {
         const row = Math.floor(index / columns);
         const column = index % columns;
-        const edge = row === 0 || row === rows - 1 || column === 0 || column === columns - 1;
-        const path = edge ? getPath({ row, rows, column, columns }) : 0;
+        const vector: TNumberParams = { row, rows, column, columns };
+        const edge = getEdge(vector).all();
+        const path = edge ? getPath(vector) : 0;
 
         return {
             index,
