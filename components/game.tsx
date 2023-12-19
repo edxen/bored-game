@@ -14,20 +14,6 @@ export default function Game() {
 
     initialize();
     monitorPlayerChange();
-
-    const ControlBox = () => {
-        return (
-            <>
-                <div className="flex justify-center items-center gap-2 w-full mb-2">
-                    <RollDiceButton />
-                </div>
-                <div className='flex gap-2'>
-                    <PlayerInformation />
-                </div>
-            </>
-        );
-    };
-
     return (
         <div className='flex flex-col h-screen p-4'>
             <div className='w-full flex flex-col justify-center items-center text-sm text-gray-700 font-bold'>
@@ -64,3 +50,16 @@ export default function Game() {
         </div >
     );
 }
+
+const ControlBox = () => {
+    return (
+        <>
+            <div className="flex justify-center items-center gap-2 w-full mb-2">
+                <RollDiceButton />
+            </div>
+            <div className='flex gap-2'>
+                <PlayerInformation />
+            </div>
+        </>
+    );
+};
