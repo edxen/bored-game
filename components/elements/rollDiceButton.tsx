@@ -59,6 +59,7 @@ const RollDiceButton = () => {
                                 const filteredPlayers = tile.occupants.filter((id: string) => id !== playerData.id);
                                 const removeFilteredPlayers = players.filter(player => !filteredPlayers.includes(player.id));
                                 dispatch(setPlayers(removeFilteredPlayers));
+                                dispatch(setTurn(removeFilteredPlayers));
                                 dispatch(setTile({ index: tile.index, key: 'occupants', value: [playerData.id] }));
                             }
                         };
