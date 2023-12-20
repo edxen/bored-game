@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import GetData from "../hooks/GetData";
 import GenerateTileWithIcon from "./tiles/GenerateTileWithIcon";
 import { TTile } from "../reducers/tilesReducer";

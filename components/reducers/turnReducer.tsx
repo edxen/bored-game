@@ -6,7 +6,6 @@ export type TTurnState = {
     round: number;
     turn: number;
     ranking: string[];
-    arrow: number;
 };
 
 const initialState: TTurnState = {
@@ -14,7 +13,6 @@ const initialState: TTurnState = {
     round: 1,
     turn: 1,
     ranking: [],
-    arrow: 1
 };
 
 const turnsSlice = createSlice({
@@ -44,12 +42,6 @@ const turnsSlice = createSlice({
             return {
                 ...state,
                 round: state.round + 1
-            };
-        },
-        increasArrowCount: (state) => {
-            return {
-                ...state,
-                arrow: state.arrow + 1
             };
         },
         setRanking: (state, action: PayloadAction<string>) => {
