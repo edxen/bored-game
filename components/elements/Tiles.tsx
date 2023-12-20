@@ -42,7 +42,7 @@ function Tiles() {
     };
 
     let imageClass = (tile: TTile) => {
-        const tileOccupied = tile.occupants.length ? 'animate-ping animate-once' : '';
+        const tileOccupied = tile.occupants.length ? 'animate-ping animate-once' : 'animate-wiggle animate-infinite';
         return `
             ${tileOccupied}
             z-0
