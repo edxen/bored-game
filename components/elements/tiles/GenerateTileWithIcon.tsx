@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from "next/image";
-import { TTile } from "@/components/reducers/tilesReducer";
+import { TTile } from '../../reducers/tilesReducer';
 
 type TImageRefArr = Partial<{ [key in TTile['type']]: string; }>;
 
@@ -32,7 +32,7 @@ const GenerateTileWithIcon = ({ type, iconsListRef = iconsList }: IGenerateTileW
         return null;
     }
 
-    const typeRef = iconsList[type] as TImageRefArr;
+    const typeRef = iconsList[type];
 
     return (
         <Image

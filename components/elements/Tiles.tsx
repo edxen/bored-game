@@ -1,12 +1,12 @@
+import React from 'react';
 import GetData from "../hooks/GetData";
 import GenerateTileWithIcon from "./tiles/GenerateTileWithIcon";
 import { TTile } from "../reducers/tilesReducer";
-import { TPlayer } from "../reducers/playersReducer";
 import config from "../config";
 import GenerateOccupants from "./tiles/GenerateOccupants";
 
 function Tiles() {
-    const { turns, tiles, getPlayerData } = GetData();
+    const { dice, turns, tiles, getPlayerData } = GetData();
 
     let containerClass = () => {
         return `
@@ -29,7 +29,9 @@ function Tiles() {
 
     let playerClass = (occupant: string) => {
         const { id, color } = getPlayerData(occupant);
-        const isPlayerActive = turns.players[0].id === id ? 'border-4 border-red-800' : '';
+        const isPlayerActive = turns.players[0].id === id ?
+            `border-4 border-red-800 ${!dice.display ? 'animate-bounce' : 'animate-spin'}`
+            : 'animate-shake animate-duration-[2000ms] animate-infinite animate-alternate';
 
         return `
         ${isPlayerActive} ${color}
@@ -39,13 +41,19 @@ function Tiles() {
         `;
     };
 
+    let imageClass = () => {
+        return `
+            z-0
+        `;
+    };
+
     return (
         <div className={containerClass()}>
             {
                 tiles.map(tile => (
                     <div key={tile.index} className={tileClass(tile)}>
                         <GenerateOccupants occupants={tile.occupants} playerClass={playerClass} />
-                        <div className='z-0'>
+                        <div className={imageClass()}>
                             <GenerateTileWithIcon type={tile.type} />
                         </div>
                     </div>
