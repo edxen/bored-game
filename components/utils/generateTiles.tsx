@@ -1,4 +1,3 @@
-import config from "../config";
 import { TTile } from "../reducers/tilesReducer";
 
 type TNumberParams = { [key: string]: number; };
@@ -26,37 +25,39 @@ const getPath = (vector: TNumberParams): number => {
 };
 
 type TTileType = TTile['type'];
-const tilePath: Partial<Record<Exclude<TTileType, 'plain'>, number[]>> = {
-    // add manually here
-    // can manually add using dynamicallyAssignPathSet
-};
 
-const dynamicallyAssignPathSet = () => {
-    const { columns } = config.tiles.size;
+const assignType = (edge: boolean, index: number, path: number, vector: TNumberParams): TTileType => {
+    const tileIndex: Partial<Record<Exclude<TTileType, 'plain'>, number[]>> = {};
 
-    Array.from({ length: 4 }).map((_, i) => {
-        const addTypeEachLine = (key: Exclude<TTileType, 'plain'>, targetPaths: number[]) => {
-            if (!tilePath[key]) tilePath[key] = [];
-            targetPaths.forEach((targetPath) => tilePath[key]?.push((((columns * i) - i)) + targetPath));
-        };
-        // add below using addPathToSet | check TTileType for allowed types
-        // first arg: type id | second arg: array for tile location per line 1 - 10, add to repeat
-        // added type will mirror on all sides
+    let type: Partial<TTileType> = 'plain';
+    const { columns, rows } = vector;
 
+    const addTypeEachLine = (key: Exclude<TTileType, 'plain'>, targetArr: number[], index: Partial<TNumberParams> = { column: 0, row: 0, repeat: 0 }) => {
+        Array.from({ length: edge ? 4 : index.repeat ? index.repeat : 1 }).map((_, i) => {
+            if (!tileIndex[key]) tileIndex[key] = [];
+            targetArr.forEach((target) => {
+                if (edge) {
+                    tileIndex[key]?.push((((columns * i) - i)) + target);
+                } else {
+                    if (index.column) {
+                        tileIndex[key]?.push((((columns * (target + (index.repeat ? index.repeat : 0))) - (i * columns))) + index.column);
+                    } else if (index.row) {
+                        tileIndex[key]?.push((((rows * index.row) - i)) + target + (index.repeat ? index.repeat : 0));
+                    }
+                }
+            });
+        });
+    };
+
+    if (edge) {
         addTypeEachLine('flag', [1]);
         addTypeEachLine('portal', [6]);
         addTypeEachLine('dice', [2, 5, 7, 10]);
         addTypeEachLine('stop', [3, 9]);
         addTypeEachLine('safe', [4, 8]);
+    }
 
-    });
-};
-
-const assignTypeToPath = (path: number): TTileType => {
-    let type: Partial<TTileType> = 'plain';
-    dynamicallyAssignPathSet();
-
-    Object.entries(tilePath).forEach(([key, value]) => value.includes(path) && (type = key as TTileType));
+    Object.entries(tileIndex).forEach(([key, value]) => value.includes(edge ? path : index) && (type = key as TTileType));
 
     return type;
 };
@@ -73,7 +74,7 @@ const generateTiles = ({ columns, rows }: TNumberParams): TTile[] => {
             index,
             edge,
             path,
-            type: assignTypeToPath(path),
+            type: assignType(edge, index, path, vector),
             occupants: []
         };
     });
