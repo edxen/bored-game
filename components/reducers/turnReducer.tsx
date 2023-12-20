@@ -53,5 +53,5 @@ const turnsSlice = createSlice({
     }
 });
 
-export const { setTurnPlayers, nextTurn, increaseTurnCount, increaseRoundCount, increasArrowCount, setRanking } = turnsSlice.actions;
+export const { setTurnPlayers, nextTurn, increaseTurnCount, increaseRoundCount, setRanking } = turnsSlice.actions;
 export default turnsSlice.reducer;
