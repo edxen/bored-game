@@ -9,7 +9,15 @@ const iconsList: TImageRefArr = {
     dice: 'dice',
     flag: 'flag',
     safe: 'safe',
-    stop: 'stop'
+    stop: 'stop',
+    'arrow-up': 'arrow-up',
+    'arrow-down': 'arrow-down',
+    'arrow-left': 'arrow-left',
+    'arrow-right': 'arrow-right',
+    'arrow-up-left': 'arrow-up-left',
+    'arrow-up-right': 'arrow-up-right',
+    'arrow-down-left': 'arrow-down-left',
+    'arrow-down-right': 'arrow-down-right'
 };
 
 interface IGenerateTileWithIcon {
@@ -24,7 +32,7 @@ const GenerateTileWithIcon = ({ type, iconsListRef = iconsList }: IGenerateTileW
         return null;
     }
 
-    const typeRef = iconsList[type];
+    const typeRef = iconsList[type] as TImageRefArr;
 
     return (
         <Image

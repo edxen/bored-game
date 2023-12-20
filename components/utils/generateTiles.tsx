@@ -55,6 +55,16 @@ const assignType = (edge: boolean, index: number, path: number, vector: TNumberP
         addTypeEachLine('dice', [2, 5, 7, 10]);
         addTypeEachLine('stop', [3, 9]);
         addTypeEachLine('safe', [4, 8]);
+    } else {
+        addTypeEachLine('arrow-left', [1], { row: 1, repeat: 7 });
+        addTypeEachLine('arrow-down', [1], { column: 9, repeat: 7 });
+        addTypeEachLine('arrow-right', [1], { row: 9, repeat: 7 });
+        addTypeEachLine('arrow-up', [1], { column: 1, repeat: 7 });
+
+        addTypeEachLine('arrow-down-right', [1], { column: 8 });
+        addTypeEachLine('arrow-down-left', [8], { column: 9 });
+        addTypeEachLine('arrow-up-left', [9], { column: 2 });
+        addTypeEachLine('arrow-up-right', [2], { column: 1 });
     }
 
     Object.entries(tileIndex).forEach(([key, value]) => value.includes(edge ? path : index) && (type = key as TTileType));

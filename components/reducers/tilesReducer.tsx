@@ -3,7 +3,8 @@ import generateTiles from "../utils/generateTiles";
 import config from "../config";
 
 export type TTile = {
-    type: 'plain' | 'portal' | 'dice' | 'flag' | 'safe' | 'stop';
+    type: 'plain' | 'portal' | 'dice' | 'flag' | 'safe' | 'stop' | 'arrow-up' | 'arrow-down' | 'arrow-left' | 'arrow-right' | 'arrow-up-left' | 'arrow-up-right' | 'arrow-down-left' | 'arrow-down-right';
+
     occupants: string[];
     edge: boolean;
     path: number;
