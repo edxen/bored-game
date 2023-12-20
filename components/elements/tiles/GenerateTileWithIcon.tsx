@@ -28,10 +28,11 @@ const GenerateTileWithIcon = ({ type, iconsListRef = iconsList }: IGenerateTileW
 
     return (
         <Image
-            className="absolute"
+            className="object-contain"
             src={`/images/icons/icon-${typeRef}.png`}
-            alt={type} width="150"
-            height="150"
+            alt={type}
+            width='100'
+            height='100'
         />
     );
 };

@@ -8,7 +8,6 @@ import Menu from './elements/Menu';
 import RollDiceButton from './elements/RollDiceButton';
 import PlayerInformation from './elements/PlayerInformation';
 import WinBox from './elements/WinBox';
-import config from './config';
 
 export default function Game() {
     const { players } = getData();
@@ -23,7 +22,7 @@ export default function Game() {
                 <h4 className='-rotate-3'>Edxen the Bored Developer</h4>
             </div>
             <Turns />
-            <div className='flex-1 relative grid my-2'>
+            <div className='flex justify-center items center flex-1 relative my-2'>
                 {
                     players.length === 0
                         ?
@@ -32,9 +31,7 @@ export default function Game() {
                         </div>
                         :
                         <>
-                            <div className={`h-full w-full grid gap-4 ${config.tiles.gridColumns} justify-center items-center`}>
-                                <Tiles />
-                            </div>
+                            <Tiles />
                             <div className="absolute top-0 left-0 h-full w-full flex flex-col justify-center items-center">
                                 <div className="bg-white p-4 rounded-md border border-slate-100 flex flex-col justify-center items-center">
                                     {
