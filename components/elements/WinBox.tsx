@@ -11,7 +11,7 @@ const WinBox = () => {
             {
                 !players.length ? '' :
                     <>
-                        <div className='text-3xl underline font-bold mb-2'>
+                        <div className='text-3xl underline font-bold mb-2 animate-jump animate-infinite animate-duration-1000 animate-alternate '>
                             {`Winner: ${players[0].name}`}
                         </div>
                         <div className='mb-2 flex flex-col items-start'>
