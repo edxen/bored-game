@@ -22,11 +22,11 @@ const allcomputers = [
 const config = {
     enableSpecificDice: false,
     customPlayer: {
-        enabled: true,
+        enabled: false,
         state: allcomputers as TPlayer[]
     },
-    moveSpeed: 0, // 150 - default
-    rollSpeed: 0, // 150 - default,
+    moveSpeed: 150, // 150 - default
+    rollSpeed: 150, // 150 - default,
     tiles: {
         gridColumns: 'grid-cols-11', // only update the number to change column size
         size: {
