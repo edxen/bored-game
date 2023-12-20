@@ -108,8 +108,8 @@ const RollDiceButton = () => {
     useEffect(() => {
         if (dice.started && dice.done) {
             dispatch(nextTurn());
-            if (countTurn >= players.length) {
-                setCountTurn(1);
+            if (countTurn === players.length) {
+                setCountTurn(0);
                 dispatch(increaseRoundCount());
             }
             setCountTurn(prevCount => prevCount + 1);
