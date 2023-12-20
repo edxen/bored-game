@@ -73,7 +73,7 @@ const RollDiceButton = () => {
 
                             if (playerTile.type === 'portal') {
                                 const warpTo = (nextPath: TTile['path']) => {
-                                    const nextTile = getTile({ path: nextPath });
+                                    const nextTile = getTile({ path: getPortalPath(nextPath) });
                                     movePlayerToNextTile(playerData, nextTile.path);
                                     dispatch(setPlayer({ id: playerData.id, index: nextTile.index, path: nextTile.path }));
 
@@ -81,11 +81,14 @@ const RollDiceButton = () => {
                                     removeOtherOccupants(portalTile);
                                 };
 
+                                const { columns } = config.tiles.size;
+                                const getPortalPath = (line: number) => (columns * line) + 6 - line;
+
                                 switch (playerTile.path) {
-                                    case 6: warpTo(24); break;
-                                    case 15: warpTo(33); break;
-                                    case 24: warpTo(6); break;
-                                    case 33: warpTo(15); break;
+                                    case getPortalPath(0): warpTo(2); break;
+                                    case getPortalPath(1): warpTo(3); break;
+                                    case getPortalPath(2): warpTo(0); break;
+                                    case getPortalPath(3): warpTo(1); break;
                                 }
                             }
 
