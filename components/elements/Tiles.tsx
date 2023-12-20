@@ -6,7 +6,7 @@ import config from "../config";
 import GenerateOccupants from "./tiles/GenerateOccupants";
 
 function Tiles() {
-    const { dice, turns, tiles, getPlayerData } = GetData();
+    const { dice, turns, players, tiles, getPlayerData } = GetData();
 
     let containerClass = () => {
         return `
@@ -17,9 +17,10 @@ function Tiles() {
 
     let tileClass = (tile: TTile) => {
         const isEdge = tile.edge ? 'bg-slate-200' : '';
+        const isOver = players.length === 1 ? 'animate-jump-out animate-duration-[2500ms]' : '';
 
         return `
-        ${isEdge}
+        ${isEdge} ${isOver}
         relative
         flex justify-center items-center
         min-w-[2.5rem] w-10 h-10
@@ -29,9 +30,11 @@ function Tiles() {
 
     let playerClass = (occupant: string) => {
         const { id, color } = getPlayerData(occupant);
-        const isPlayerActive = turns.players[0].id === id ?
-            `border-4 border-red-800 ${!dice.display ? 'animate-bounce' : 'animate-spin'}`
-            : 'animate-shake animate-duration-[2000ms] animate-infinite animate-alternate';
+        const isPlayerActive = (
+            turns.players[0]?.id === id ?
+                `border-4 border-red-800 ${!dice.display ? 'animate-bounce' : 'animate-spin'}`
+                : 'animate-shake animate-duration-[2000ms] animate-infinite animate-alternate'
+        );
 
         return `
         ${isPlayerActive} ${color}
@@ -42,7 +45,9 @@ function Tiles() {
     };
 
     let imageClass = (tile: TTile) => {
-        const tileOccupied = tile.occupants.length ? 'animate-ping animate-once' : 'animate-wiggle animate-infinite';
+        const tileOccupied = (
+            tile.occupants.length ? 'animate-ping animate-once' : 'animate-wiggle animate-infinite'
+        );
         return `
             ${tileOccupied}
             z-0
