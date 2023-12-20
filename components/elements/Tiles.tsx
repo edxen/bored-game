@@ -41,8 +41,10 @@ function Tiles() {
         `;
     };
 
-    let imageClass = () => {
+    let imageClass = (tile: TTile) => {
+        const tileOccupied = tile.occupants.length ? 'animate-ping animate-once' : '';
         return `
+            ${tileOccupied}
             z-0
         `;
     };
@@ -53,7 +55,7 @@ function Tiles() {
                 tiles.map(tile => (
                     <div key={tile.index} className={tileClass(tile)}>
                         <GenerateOccupants occupants={tile.occupants} playerClass={playerClass} />
-                        <div className={imageClass()}>
+                        <div className={imageClass(tile)}>
                             <GenerateTileWithIcon type={tile.type} />
                         </div>
                     </div>
