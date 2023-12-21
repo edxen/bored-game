@@ -9,6 +9,7 @@ import { setPlayers as setGamePlayers } from '../reducers/playersReducer';
 import { setTurnPlayers } from '../reducers/turnReducer';
 import { TTile, setTile } from '../reducers/tilesReducer';
 import config from '../config';
+import { getSameSideColumn } from '../utils/helper';
 
 type TNav = 'menu' | 'start';
 
@@ -41,7 +42,7 @@ const Menu = () => {
             setNav('start');
         } else {
 
-            let availablePath = Array.from({ length: 4 }).map((_, i) => (config.tiles.size.columns * i) - i + 1).sort(() => Math.random() - 0.5);
+            let availablePath = Array.from({ length: 4 }).map((_, i) => getSameSideColumn(i, 1)).sort(() => Math.random() - 0.5);
             setPlayers(prevPlayers => (
                 prevPlayers.map((prevPlayer, i) => (
                     {

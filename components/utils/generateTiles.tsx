@@ -1,4 +1,5 @@
 import { TTile } from "../reducers/tilesReducer";
+import { getSameSideColumn } from "./helper";
 
 type TNumberParams = { [key: string]: number; };
 
@@ -37,7 +38,7 @@ const assignType = (edge: boolean, index: number, path: number, vector: TNumberP
             if (!tileIndex[key]) tileIndex[key] = [];
             targetArr.forEach((target) => {
                 if (edge) {
-                    tileIndex[key]?.push((((columns * i) - i)) + target);
+                    tileIndex[key]?.push(getSameSideColumn(i, target));
                 } else {
                     if (index.column) {
                         tileIndex[key]?.push((((columns * (target + (index.repeat ? index.repeat : 0))) - (i * columns))) + index.column);
