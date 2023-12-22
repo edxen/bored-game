@@ -6,9 +6,10 @@ import { TPlayer } from '../reducers/playersReducer';
 
 import GetData from '../hooks/GetData';
 import { setPlayers as setGamePlayers } from '../reducers/playersReducer';
-import { TTile, setTile } from '../reducers/tilesReducer';
+import { setTile } from '../reducers/tilesReducer';
 import { getSameSideColumn } from '../utils/helper';
 import { updateGame } from '../reducers/gameReducer';
+import { TTile } from '../reducers/initialStates';
 
 type TNav = 'menu' | 'start';
 

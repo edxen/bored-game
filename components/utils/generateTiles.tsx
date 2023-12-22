@@ -1,4 +1,4 @@
-import { TTile } from "../reducers/tilesReducer";
+import { TTile } from "../reducers/initialStates";
 import { getEdge, getPath, getSameSideColumn } from "./helper";
 
 type TTileType = TTile['type'];

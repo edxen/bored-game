@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import GetData from "../hooks/GetData";
+import { TTile } from '../reducers/initialStates';
 import GenerateTileWithIcon from "./tiles/GenerateTileWithIcon";
-import { TTile } from "../reducers/tilesReducer";
-import config from "../config";
 import GenerateOccupants from "./tiles/GenerateOccupants";
+import config from "../config";
 
 function Tiles() {
     const { game, dice, players, tiles, getPlayerData } = GetData();

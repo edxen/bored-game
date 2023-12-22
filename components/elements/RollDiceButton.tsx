@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux';
 
 import { setDice } from '../reducers/diceReducer';
 import { TPlayer, setPlayer, setPlayers } from '../reducers/playersReducer';
-import { TTile, setTile } from '../reducers/tilesReducer';
+import { setTile } from '../reducers/tilesReducer';
+import { TTile } from '../reducers/initialStates';
 
 import SetElementOnFocus from '../hooks/SetElementOnFocus';
 import GetData from '../hooks/GetData';

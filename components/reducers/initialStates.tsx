@@ -47,3 +47,17 @@ export const initialDiceState: TDice = {
     done: true,
     move: false,
 };
+
+export type TTile = {
+    type: 'plain' | 'portal' | 'dice' | 'flag' | 'safe' | 'stop' | 'arrow-up' | 'arrow-down' | 'arrow-left' | 'arrow-right' | 'arrow-up-left' | 'arrow-up-right' | 'arrow-down-left' | 'arrow-down-right';
+    occupants: string[];
+    edge: boolean;
+    path: number;
+    index: number;
+};
+
+export type TilePayload<K extends keyof TTile> = {
+    index: number;
+    key: K;
+    value: TTile[K];
+};

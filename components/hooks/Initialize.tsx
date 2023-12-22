@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { TTile } from '../reducers/initialStates';
 import { TPlayer } from '../reducers/playersReducer';
-import { TTile, setTile } from '../reducers/tilesReducer';
-import GetData from './GetData';
+import { setTile } from '../reducers/tilesReducer';
 import { updateGame } from '../reducers/gameReducer';
+import GetData from './GetData';
 
 const Initialize = () => {
     const dispatch = useDispatch();

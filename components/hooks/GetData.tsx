@@ -1,9 +1,8 @@
 import { useSelector } from 'react-redux';
 import { RootState } from '../reducers';
 
+import { TGame, TDice, TTile } from '../reducers/initialStates';
 import { TPlayer } from "../reducers/playersReducer";
-import { TTile } from '../reducers/tilesReducer';
-import { TDice, TGame } from '../reducers/initialStates';
 
 const GetData = () => {
     const game: TGame = useSelector((state: RootState) => state.game);

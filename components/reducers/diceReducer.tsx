@@ -2,8 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import { produce } from "immer";
 import { TDice, initialDiceState } from "./initialStates";
 
-
-
 const diceSlice = createSlice({
     name: 'dice',
     initialState: initialDiceState,

@@ -1,4 +1,4 @@
-import { TTile } from "@/components/reducers/tilesReducer";
+import { TTile } from "@/components/reducers/initialStates";
 import GetData from "@/components/hooks/GetData";
 
 const GenerateOccupants = ({ occupants, playerClass }: { occupants: TTile['occupants'], playerClass: (occupants: string) => string; }) => {
