@@ -27,7 +27,7 @@ export const initialGameState: TGame = {
     round: {
         queue: [],
         turn: 0,
-        count: 0
+        count: 1
     },
     ranking: {
         list: []

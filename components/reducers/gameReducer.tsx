@@ -17,33 +17,25 @@ const gameSlice = createSlice({
             return produce(state, draftState => Object.assign(draftState, updates));
         },
         /**
-         * Increments round counter by 1 .
+         * Updates round data.
+         * Following actions occur: 
+         * When turn is a multiple of queue length, round counter is incremented by 1. 
+         * Turn count is incremented by 1.
+         * Queue is rotated by moving first player in queue to last.
+         *  
         **/
-        updateRound: (state) => {
+        updateRoundCounter: (state) => {
             return produce(state, draftState => {
-                draftState.round.count++;
-            });
-        },
-        /**
-         * updates round turn related data.
-         * @param target - Accepted values: 'next', 'counter'
-         * 
-         * @param description - target: 'next' - moves first player in queue to last'
-         * @param description - target: 'counter' - increments turn counter by 1
-        **/
-        updateTurn: (state, action: PayloadAction<{ target: 'next' | 'counter'; }>) => {
-            const { target } = action.payload;
-            return produce(state, draftState => {
-                switch (target) {
-                    case 'next':
-                        const [first, ...rest] = draftState.round.queue;
-                        draftState.round.queue = [...rest, first];
-                        break;
+                const { round } = draftState;
+                const { turn, queue } = draftState.round;
 
-                    case 'counter':
-                        draftState.round.turn++;
-                        break;
-                }
+                const incrementTurn = () => round.turn++;
+                const incrementRound = () => (turn % queue.length === 0) && round.count++;
+                const rotateQueue = () => round.queue = [...queue.slice(1), queue[0]];
+
+                incrementRound();
+                incrementTurn();
+                rotateQueue();
             });
         },
         /**
@@ -77,5 +69,5 @@ const gameSlice = createSlice({
     }
 });
 
-export const { toggleGame, updateRound, updateTurn, updateQueuePlayers, updateGame } = gameSlice.actions;
+export const { toggleGame, updateRoundCounter, updateQueuePlayers, updateGame } = gameSlice.actions;
 export default gameSlice.reducer;

@@ -146,22 +146,7 @@ const RollDiceButton = () => {
     };
 
     const handleEndTurn = () => {
-        const [countTurn, setCountTurn] = useState(1);
         const { queue } = round;
-
-        const handleTurnUpdate = () => {
-            useEffect(() => {
-                if (game.started && dice.done) {
-                    dispatch(updateTurn({ target: 'next' }));
-                    if (countTurn === players.length) {
-                        setCountTurn(0);
-                        dispatch(updateRound());
-                    }
-                    setCountTurn(prevCount => prevCount + 1);
-                    dispatch(updateTurn({ target: 'counter' }));
-                }
-            }, [dice.done]); // eslint-disable-line react-hooks/exhaustive-deps
-        };
 
         const handleComputerTurn = () => {
             if (queue.length > 1 && getPlayerData(queue[0]).type === 'computer') {
@@ -181,7 +166,6 @@ const RollDiceButton = () => {
             handleRemainingPlayers();
         }, [round]); // eslint-disable-line react-hooks/exhaustive-deps
 
-        handleTurnUpdate();
     };
     handleEndTurn();
 
