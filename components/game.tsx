@@ -6,12 +6,12 @@ import Menu from './elements/Menu';
 import RollDiceButton from './elements/RollDiceButton';
 import PlayerInformation from './elements/PlayerInformation';
 import WinBox from './elements/WinBox';
-import handleGame from './logic/handleGame';
+import HandleGame from './logic/HandleGame';
 
 export default function Game() {
     const { game, players } = getData();
 
-    handleGame();
+    HandleGame();
 
     return (
         <div className='flex flex-col h-screen p-4'>

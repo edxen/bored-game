@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 
 import GetData from "../hooks/GetData";
-import handleRound from "./handleRound";
+import HandleRound from "./HandleRound";
 import { toggleGame, updateQueuePlayers, updateRoundCounter } from "../reducers/gameReducer";
 import { setTile } from "../reducers/tilesReducer";
 import { TDice, TGame, TPlayer, TTile } from "../reducers/initialStates";
@@ -17,7 +17,7 @@ export type THandleGameProps = {
     dice: TDice;
 };
 
-const handleInitialize = ({ dispatch, game, players, tiles }: Omit<THandleGameProps, 'dice'>) => {
+const HandleInitialize = ({ dispatch, game, players, tiles }: Omit<THandleGameProps, 'dice'>) => {
     // console.log('initialize game');
 
     const updatePlayers = () => {
@@ -42,10 +42,10 @@ const handleInitialize = ({ dispatch, game, players, tiles }: Omit<THandleGamePr
         } else {
             initialRender.current = false;
         }
-    }, [game.started]);
+    }, [game.started]);  // eslint-disable-line react-hooks/exhaustive-deps
 };
 
-const handleEnd = ({ dispatch, players }: Pick<THandleGameProps, 'dispatch' | 'players'>) => {
+const HandleEnd = ({ dispatch, players }: Pick<THandleGameProps, 'dispatch' | 'players'>) => {
     // console.log('checking game ending condition');
 
     useEffect(() => {
@@ -53,16 +53,16 @@ const handleEnd = ({ dispatch, players }: Pick<THandleGameProps, 'dispatch' | 'p
             dispatch(updateQueuePlayers(players));
             dispatch(toggleGame({ over: true }));
         }
-    }, [players.length]);
+    }, [players.length]);  // eslint-disable-line react-hooks/exhaustive-deps
 };
 
-const handleGame = () => {
+const HandleGame = () => {
     const dispatch = useDispatch();
     const { game, players, tiles, dice } = GetData();
 
-    handleInitialize({ dispatch, game, players, tiles });
-    handleRound({ dispatch, game, players, tiles, dice });
-    handleEnd({ dispatch, players });
+    HandleInitialize({ dispatch, game, players, tiles });
+    HandleRound({ dispatch, game, players, tiles, dice });
+    HandleEnd({ dispatch, players });
 };
 
-export default handleGame;
+export default HandleGame;

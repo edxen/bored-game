@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 
-import handleTurn from "./handleTurn";
-import { THandleGameProps } from './handleGame';
+import HandleTurn from "./HandleTurn";
+import { THandleGameProps } from './HandleGame';
 import { updateRoundCounter } from '../reducers/gameReducer';
 
-const handleTurnUpdate = ({ dispatch, game, players, dice }: Omit<THandleGameProps, 'tiles'>) => {
+const HandleTurnUpdate = ({ dispatch, game, players, dice }: Omit<THandleGameProps, 'tiles'>) => {
     useEffect(() => {
         if (game.started && dice.done) {
             dispatch(updateRoundCounter());
@@ -12,27 +12,27 @@ const handleTurnUpdate = ({ dispatch, game, players, dice }: Omit<THandleGamePro
     }, [dice.done]); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
-const handlePreTurn = ({ dispatch, game, players, dice }: Omit<THandleGameProps, 'tiles'>) => {
+const HandlePreTurn = ({ dispatch, game, players, dice }: Omit<THandleGameProps, 'tiles'>) => {
     // console.log('pre turn check');
     // update round and turn counter
 
-    handleTurnUpdate({ dispatch, game, players, dice });
+    HandleTurnUpdate({ dispatch, game, players, dice });
 };
 
-const handlePostTurn = () => {
+const HandlePostTurn = () => {
     // console.log('post turn check');
 
-    const handlePlayerRemoval = () => {
+    const HandlePlayerRemoval = () => {
         // based on player positions on board, remove overlapping players besides the last to occupy
     };
 };
 
-const handleRound = ({ dispatch, game, players, tiles, dice }: THandleGameProps) => {
+const HandleRound = ({ dispatch, game, players, tiles, dice }: THandleGameProps) => {
     // console.log('start round');
 
-    handlePreTurn({ dispatch, game, players, dice });
-    handleTurn();
-    handlePostTurn();
+    HandlePreTurn({ dispatch, game, players, dice });
+    HandleTurn();
+    HandlePostTurn();
 };
 
-export default handleRound;
+export default HandleRound;

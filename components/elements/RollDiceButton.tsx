@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { setDice } from '../reducers/diceReducer';
@@ -10,7 +10,7 @@ import useFocusOnElement from '../hooks/useFocusOnElement';
 import GetData from '../hooks/GetData';
 
 import config from '../config';
-import { toggleGame, updateGame, updateRound, updateTurn } from '../reducers/gameReducer';
+import { toggleGame, updateGame } from '../reducers/gameReducer';
 
 const RollDiceButton = () => {
     const dispatch = useDispatch();
@@ -145,7 +145,7 @@ const RollDiceButton = () => {
         }
     };
 
-    const handleEndTurn = () => {
+    const HandleEndTurn = () => {
         const { queue } = round;
 
         const handleComputerTurn = () => {
@@ -167,7 +167,7 @@ const RollDiceButton = () => {
         }, [round]); // eslint-disable-line react-hooks/exhaustive-deps
 
     };
-    handleEndTurn();
+    HandleEndTurn();
 
     useFocusOnElement({ condition: dice.done, elementRef: rollButtonRef });
 

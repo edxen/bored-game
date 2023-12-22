@@ -1,28 +1,28 @@
-const handlePlayerActionChoice = () => {
+const HandlePlayerActionChoice = () => {
     // console.log('determining current player');
     // if current player is human, display dice options
     // if computer, apply computer logic for dice options
 };
 
-const handleDiceRoll = () => {
+const HandleDiceRoll = () => {
     // console.log('rolling dice');
-    // handle roll logic here
+    // Handle roll logic here
     // randomizing dice value display
     // determining actual dice value
 };
 
-const handlePlayerActions = () => {
+const HandlePlayerActions = () => {
     // console.log('handling player movement');
-    // handle player movements after determining dice roll
-    // handle additional actions related to movement as well: ex. portal warping
+    // Handle player movements after determining dice roll
+    // Handle additional actions related to movement as well: ex. portal warping
 };
 
-const handleTurn = () => {
+const HandleTurn = () => {
     // console.log('start turn');
 
-    handlePlayerActionChoice();
-    handleDiceRoll();
-    handlePlayerActions();
+    HandlePlayerActionChoice();
+    HandleDiceRoll();
+    HandlePlayerActions();
 };
 
-export default handleTurn;
+export default HandleTurn;
