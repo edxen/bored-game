@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setTurnPlayers } from '../reducers/turnReducer';
 import { TPlayer } from '../reducers/playersReducer';
 import { TTile, setTile } from '../reducers/tilesReducer';
 import GetData from './GetData';
+import { updateGame } from '../reducers/gameReducer';
 
 const Initialize = () => {
     const dispatch = useDispatch();
@@ -21,7 +21,8 @@ const Initialize = () => {
     };
 
     const initializeTurnDisplay = (players: TPlayer[]) => {
-        dispatch(setTurnPlayers(players));
+        const getPlayerIds = players.map((player) => player.id);
+        dispatch(updateGame({ target: 'queue', value: getPlayerIds }));
     };
 
     useEffect(() => {

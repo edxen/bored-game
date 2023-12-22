@@ -6,7 +6,8 @@ import config from "../config";
 import GenerateOccupants from "./tiles/GenerateOccupants";
 
 function Tiles() {
-    const { dice, turns, players, tiles, getPlayerData } = GetData();
+    const { game, dice, players, tiles, getPlayerData } = GetData();
+    const { queue } = game.round;
 
     let containerClass = () => {
         return `
@@ -31,7 +32,7 @@ function Tiles() {
     let playerClass = (occupant: string) => {
         const { id, color } = getPlayerData(occupant);
         const isPlayerActive = (
-            turns.players[0]?.id === id ?
+            queue[0] === id ?
                 `border-4 border-red-800 ${!dice.display ? 'animate-bounce' : 'animate-spin'}`
                 : 'animate-shake animate-duration-[2000ms] animate-infinite animate-alternate'
         );

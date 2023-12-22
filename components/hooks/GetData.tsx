@@ -4,10 +4,10 @@ import { RootState } from '../reducers';
 import { TDice } from '../reducers/diceReducer';
 import { TPlayer } from "../reducers/playersReducer";
 import { TTile } from '../reducers/tilesReducer';
-import { TTurnState } from '../reducers/turnReducer';
+import { TGame } from '../reducers/gameReducer';
 
 const GetData = () => {
-    const turns: TTurnState = useSelector((state: RootState) => state.turns);
+    const game: TGame = useSelector((state: RootState) => state.game);
     const dice: TDice = useSelector((state: RootState) => state.dice);
     const players: TPlayer[] = useSelector((state: RootState) => state.players);
     const tiles: TTile[] = useSelector((state: RootState) => state.tiles);
@@ -28,7 +28,7 @@ const GetData = () => {
         return found as TTile;
     };
 
-    return { turns, dice, players, tiles, getPlayerData, getPlayerTile, getTile };
+    return { game, dice, players, tiles, getPlayerData, getPlayerTile, getTile };
 };
 
 export default GetData;

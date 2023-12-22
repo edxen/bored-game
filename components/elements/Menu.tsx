@@ -6,10 +6,9 @@ import { TPlayer } from '../reducers/playersReducer';
 
 import GetData from '../hooks/GetData';
 import { setPlayers as setGamePlayers } from '../reducers/playersReducer';
-import { setTurnPlayers } from '../reducers/turnReducer';
 import { TTile, setTile } from '../reducers/tilesReducer';
-import config from '../config';
 import { getSameSideColumn } from '../utils/helper';
+import { updateGame } from '../reducers/gameReducer';
 
 type TNav = 'menu' | 'start';
 
@@ -70,7 +69,8 @@ const Menu = () => {
     };
 
     const initializeTurnDisplay = (players: TPlayer[]) => {
-        dispatch(setTurnPlayers(players));
+        const getPlayerIds = players.map((player) => player.id);
+        dispatch(updateGame({ target: 'queue', value: getPlayerIds }));
     };
 
     useEffect(() => {

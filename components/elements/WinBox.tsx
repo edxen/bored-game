@@ -2,7 +2,7 @@ import GetData from "../hooks/GetData";
 import RenderPage from "../hooks/RenderPage";
 
 const WinBox = () => {
-    const { turns, players } = GetData();
+    const { game, players } = GetData();
     const { refresh } = RenderPage();
 
     const rankSuffix = ['nd', 'rd', 'th'];
@@ -16,7 +16,7 @@ const WinBox = () => {
                         </div>
                         <div className='mb-2 flex flex-col items-start'>
                             {
-                                turns.ranking.map((rank, i) => (
+                                game.ranking.list.map((rank, i) => (
                                     rank !== players[0].name && (
                                         <div className='text-xl' key={i}>
                                             {`${i + 2}${rankSuffix[i]}: ${rank} `}
