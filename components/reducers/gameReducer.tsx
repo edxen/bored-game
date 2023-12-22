@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { produce } from "immer";
+
 import { initialGameState, TGame } from "./initialStates";
 
 const gameSlice = createSlice({

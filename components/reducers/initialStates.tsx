@@ -65,6 +65,9 @@ export type TilePayload<K extends keyof TTile> = {
     value: TTile[K];
 };
 
+/**
+ * Data to initialize Tile state
+**/
 export const initialTileState = generateTiles({ ...config.tiles.size });
 
 export type TPlayer = {
@@ -78,4 +81,7 @@ export type TPlayer = {
     roll?: number;
 };
 
+/**
+ * Data to initialize Player state
+**/
 export const initialPlayerState: TPlayer[] = config.customPlayer.enabled ? config.customPlayer.state : [];
