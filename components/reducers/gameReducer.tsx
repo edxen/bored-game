@@ -1,23 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { produce } from "immer";
-import { initialGameState } from "./initialStates";
-
-type TRound = {
-    queue: string[];
-    turn: number;
-    count: number;
-};
-
-type TRanking = {
-    list: string[];
-};
-
-export type TGame = {
-    started: boolean;
-    over: boolean;
-    round: TRound;
-    ranking: TRanking;
-};
+import { initialGameState, TGame } from "./initialStates";
 
 const gameSlice = createSlice({
     name: 'game',

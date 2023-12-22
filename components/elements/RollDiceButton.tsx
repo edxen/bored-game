@@ -9,7 +9,7 @@ import SetElementOnFocus from '../hooks/SetElementOnFocus';
 import GetData from '../hooks/GetData';
 
 import config from '../config';
-import { updateGame, updateRound, updateTurn } from '../reducers/gameReducer';
+import { toggleGame, updateGame, updateRound, updateTurn } from '../reducers/gameReducer';
 
 const RollDiceButton = () => {
     const dispatch = useDispatch();
@@ -26,7 +26,8 @@ const RollDiceButton = () => {
         const rollResult = force ? force : randomize();
         const countInterval = 10;
         let count = force ? countInterval : 0;
-        dispatch(setDice({ started: true, done: false }));
+        dispatch(toggleGame({ started: true }));
+        dispatch(setDice({ done: false }));
 
         const playerData = getPlayerData(round.queue[0]);
         if (playerData) {
@@ -109,7 +110,7 @@ const RollDiceButton = () => {
     const [countTurn, setCountTurn] = useState(1);
 
     useEffect(() => {
-        if (dice.started && dice.done) {
+        if (game.started && dice.done) {
             dispatch(updateTurn({ target: 'next' }));
             if (countTurn === players.length) {
                 setCountTurn(0);

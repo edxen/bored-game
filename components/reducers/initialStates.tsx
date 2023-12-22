@@ -30,3 +30,20 @@ export const initialGameState: TGame = {
         list: []
     }
 };
+
+export type TDice = {
+    display: number;
+    current: number;
+    done: boolean;
+    move: boolean;
+};
+
+/**
+ * Data to initialize Dice state
+**/
+export const initialDiceState: TDice = {
+    display: 0,
+    current: 1,
+    done: true,
+    move: false,
+};
