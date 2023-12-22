@@ -1,4 +1,4 @@
-import { TPlayer } from '@/components/reducers/playersReducer';
+import { TPlayer } from '@/components/reducers/initialStates';
 import CardOptions from './card/CardOptions';
 import CardDetails from './card/CardDetails';
 import { maxPlayer } from '../Menu';

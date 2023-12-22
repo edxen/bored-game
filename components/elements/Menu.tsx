@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import PlayerCard, { TColorsList, bgColors } from './menu/PlayerCard';
 
-import { TPlayer } from '../reducers/playersReducer';
-
-import GetData from '../hooks/GetData';
 import { setPlayers as setGamePlayers } from '../reducers/playersReducer';
 import { setTile } from '../reducers/tilesReducer';
 import { getSameSideColumn } from '../utils/helper';
 import { updateGame } from '../reducers/gameReducer';
-import { TTile } from '../reducers/initialStates';
+import { TTile, TPlayer } from '../reducers/initialStates';
+import GetData from '../hooks/GetData';
 
 type TNav = 'menu' | 'start';
 

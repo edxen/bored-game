@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { setDice } from '../reducers/diceReducer';
-import { TPlayer, setPlayer, setPlayers } from '../reducers/playersReducer';
+import { setPlayer, setPlayers } from '../reducers/playersReducer';
 import { setTile } from '../reducers/tilesReducer';
-import { TTile } from '../reducers/initialStates';
+import { TPlayer, TTile } from '../reducers/initialStates';
 
 import SetElementOnFocus from '../hooks/SetElementOnFocus';
 import GetData from '../hooks/GetData';

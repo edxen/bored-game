@@ -1,12 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import generateTiles from "../utils/generateTiles";
-import config from "../config";
 import { produce } from "immer";
-import { TilePayload, TTile } from "./initialStates";
+
+import { initialTileState, TilePayload, TTile } from "./initialStates";
 
 const tileSlice = createSlice({
     name: 'tiles',
-    initialState: generateTiles({ ...config.tiles.size }),
+    initialState: initialTileState,
     reducers: {
         setTile: <K extends keyof TTile>(state: TTile[], action: PayloadAction<TilePayload<K>>) => {
             const { index, key, value } = action.payload;

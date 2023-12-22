@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { TTile } from '../reducers/initialStates';
-import { TPlayer } from '../reducers/playersReducer';
+import { TTile, TPlayer } from '../reducers/initialStates';
 import { setTile } from '../reducers/tilesReducer';
 import { updateGame } from '../reducers/gameReducer';
 import GetData from './GetData';

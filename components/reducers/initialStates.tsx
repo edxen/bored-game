@@ -1,3 +1,6 @@
+import config from "../config";
+import generateTiles from "../utils/generateTiles";
+
 type TRound = {
     queue: string[];
     turn: number;
@@ -61,3 +64,18 @@ export type TilePayload<K extends keyof TTile> = {
     key: K;
     value: TTile[K];
 };
+
+export const initialTileState = generateTiles({ ...config.tiles.size });
+
+export type TPlayer = {
+    id: string;
+    type: 'human' | 'computer';
+    name: string;
+    path: number;
+    color: string;
+    index?: number;
+    last_path?: number;
+    roll?: number;
+};
+
+export const initialPlayerState: TPlayer[] = config.customPlayer.enabled ? config.customPlayer.state : [];

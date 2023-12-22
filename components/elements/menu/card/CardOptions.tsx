@@ -1,6 +1,6 @@
 import CustomButton from '../CustomButton';
 
-import { TPlayer } from '@/components/reducers/playersReducer';
+import { TPlayer } from '@/components/reducers/initialStates';
 import { defaultPlayer, maxPlayer } from '../../Menu';
 import { TPlayerState, colorsList, getRemainingColors } from '../PlayerCard';
 
