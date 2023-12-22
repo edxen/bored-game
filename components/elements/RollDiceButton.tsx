@@ -108,20 +108,6 @@ const RollDiceButton = () => {
     };
     TriggerOnMove();
 
-    const [countTurn, setCountTurn] = useState(1);
-
-    useEffect(() => {
-        if (game.started && dice.done) {
-            dispatch(updateTurn({ target: 'next' }));
-            if (countTurn === players.length) {
-                setCountTurn(0);
-                dispatch(updateRound());
-            }
-            setCountTurn(prevCount => prevCount + 1);
-            dispatch(updateTurn({ target: 'counter' }));
-        }
-    }, [dice.done]); // eslint-disable-line react-hooks/exhaustive-deps
-
     const movePlayerToNextTile = (playerData: TPlayer, nextPath: TTile['path']) => {
         const playerTile = getPlayerTile(playerData.id);
         const nextTile = getTile({ path: nextPath });
@@ -159,16 +145,45 @@ const RollDiceButton = () => {
         }
     };
 
-    useEffect(() => {
+    const handleEndTurn = () => {
+        const [countTurn, setCountTurn] = useState(1);
         const { queue } = round;
-        if (queue.length > 1 && getPlayerData(queue[0]).type === 'computer') {
-            diceRoll();
-        }
-        if (queue.length !== players.length) {
-            const remainingPlayers = queue.filter((id) => players.some(player => player.id === id));
-            dispatch(updateGame({ target: 'queue', value: remainingPlayers }));
-        }
-    }, [round]); // eslint-disable-line react-hooks/exhaustive-deps
+
+        const handleTurnUpdate = () => {
+            useEffect(() => {
+                if (game.started && dice.done) {
+                    dispatch(updateTurn({ target: 'next' }));
+                    if (countTurn === players.length) {
+                        setCountTurn(0);
+                        dispatch(updateRound());
+                    }
+                    setCountTurn(prevCount => prevCount + 1);
+                    dispatch(updateTurn({ target: 'counter' }));
+                }
+            }, [dice.done]); // eslint-disable-line react-hooks/exhaustive-deps
+        };
+
+        const handleComputerTurn = () => {
+            if (queue.length > 1 && getPlayerData(queue[0]).type === 'computer') {
+                diceRoll();
+            }
+        };
+
+        const handleRemainingPlayers = () => {
+            if (queue.length !== players.length) {
+                const remainingPlayers = queue.filter((id) => players.some(player => player.id === id));
+                dispatch(updateGame({ target: 'queue', value: remainingPlayers }));
+            }
+        };
+
+        useEffect(() => {
+            handleComputerTurn();
+            handleRemainingPlayers();
+        }, [round]); // eslint-disable-line react-hooks/exhaustive-deps
+
+        handleTurnUpdate();
+    };
+    handleEndTurn();
 
     SetElementOnFocus({ condition: dice.done, elementRef: rollButtonRef });
 
