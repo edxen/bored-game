@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { produce } from "immer";
 
-import { initialGameState, TGame } from "./initialStates";
+import { initialGameState, TGame, TPlayer } from "./initialStates";
 
 const gameSlice = createSlice({
     name: 'game',
@@ -12,8 +12,8 @@ const gameSlice = createSlice({
          * @param started - set game started status
          * @param over - set game over status 
         **/
-        toggleGame: (state: TGame, action) => {
-            const { ...updates }: { [key: string]: boolean; } = action.payload;
+        toggleGame: (state: TGame, action: PayloadAction<Partial<{ started: boolean, over: boolean; }>>) => {
+            const { ...updates } = action.payload;
             return produce(state, draftState => Object.assign(draftState, updates));
         },
         /**
@@ -47,6 +47,16 @@ const gameSlice = createSlice({
             });
         },
         /**
+         * Update player in queue with ID based on provided string array.
+         * @param arg1 - Accepts: string array with id as property
+        **/
+        updateQueuePlayers: (state, action: PayloadAction<TPlayer[]>) => {
+            const players = action.payload;
+            return produce(state, draftState => {
+                draftState.round.queue = players.map(player => player.id);
+            });
+        },
+        /**
          * Toggle boolean game state.
          * @param target - Update selected target array string. Accepted values: 'nextTurn','queue', 'ranking'
          * @param value - Value to overwrite selected target data. Accepts string array value.
@@ -67,5 +77,5 @@ const gameSlice = createSlice({
     }
 });
 
-export const { toggleGame, updateRound, updateTurn, updateGame } = gameSlice.actions;
+export const { toggleGame, updateRound, updateTurn, updateQueuePlayers, updateGame } = gameSlice.actions;
 export default gameSlice.reducer;

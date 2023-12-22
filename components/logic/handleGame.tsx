@@ -1,26 +1,63 @@
-import handleRound from "./handleRound";
+import React from 'react';
+import { useDispatch } from "react-redux";
 
-const initializeGame = () => {
-    console.log('initialize game');
-    // if game start
-    // initialize players here
-    // initialize tiles generation here
+import GetData from "../hooks/GetData";
+import handleRound from "./handleRound";
+import { toggleGame, updateQueuePlayers } from "../reducers/gameReducer";
+import { setTile } from "../reducers/tilesReducer";
+import { TGame, TPlayer, TTile } from "../reducers/initialStates";
+import { useEffect } from "react";
+import { UnknownAction } from 'redux';
+
+export type THandleGameProps = {
+    dispatch: React.Dispatch<UnknownAction>,
+    game: TGame,
+    players: TPlayer[],
+    tiles: TTile[];
 };
 
-const handleGameEnd = () => {
+const handleInitialize = ({ dispatch, game, players, tiles }: THandleGameProps) => {
+    console.log('initialize game');
+
+    const updatePlayers = () => {
+        const addPlayerToTile = (player: TPlayer) => {
+            const tile = tiles.find((tile) => tile.path === player.path) as TTile;
+            if (!tile.occupants.includes(player.id)) {
+                const updatedOccupants = [...tile.occupants, player.id];
+                dispatch(setTile({ index: tile.index, key: 'occupants', value: updatedOccupants }));
+            }
+        };
+
+        players.map((player) => addPlayerToTile(player));
+        dispatch(updateQueuePlayers(players));
+        dispatch(toggleGame({ started: true }));
+    };
+
+    useEffect(() => {
+        if (!game.started) {
+            updatePlayers();
+        }
+    }, [game.started]);
+};
+
+const handleEnd = ({ dispatch, players }: Pick<THandleGameProps, 'dispatch' | 'players'>) => {
     console.log('checking game ending condition');
-    // check if game has met conditions to end
-    // ex. 1 player left
+
+    useEffect(() => {
+        if (players.length === 1) {
+            dispatch(updateQueuePlayers(players));
+            dispatch(toggleGame({ over: true }));
+        }
+    }, [players.length]);
 };
 
 const handleGame = () => {
-    initializeGame();
+    const dispatch = useDispatch();
+    const { game, players, tiles } = GetData();
+
+    handleInitialize({ dispatch, game, players, tiles });
     handleRound();
-    handleGameEnd();
+    handleEnd({ dispatch, players });
 };
 
-const playGame = () => {
-    handleGame();
-};
-
-export default playGame;
+export default handleGame;
