@@ -6,7 +6,7 @@ import { setPlayer, setPlayers } from '../reducers/playersReducer';
 import { setTile } from '../reducers/tilesReducer';
 import { TPlayer, TTile } from '../reducers/initialStates';
 
-import SetElementOnFocus from '../hooks/SetElementOnFocus';
+import useFocusOnElement from '../hooks/useFocusOnElement';
 import GetData from '../hooks/GetData';
 
 import config from '../config';
@@ -185,7 +185,7 @@ const RollDiceButton = () => {
     };
     handleEndTurn();
 
-    SetElementOnFocus({ condition: dice.done, elementRef: rollButtonRef });
+    useFocusOnElement({ condition: dice.done, elementRef: rollButtonRef });
 
     return (
         dice.done

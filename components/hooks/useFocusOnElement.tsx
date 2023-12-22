@@ -5,10 +5,10 @@ type TSetElementOnFocus = {
     elementRef: React.RefObject<HTMLButtonElement>;
 };
 
-const SetElementOnFocus = ({ condition, elementRef }: TSetElementOnFocus) => {
+const useFocusOnElement = ({ condition, elementRef }: TSetElementOnFocus) => {
     useEffect(() => {
         if (condition && elementRef.current) elementRef.current.focus();
     }, [condition, elementRef]);
 };
 
-export default SetElementOnFocus;
+export default useFocusOnElement;
