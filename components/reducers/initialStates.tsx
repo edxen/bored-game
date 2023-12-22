@@ -1,4 +1,19 @@
-import { TGame } from "./gameReducer";
+type TRound = {
+    queue: string[];
+    turn: number;
+    count: number;
+};
+
+type TRanking = {
+    list: string[];
+};
+
+export type TGame = {
+    started: boolean;
+    over: boolean;
+    round: TRound;
+    ranking: TRanking;
+};
 
 /**
  * Data to initialize Game state
