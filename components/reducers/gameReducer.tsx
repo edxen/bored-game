@@ -25,14 +25,12 @@ const gameSlice = createSlice({
     reducers: {
         /**
          * Toggle boolean game state.
-         * @param target - Object to update. Accepted values: 'started', 'over'
-         * @param flag - Value to provide to target. Accepted values: 'true', 'false 
+         * @param started - set game started status
+         * @param over - set game over status 
         **/
-        toggleGame: (state: TGame, action: PayloadAction<{ target: 'started' | 'over', flag: boolean; }>) => {
-            const { target, flag } = action.payload;
-            return produce(state, draftState => {
-                draftState[target] = flag;
-            });
+        toggleGame: (state: TGame, action) => {
+            const { ...updates }: { [key: string]: boolean; } = action.payload;
+            return produce(state, draftState => Object.assign(draftState, updates));
         },
         /**
          * Increments round counter by 1 .
