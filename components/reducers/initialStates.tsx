@@ -68,7 +68,9 @@ export type TilePayload<K extends keyof TTile> = {
 /**
  * Data to initialize Tile state
 **/
-export const initialTileState = generateTiles({ ...config.tiles.size });
+const rows = config.tiles?.size.rows;
+const columns = config.tiles?.size.columns;
+export const initialTileState = generateTiles({ columns: (columns || 11), rows: (rows || 11) });
 
 export type TPlayer = {
     id: string;
@@ -84,4 +86,4 @@ export type TPlayer = {
 /**
  * Data to initialize Player state
 **/
-export const initialPlayerState: TPlayer[] = config.customPlayer.enabled ? config.customPlayer.state : [];
+export const initialPlayerState: TPlayer[] = config.customPlayer?.enabled ? config.customPlayer.state : [];

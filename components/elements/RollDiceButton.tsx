@@ -41,7 +41,7 @@ const RollDiceButton = () => {
                     dispatch(setDice({ display: 0, current: rollResult, move: true }));
                     dispatch(setPlayer({ id: playerData.id, last_path: playerData.path, roll: rollResult }));
                 }
-            }, config.rollSpeed);
+            }, config.rollSpeed || 150);
         }
     };
 
@@ -99,7 +99,7 @@ const RollDiceButton = () => {
 
                             dispatch(setDice({ move: false, done: true }));
                         }
-                    }, config.moveSpeed);
+                    }, config.moveSpeed || 150);
                 }
             }
 

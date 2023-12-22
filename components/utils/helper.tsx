@@ -1,5 +1,5 @@
 import config from "../config";
-const { columns } = config.tiles.size;
+const columns = config.tiles?.size.columns ?? 11;
 
 /**
      * Retrieves the same side column index based on the provided 'index' and 'step'.

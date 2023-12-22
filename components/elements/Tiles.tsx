@@ -11,7 +11,7 @@ function Tiles() {
 
     let containerClass = () => {
         return `
-        ${config.tiles.gridColumns} 
+        ${config.tiles?.gridColumns || 'grid-cols-11'} 
         grid gap-4 justify-items-center items-center h-full w-full 
         `;
     };
