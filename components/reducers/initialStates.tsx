@@ -5,7 +5,7 @@ export type TRound = {
     queue: string[];
     turn: number;
     count: number;
-    phase: 'pre' | 'roll' | 'action' | 'post';
+    phase: 'unstarted' | 'pre' | 'roll' | 'action' | 'post';
 };
 
 type TRanking = {
@@ -27,9 +27,9 @@ export const initialGameState: TGame = {
     over: false,
     round: {
         queue: [],
-        turn: 0,
+        turn: 1,
         count: 1,
-        phase: 'pre'
+        phase: 'unstarted'
     },
     ranking: {
         list: []

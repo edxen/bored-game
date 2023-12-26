@@ -1,23 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+
 import { THandleGameProps } from './HandleGame';
+import { getSameSideColumn } from '../utils/helper';
 import GetData from '../hooks/GetData';
+
 import { TDice, TPlayer, TTile } from '../reducers/initialStates';
 import { setDice } from '../reducers/diceReducer';
 import { setPlayer, setPlayers } from '../reducers/playersReducer';
-import { updateGame, updatePhase } from '../reducers/gameReducer';
-import config from '../config';
-import { cp } from 'fs';
 import { setTile } from '../reducers/tilesReducer';
-import { getSameSideColumn } from '../utils/helper';
+import { updatePhase } from '../reducers/gameReducer';
 
-const HandlePlayerActionChoice = ({ dispatch, queue, player }: { dispatch: THandleGameProps['dispatch'], queue: string[], player: TPlayer; }) => {
-    const handleComputerTurn = () => {
-        if (queue.length > 1 && player.type === 'computer') {
-            // dice roll here
-        }
-    };
-    handleComputerTurn();
-};
+import config from '../config';
+
 
 const HandleDiceRoll = ({ dispatch, player, dice }: { dispatch: THandleGameProps['dispatch'], player: TPlayer, dice: TDice; }) => {
     const randomize = () => Math.floor(Math.random() * 6) + 1;
@@ -34,7 +28,7 @@ const HandleDiceRoll = ({ dispatch, player, dice }: { dispatch: THandleGameProps
                 count++;
             } else {
                 clearInterval(rollingInterval);
-                dispatch(setPlayer({ id: player.id, last_path: player.path, roll: dice.force ?? randomize() }));
+                dispatch(setPlayer({ id: player.id, last_path: player.path, roll: dice.force ? dice.force : randomize() }));
                 dispatch(updatePhase({ phase: 'action' }));
                 dispatch(setDice({ force: 0 }));
             }
@@ -130,9 +124,6 @@ const HandleTurn = ({ dispatch, game, players, dice }: THandleGameProps) => {
 
     useEffect(() => {
         switch (phase) {
-            case 'pre':
-                HandlePlayerActionChoice({ dispatch, queue, player });
-                break;
             case 'roll':
                 HandleDiceRoll({ dispatch, player, dice });
                 break;

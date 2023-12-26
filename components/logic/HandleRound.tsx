@@ -3,36 +3,38 @@ import { useState, useEffect } from 'react';
 import HandleTurn from "./HandleTurn";
 import { THandleGameProps } from './HandleGame';
 import { updateRoundCounter } from '../reducers/gameReducer';
+import GetData from '../hooks/GetData';
+import { updatePhase } from '../reducers/gameReducer';
 
-const HandleTurnUpdate = ({ dispatch, game, players, dice }: Omit<THandleGameProps, 'tiles'>) => {
+const HandlePreTurn = ({ dispatch, game }: Pick<THandleGameProps, 'dispatch' | 'game'>) => {
+    const { phase, queue } = game.round;
+    const { getPlayerData } = GetData();
+
     useEffect(() => {
-        if (game.started && dice.done) {
-            dispatch(updateRoundCounter());
+        if (phase === 'pre') {
+            if (queue.length && getPlayerData(queue[0]).type === 'computer') {
+                dispatch(updatePhase({ phase: 'roll' }));
+            }
         }
-    }, [dice.done]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [phase]);
 };
 
-const HandlePreTurn = ({ dispatch, game, players, dice }: Omit<THandleGameProps, 'tiles'>) => {
-    // console.log('pre turn check');
-    // update round and turn counter
+const HandlePostTurn = ({ dispatch, game }: Pick<THandleGameProps, 'dispatch' | 'game'>) => {
+    const { phase } = game.round;
 
-    HandleTurnUpdate({ dispatch, game, players, dice });
-};
+    useEffect(() => {
+        if (phase === 'post') {
+            dispatch(updateRoundCounter());
+            dispatch(updatePhase({ phase: 'pre' }));
+        }
+    }, [phase]);
 
-const HandlePostTurn = () => {
-    // console.log('post turn check');
-
-    const HandlePlayerRemoval = () => {
-        // based on player positions on board, remove overlapping players besides the last to occupy
-    };
 };
 
 const HandleRound = ({ dispatch, game, players, tiles, dice }: THandleGameProps) => {
-    // console.log('start round');
-
-    HandlePreTurn({ dispatch, game, players, dice });
+    HandlePreTurn({ dispatch, game });
     HandleTurn({ dispatch, game, players, tiles, dice });
-    HandlePostTurn();
+    HandlePostTurn({ dispatch, game });
 };
 
 export default HandleRound;

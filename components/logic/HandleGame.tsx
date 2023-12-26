@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 
 import GetData from "../hooks/GetData";
 import HandleRound from "./HandleRound";
-import { toggleGame, updateQueuePlayers, updateRoundCounter } from "../reducers/gameReducer";
+import { toggleGame, updatePhase, updateQueuePlayers, updateRoundCounter } from "../reducers/gameReducer";
 import { setTile } from "../reducers/tilesReducer";
 import { TDice, TGame, TPlayer, TTile } from "../reducers/initialStates";
 import { UnknownAction } from 'redux';
@@ -37,7 +37,7 @@ const HandleInitialize = ({ dispatch, game, players, tiles }: Omit<THandleGamePr
     const initialRender = useRef(true);
     useEffect(() => {
         if (!initialRender.current && !game.started) {
-            dispatch(updateRoundCounter());
+            dispatch(updatePhase({ phase: 'pre' }));
             updatePlayers();
         } else {
             initialRender.current = false;
