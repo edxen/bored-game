@@ -30,7 +30,7 @@ const HandleDiceRoll = ({ dispatch, player, dice }: { dispatch: THandleGameProps
                 clearInterval(rollingInterval);
                 dispatch(setPlayer({ id: player.id, last_path: player.path, roll: dice.force ? dice.force : randomize() }));
                 dispatch(updatePhase({ phase: 'action' }));
-                dispatch(setDice({ force: 0 }));
+                dispatch(setDice({ force: 0, display: 0 }));
             }
         }, config.rollSpeed || 150);
 
