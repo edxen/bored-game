@@ -1,3 +1,6 @@
+import React, { useEffect } from 'react';
+import { THandleGameProps } from './HandleGame';
+
 const HandlePlayerActionChoice = () => {
     // console.log('determining current player');
     // if current player is human, display dice options
@@ -17,12 +20,22 @@ const HandlePlayerActions = () => {
     // Handle additional actions related to movement as well: ex. portal warping
 };
 
-const HandleTurn = () => {
-    // console.log('start turn');
+const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) => {
+    const { phase } = game.round;
 
-    HandlePlayerActionChoice();
-    HandleDiceRoll();
-    HandlePlayerActions();
+    useEffect(() => {
+        switch (phase) {
+            case 'pre':
+                HandlePlayerActionChoice();
+                break;
+            case 'roll':
+                HandleDiceRoll();
+                break;
+            case 'action':
+                HandlePlayerActions();
+                break;
+        }
+    }, [phase]);
 };
 
 export default HandleTurn;

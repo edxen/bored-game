@@ -31,7 +31,7 @@ const HandleRound = ({ dispatch, game, players, tiles, dice }: THandleGameProps)
     // console.log('start round');
 
     HandlePreTurn({ dispatch, game, players, dice });
-    HandleTurn();
+    HandleTurn({ dispatch, game, players, tiles, dice });
     HandlePostTurn();
 };
 

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { produce } from "immer";
 
-import { initialGameState, TGame, TPlayer } from "./initialStates";
+import { initialGameState, TGame, TPlayer, TRound } from "./initialStates";
 
 const gameSlice = createSlice({
     name: 'game',
@@ -15,6 +15,16 @@ const gameSlice = createSlice({
         toggleGame: (state: TGame, action: PayloadAction<Partial<{ started: boolean, over: boolean; }>>) => {
             const { ...updates } = action.payload;
             return produce(state, draftState => Object.assign(draftState, updates));
+        },
+        /**
+         * Updates phase data to process turn.
+         * @param phase - Accepts: 'pre' | 'roll' | 'action' | 'post'
+         *  
+        **/
+        updatePhase: (state, action: PayloadAction<{ phase: TRound['phase']; }>) => {
+            return produce(state, draftState => {
+                draftState.round.phase = action.payload.phase;
+            });
         },
         /**
          * Updates round data.
@@ -69,5 +79,5 @@ const gameSlice = createSlice({
     }
 });
 
-export const { toggleGame, updateRoundCounter, updateQueuePlayers, updateGame } = gameSlice.actions;
+export const { toggleGame, updateRoundCounter, updatePhase, updateQueuePlayers, updateGame } = gameSlice.actions;
 export default gameSlice.reducer;

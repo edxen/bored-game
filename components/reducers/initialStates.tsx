@@ -1,10 +1,11 @@
 import config from "../config";
 import generateTiles from "../utils/generateTiles";
 
-type TRound = {
+export type TRound = {
     queue: string[];
     turn: number;
     count: number;
+    phase: 'pre' | 'roll' | 'action' | 'post';
 };
 
 type TRanking = {
@@ -27,7 +28,8 @@ export const initialGameState: TGame = {
     round: {
         queue: [],
         turn: 0,
-        count: 1
+        count: 1,
+        phase: 'pre'
     },
     ranking: {
         list: []
