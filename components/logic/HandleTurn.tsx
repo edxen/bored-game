@@ -8,6 +8,7 @@ import { updateGame, updatePhase } from '../reducers/gameReducer';
 import config from '../config';
 import { cp } from 'fs';
 import { setTile } from '../reducers/tilesReducer';
+import { getSameSideColumn } from '../utils/helper';
 
 const HandlePlayerActionChoice = ({ dispatch, queue, player }: { dispatch: THandleGameProps['dispatch'], queue: string[], player: TPlayer; }) => {
     const handleComputerTurn = () => {
@@ -56,18 +57,38 @@ interface THandlePlayerActions {
 }
 
 const HandlePlayerActions = ({ dispatch, players, tiles, playerId, player, playerTile, getTile }: THandlePlayerActions) => {
-    const moveToNextTile = (playerTile: TTile, moveCounter: number) => {
+    const isPortal = (player: Required<TPlayer>, playerTile: TTile) => {
+        const currentTile = getTile({ path: playerTile.path + player.roll });
+        if (currentTile.type === 'portal') {
+            const getPortalPath = (index: number) => getSameSideColumn(index, 6);
+            const warpTo = (portalPath: number) => {
+                const portalTile = getTile({ path: getPortalPath(portalPath) });
+                moveToNextTile(portalTile, 0, currentTile.path);
+            };
+
+            switch (currentTile.path) {
+                case getPortalPath(0): warpTo(2); break;
+                case getPortalPath(1): warpTo(3); break;
+                case getPortalPath(2): warpTo(0); break;
+                case getPortalPath(3): warpTo(1); break;
+            }
+        }
+    };
+
+    const moveToNextTile = (playerTile: TTile, moveCounter: number, prevPath?: number) => {
         const updateTileOccupants = (index: number, occupants: string[]) => dispatch(setTile({ index, key: 'occupants', value: occupants }));
 
         const nextPath = playerTile.path + moveCounter;
-        const lastTile = getTile({ path: nextPath - 1 });
+        const lastTile = getTile({ path: prevPath ? prevPath : (nextPath - 1) });
         const nextTile = getTile({ path: nextPath });
 
         updateTileOccupants(nextTile.index, [playerId, ...nextTile.occupants]);
         updateTileOccupants(lastTile.index, lastTile.occupants.filter(id => id !== playerId));
+        dispatch(setPlayer({ id: playerId, index: nextTile.index, path: nextTile.path, last_path: lastTile.path }));
     };
 
     const actionSequence = () => {
+        isPortal(player, playerTile);
     };
 
     let moveCounter = 0;
