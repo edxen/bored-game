@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 import HandleTurn from "./HandleTurn";
 import { THandleGameProps } from './HandleGame';
-import { updateRoundCounter } from '../reducers/gameReducer';
+import { updateQueuePlayers, updateRoundCounter } from '../reducers/gameReducer';
 import GetData from '../hooks/GetData';
 import { updatePhase } from '../reducers/gameReducer';
 
@@ -12,14 +12,14 @@ const HandlePreTurn = ({ dispatch, game }: Pick<THandleGameProps, 'dispatch' | '
 
     useEffect(() => {
         if (phase === 'pre') {
-            if (queue.length && getPlayerData(queue[0]).type === 'computer') {
+            if (getPlayerData(queue[0])?.type === 'computer')
                 dispatch(updatePhase({ phase: 'roll' }));
-            }
+        } else {
         }
     }, [phase]);
 };
 
-const HandlePostTurn = ({ dispatch, game }: Pick<THandleGameProps, 'dispatch' | 'game'>) => {
+const HandlePostTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'dispatch' | 'game' | 'players'>) => {
     const { phase } = game.round;
 
     useEffect(() => {
@@ -34,7 +34,7 @@ const HandlePostTurn = ({ dispatch, game }: Pick<THandleGameProps, 'dispatch' | 
 const HandleRound = ({ dispatch, game, players, tiles, dice }: THandleGameProps) => {
     HandlePreTurn({ dispatch, game });
     HandleTurn({ dispatch, game, players, tiles, dice });
-    HandlePostTurn({ dispatch, game });
+    HandlePostTurn({ dispatch, game, players });
 };
 
 export default HandleRound;

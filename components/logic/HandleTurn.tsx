@@ -8,7 +8,7 @@ import { TDice, TPlayer, TTile } from '../reducers/initialStates';
 import { setDice } from '../reducers/diceReducer';
 import { setPlayer, setPlayers } from '../reducers/playersReducer';
 import { setTile } from '../reducers/tilesReducer';
-import { updatePhase } from '../reducers/gameReducer';
+import { updateGame, updatePhase, updateQueuePlayers } from '../reducers/gameReducer';
 
 import config from '../config';
 
@@ -42,13 +42,14 @@ const HandleDiceRoll = ({ dispatch, player, dice }: { dispatch: THandleGameProps
 
 interface THandlePlayerActions {
     dispatch: THandleGameProps['dispatch'];
+    queue: string[],
     player: Required<TPlayer>,
     players: TPlayer[];
     tiles: TTile[];
     getTile: ({ path }: { path: number; }) => TTile;
 }
 
-const HandlePlayerActions = ({ dispatch, player, players, tiles, getTile }: THandlePlayerActions) => {
+const HandlePlayerActions = ({ dispatch, queue, player, players, tiles, getTile }: THandlePlayerActions) => {
     let currentPath = player.path;
 
     const endSequence = () => {
@@ -60,9 +61,14 @@ const HandlePlayerActions = ({ dispatch, player, players, tiles, getTile }: THan
         if (currentTile.occupants.length) {
             const removePlayer = () => dispatch(setPlayers(players.filter(fPlayer => !currentTile.occupants.includes(fPlayer.id))));
             const removeOccupants = () => dispatch(setTile({ index: currentTile.index, key: 'occupants', value: [player.id] }));
+            const updateQueue = () => dispatch(updateQueuePlayers(players.filter(fPlayers => !currentTile.occupants.includes(fPlayers.id))));
+            const updateRanking = () => dispatch(updateGame({ target: 'ranking', value: currentTile.occupants }));
 
+            updateQueue();
+            updateRanking();
             removePlayer();
             removeOccupants();
+
         }
     };
 
@@ -97,7 +103,6 @@ const HandlePlayerActions = ({ dispatch, player, players, tiles, getTile }: THan
 
         const lastTile = getTile({ path: prevPath ? prevPath : (nextPath - 1) });
         const nextTile = getTile({ path: nextPath });
-
 
         updateTileOccupants(nextTile.index, [player.id, ...nextTile.occupants]);
         updateTileOccupants(lastTile.index, lastTile.occupants.filter(id => id !== player.id));
@@ -138,7 +143,7 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
                 HandleDiceRoll({ dispatch, player, dice });
                 break;
             case 'action':
-                HandlePlayerActions({ dispatch, player, players, tiles, getTile });
+                HandlePlayerActions({ dispatch, queue, player, players, tiles, getTile });
                 break;
         }
     }, [phase]);
