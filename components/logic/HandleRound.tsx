@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 import HandleTurn from "./HandleTurn";
 import { THandleGameProps } from './HandleGame';
-import { updateQueuePlayers, updateRoundCounter } from '../reducers/gameReducer';
+import { toggleGame, updateQueuePlayers, updateRoundCounter } from '../reducers/gameReducer';
 import GetData from '../hooks/GetData';
 import { updatePhase } from '../reducers/gameReducer';
 
@@ -25,7 +25,11 @@ const HandlePostTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'dis
     useEffect(() => {
         if (phase === 'post') {
             dispatch(updateRoundCounter());
-            dispatch(updatePhase({ phase: 'pre' }));
+            if (players.length === 1) {
+                dispatch(toggleGame({ over: true }));
+            } else {
+                dispatch(updatePhase({ phase: 'pre' }));
+            }
         }
     }, [phase]);
 

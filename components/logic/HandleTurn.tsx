@@ -20,7 +20,7 @@ const HandleDiceRoll = ({ dispatch, player, dice }: { dispatch: THandleGameProps
 
     const diceRoll = () => {
         const countInterval = 10;
-        let count = dice.force ? countInterval : 0;
+        let count = dice.force ? countInterval : config.diceInterval ? config.diceInterval : 0;
 
         const rollingInterval = setInterval(() => {
             if (count !== countInterval) {

@@ -45,24 +45,12 @@ const HandleInitialize = ({ dispatch, game, players, tiles }: Omit<THandleGamePr
     }, [game.started]);  // eslint-disable-line react-hooks/exhaustive-deps
 };
 
-const HandleEnd = ({ dispatch, players }: Pick<THandleGameProps, 'dispatch' | 'players'>) => {
-    // console.log('checking game ending condition');
-
-    useEffect(() => {
-        if (players.length === 1) {
-            dispatch(updateQueuePlayers(players));
-            dispatch(toggleGame({ over: true }));
-        }
-    }, [players.length]);  // eslint-disable-line react-hooks/exhaustive-deps
-};
-
 const HandleGame = () => {
     const dispatch = useDispatch();
     const { game, players, tiles, dice } = GetData();
 
     HandleInitialize({ dispatch, game, players, tiles });
     HandleRound({ dispatch, game, players, tiles, dice });
-    HandleEnd({ dispatch, players });
 };
 
 export default HandleGame;
