@@ -9,6 +9,13 @@ const GetData = () => {
     const players: TPlayer[] = useSelector((state: RootState) => state.players);
     const tiles: TTile[] = useSelector((state: RootState) => state.tiles);
 
+    const getPlayer = (id: string) => {
+        const data = players.find(p => p.id === id) as Required<TPlayer>;
+        const tile = tiles.find(tile => tile.occupants.includes(id)) as TTile;
+
+        return { data, tile };
+    };
+
     const getPlayerData = (id: string) => {
         return players.find(p => p.id === id) as Required<TPlayer>;
     };
@@ -25,7 +32,7 @@ const GetData = () => {
         return found as TTile;
     };
 
-    return { game, dice, players, tiles, getPlayerData, getPlayerTile, getTile };
+    return { game, dice, players, tiles, getPlayer, getPlayerData, getPlayerTile, getTile };
 };
 
 export default GetData;
