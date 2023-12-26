@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { THandleGameProps } from './HandleGame';
 import GetData from '../hooks/GetData';
-import { TPlayer, TTile } from '../reducers/initialStates';
+import { TDice, TPlayer, TTile } from '../reducers/initialStates';
 import { setDice } from '../reducers/diceReducer';
 import { setPlayer, setPlayers } from '../reducers/playersReducer';
 import { updateGame, updatePhase } from '../reducers/gameReducer';
@@ -18,14 +18,14 @@ const HandlePlayerActionChoice = ({ dispatch, queue, player }: { dispatch: THand
     handleComputerTurn();
 };
 
-const HandleDiceRoll = ({ dispatch, player }: { dispatch: THandleGameProps['dispatch'], player: TPlayer; }) => {
+const HandleDiceRoll = ({ dispatch, player, dice }: { dispatch: THandleGameProps['dispatch'], player: TPlayer, dice: TDice; }) => {
     const randomize = () => Math.floor(Math.random() * 6) + 1;
 
     const randomizeDiceDisplay = () => dispatch(setDice({ display: randomize() }));
 
-    const diceRoll = (force: Partial<number> = 0) => {
+    const diceRoll = () => {
         const countInterval = 10;
-        let count = force ? countInterval : 0;
+        let count = dice.force ? countInterval : 0;
 
         const rollingInterval = setInterval(() => {
             if (count !== countInterval) {
@@ -33,8 +33,9 @@ const HandleDiceRoll = ({ dispatch, player }: { dispatch: THandleGameProps['disp
                 count++;
             } else {
                 clearInterval(rollingInterval);
-                dispatch(setPlayer({ id: player.id, last_path: player.path, roll: force ? force : randomize() }));
+                dispatch(setPlayer({ id: player.id, last_path: player.path, roll: dice.force ?? randomize() }));
                 dispatch(updatePhase({ phase: 'action' }));
+                dispatch(setDice({ force: 0 }));
             }
         }, config.rollSpeed || 150);
 
@@ -97,7 +98,7 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
                 HandlePlayerActionChoice({ dispatch, queue, player });
                 break;
             case 'roll':
-                HandleDiceRoll({ dispatch, player });
+                HandleDiceRoll({ dispatch, player, dice });
                 break;
             case 'action':
                 HandlePlayerActions({ dispatch, players, tiles, playerId, player, playerTile, getTile });

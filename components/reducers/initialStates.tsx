@@ -39,8 +39,7 @@ export const initialGameState: TGame = {
 export type TDice = {
     display: number;
     current: number;
-    done: boolean;
-    move: boolean;
+    force: number;
 };
 
 /**
@@ -49,8 +48,7 @@ export type TDice = {
 export const initialDiceState: TDice = {
     display: 0,
     current: 1,
-    done: true,
-    move: false,
+    force: 0
 };
 
 export type TTile = {
