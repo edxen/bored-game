@@ -42,14 +42,12 @@ const HandleDiceRoll = ({ dispatch, player, dice }: { dispatch: THandleGameProps
 
 interface THandlePlayerActions {
     dispatch: THandleGameProps['dispatch'];
-    queue: string[],
     player: Required<TPlayer>,
-    players: TPlayer[];
     tiles: TTile[];
     getTile: ({ path }: { path: number; }) => TTile;
 }
 
-const HandlePlayerActions = ({ dispatch, queue, player, players, tiles, getTile }: THandlePlayerActions) => {
+const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: THandlePlayerActions) => {
     let currentPath = player.path;
     const getCurrentTile = () => getTile({ path: currentPath });
 
@@ -66,7 +64,7 @@ const HandlePlayerActions = ({ dispatch, queue, player, players, tiles, getTile 
 
     const isOccupied = () => {
         const currentTile = getTile({ path: currentPath });
-        if (currentTile.occupants.length) {
+        if (currentTile.type !== 'safe' && currentTile.occupants.length) {
             const removeOccupants = () => dispatch(setTile({ index: currentTile.index, key: 'occupants', value: [player.id] }));
             removeOccupants();
         }
@@ -132,7 +130,7 @@ const HandlePlayerActions = ({ dispatch, queue, player, players, tiles, getTile 
     actionInterval;
 };
 
-const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) => {
+const HandleTurn = ({ dispatch, game, tiles, dice }: THandleGameProps) => {
     const { round } = game;
     const { phase, queue } = round;
     const { getPlayerData, getTile } = GetData();
@@ -144,7 +142,7 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
                 HandleDiceRoll({ dispatch, player, dice });
                 break;
             case 'action':
-                HandlePlayerActions({ dispatch, queue, player, players, tiles, getTile });
+                HandlePlayerActions({ dispatch, player, tiles, getTile });
                 break;
         }
     }, [phase]);
