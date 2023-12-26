@@ -7,6 +7,7 @@ import RollDiceButton from './elements/RollDiceButton';
 import PlayerInformation from './elements/PlayerInformation';
 import WinBox from './elements/WinBox';
 import HandleGame from './logic/HandleGame';
+import RollButton from './elements/RollButton';
 
 export default function Game() {
     const { game, players } = getData();
@@ -52,7 +53,7 @@ const ControlBox = () => {
     return (
         <>
             <div className="flex justify-center items-center gap-2 w-full mb-2">
-                <RollDiceButton />
+                <RollButton />
             </div>
             <div className='flex gap-2'>
                 <PlayerInformation />
