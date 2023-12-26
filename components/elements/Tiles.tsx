@@ -18,7 +18,7 @@ function Tiles() {
 
     let tileClass = (tile: TTile) => {
         const isEdge = tile.edge ? 'bg-slate-200' : '';
-        const isOver = players.length === 1 ? 'animate-jump-out animate-duration-[2500ms]' : '';
+        const isOver = game.over ? 'animate-jump-out animate-duration-[2500ms]' : '';
 
         return `
         ${isEdge} ${isOver}

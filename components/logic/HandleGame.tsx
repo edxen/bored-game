@@ -28,9 +28,12 @@ const HandleInitialize = ({ dispatch, game, players, tiles }: Omit<THandleGamePr
                 dispatch(setTile({ index: tile.index, key: 'occupants', value: updatedOccupants }));
             }
         };
-
-        players.map((player) => addPlayerToTile(player));
-        dispatch(updateQueuePlayers(players));
+        const currentPlayers = [] as string[];
+        players.map((player) => {
+            currentPlayers.push(player.id);
+            addPlayerToTile(player);
+        });
+        dispatch(updateQueuePlayers(currentPlayers));
         dispatch(toggleGame({ started: true }));
     };
 

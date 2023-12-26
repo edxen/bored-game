@@ -52,10 +52,9 @@ const gameSlice = createSlice({
          * Update player in queue with ID based on provided string array.
          * @param arg1 - Accepts: string array with id as property
         **/
-        updateQueuePlayers: (state, action: PayloadAction<TPlayer[]>) => {
-            const players = action.payload;
+        updateQueuePlayers: (state, action: PayloadAction<string[]>) => {
             return produce(state, draftState => {
-                draftState.round.queue = players.map(player => player.id);
+                draftState.round.queue = action.payload;
             });
         },
         /**

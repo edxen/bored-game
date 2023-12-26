@@ -6,9 +6,9 @@ import GetData from '../hooks/GetData';
 
 import { TDice, TPlayer, TTile } from '../reducers/initialStates';
 import { setDice } from '../reducers/diceReducer';
-import { setPlayer, setPlayers } from '../reducers/playersReducer';
+import { setPlayer } from '../reducers/playersReducer';
 import { setTile } from '../reducers/tilesReducer';
-import { updateGame, updatePhase, updateQueuePlayers } from '../reducers/gameReducer';
+import { updatePhase } from '../reducers/gameReducer';
 
 import config from '../config';
 
@@ -59,16 +59,8 @@ const HandlePlayerActions = ({ dispatch, queue, player, players, tiles, getTile 
     const isOccupied = () => {
         const currentTile = getTile({ path: currentPath });
         if (currentTile.occupants.length) {
-            const removePlayer = () => dispatch(setPlayers(players.filter(fPlayer => !currentTile.occupants.includes(fPlayer.id))));
             const removeOccupants = () => dispatch(setTile({ index: currentTile.index, key: 'occupants', value: [player.id] }));
-            const updateQueue = () => dispatch(updateQueuePlayers(players.filter(fPlayers => !currentTile.occupants.includes(fPlayers.id))));
-            const updateRanking = () => dispatch(updateGame({ target: 'ranking', value: currentTile.occupants }));
-
-            updateQueue();
-            updateRanking();
-            removePlayer();
             removeOccupants();
-
         }
     };
 
