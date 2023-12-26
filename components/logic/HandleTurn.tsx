@@ -6,7 +6,7 @@ import GetData from '../hooks/GetData';
 
 import { TDice, TPlayer, TTile } from '../reducers/initialStates';
 import { setDice } from '../reducers/diceReducer';
-import { setPlayer } from '../reducers/playersReducer';
+import { setPlayer, setPlayers } from '../reducers/playersReducer';
 import { setTile } from '../reducers/tilesReducer';
 import { updatePhase } from '../reducers/gameReducer';
 
@@ -51,9 +51,17 @@ interface THandlePlayerActions {
 
 const HandlePlayerActions = ({ dispatch, queue, player, players, tiles, getTile }: THandlePlayerActions) => {
     let currentPath = player.path;
+    const getCurrentTile = () => getTile({ path: currentPath });
 
     const endSequence = () => {
         dispatch(updatePhase({ phase: 'post' }));
+    };
+
+    const isSkip = () => {
+        const currentTile = getCurrentTile();
+        if (currentTile.type === 'stop') {
+            dispatch(setPlayer({ id: player.id, skip: true }));
+        }
     };
 
     const isOccupied = () => {
@@ -106,6 +114,7 @@ const HandlePlayerActions = ({ dispatch, queue, player, players, tiles, getTile 
     const actionSequence = () => {
         isPortal();
         isOccupied();
+        isSkip();
         endSequence();
     };
 

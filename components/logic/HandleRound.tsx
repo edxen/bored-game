@@ -5,8 +5,8 @@ import { THandleGameProps } from './HandleGame';
 import { toggleGame, updateQueuePlayers, updateRoundCounter } from '../reducers/gameReducer';
 import GetData from '../hooks/GetData';
 import { updatePhase } from '../reducers/gameReducer';
-import { TPlayer, TTile } from '../reducers/initialStates';
-import { setPlayers } from '../reducers/playersReducer';
+import { TTile } from '../reducers/initialStates';
+import { setPlayer, setPlayers } from '../reducers/playersReducer';
 
 const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'dispatch' | 'game' | 'players'>) => {
     const { phase, queue } = game.round;
@@ -14,11 +14,17 @@ const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'disp
 
     useEffect(() => {
         if (phase === 'pre') {
-            if (getPlayerData(queue[0])?.type === 'computer') {
-                dispatch(updatePhase({ phase: 'roll' }));
-            }
-            if (players.length === 1) {
-                dispatch(toggleGame({ over: true }));
+            const currentPlayer = getPlayerData(queue[0]);
+            if (!currentPlayer.skip) {
+                if (currentPlayer?.type === 'computer') {
+                    dispatch(updatePhase({ phase: 'roll' }));
+                }
+                if (players.length === 1) {
+                    dispatch(toggleGame({ over: true }));
+                }
+            } else {
+                dispatch(setPlayer({ id: currentPlayer.id, skip: false }));
+                dispatch(updatePhase({ phase: 'post' }));
             }
         }
     }, [phase]);
@@ -26,6 +32,7 @@ const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'disp
 
 const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGameProps, 'dispatch' | 'game' | 'players'> & { getTile: ({ path }: { path: number; }) => TTile; }) => {
     const { phase, queue } = game.round;
+    const { getPlayerData } = GetData();
 
     const updateRemainingPlayers = () => {
         const remainingPlayers = [] as string[];
@@ -50,6 +57,7 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
 
     useEffect(() => {
         if (phase === 'post') {
+            const currentPlayer = getPlayerData(queue[0]);
             updateRemainingPlayers();
             dispatch(updateRoundCounter());
             dispatch(updatePhase({ phase: 'pre' }));

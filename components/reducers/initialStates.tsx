@@ -81,6 +81,7 @@ export type TPlayer = {
     index?: number;
     last_path?: number;
     roll?: number;
+    skip?: boolean;
 };
 
 /**
