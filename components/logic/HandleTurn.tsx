@@ -1,10 +1,15 @@
 import React, { useEffect } from 'react';
 import { THandleGameProps } from './HandleGame';
+import GetData from '../hooks/GetData';
+import { TPlayer } from '../reducers/initialStates';
 
-const HandlePlayerActionChoice = () => {
-    // console.log('determining current player');
-    // if current player is human, display dice options
-    // if computer, apply computer logic for dice options
+const HandlePlayerActionChoice = ({ dispatch, queue, player }: { dispatch: THandleGameProps['dispatch'], queue: string[], player: TPlayer; }) => {
+    const handleComputerTurn = () => {
+        if (queue.length > 1 && player.type === 'computer') {
+            // dice roll here
+        }
+    };
+    handleComputerTurn();
 };
 
 const HandleDiceRoll = () => {
@@ -21,12 +26,15 @@ const HandlePlayerActions = () => {
 };
 
 const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) => {
-    const { phase } = game.round;
+    const { round } = game;
+    const { phase, queue } = round;
+    const { getPlayerData } = GetData();
+    const player = getPlayerData(queue[0]);
 
     useEffect(() => {
         switch (phase) {
             case 'pre':
-                HandlePlayerActionChoice();
+                HandlePlayerActionChoice({ dispatch, queue, player });
                 break;
             case 'roll':
                 HandleDiceRoll();
