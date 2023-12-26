@@ -49,15 +49,27 @@ const HandleDiceRoll = ({ dispatch, player, dice }: { dispatch: THandleGameProps
 interface THandlePlayerActions {
     dispatch: THandleGameProps['dispatch'];
     players: TPlayer[];
-    tiles: TTile[];
-    playerId: string;
     player: Required<TPlayer>,
-    playerTile: TTile,
     getTile: ({ path }: { path: number; }) => TTile;
 }
 
-const HandlePlayerActions = ({ dispatch, players, tiles, playerId, player, playerTile, getTile }: THandlePlayerActions) => {
+const HandlePlayerActions = ({ dispatch, players, player, getTile }: THandlePlayerActions) => {
     let currentPath = player.path;
+
+    const endSequence = () => {
+        dispatch(updatePhase({ phase: 'post' }));
+    };
+
+    const isOccupied = () => {
+        const currentTile = getTile({ path: currentPath });
+        if (currentTile.occupants.length) {
+            const removePlayer = () => dispatch(setPlayers(players.filter(fPlayer => !currentTile.occupants.includes(fPlayer.id))));
+            const removeOccupants = () => dispatch(setTile({ index: currentTile.index, key: 'occupants', value: [player.id] }));
+
+            removePlayer();
+            removeOccupants();
+        }
+    };
 
     const isPortal = () => {
         const currentTile = getTile({ path: currentPath });
@@ -84,14 +96,16 @@ const HandlePlayerActions = ({ dispatch, players, tiles, playerId, player, playe
         const lastTile = getTile({ path: prevPath ? prevPath : (nextPath - 1) });
         const nextTile = getTile({ path: nextPath });
 
-        updateTileOccupants(nextTile.index, [playerId, ...nextTile.occupants]);
-        updateTileOccupants(lastTile.index, lastTile.occupants.filter(id => id !== playerId));
+        updateTileOccupants(nextTile.index, [player.id, ...nextTile.occupants]);
+        updateTileOccupants(lastTile.index, lastTile.occupants.filter(id => id !== player.id));
         currentPath = nextTile.path;
-        dispatch(setPlayer({ id: playerId, index: nextTile.index, path: nextTile.path, last_path: lastTile.path }));
+        dispatch(setPlayer({ id: player.id, index: nextTile.index, path: nextTile.path, last_path: lastTile.path }));
     };
 
     const actionSequence = () => {
         isPortal();
+        isOccupied();
+        endSequence();
     };
 
     let moveCounter = 0;
@@ -108,13 +122,11 @@ const HandlePlayerActions = ({ dispatch, players, tiles, playerId, player, playe
     actionInterval;
 };
 
-const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) => {
+const HandleTurn = ({ dispatch, game, players, dice }: THandleGameProps) => {
     const { round } = game;
     const { phase, queue } = round;
-    const { getPlayerData, getPlayerTile, getTile } = GetData();
+    const { getPlayerData, getTile } = GetData();
     const player = getPlayerData(queue[0]);
-    const playerTile = getPlayerTile(queue[0]);
-    const playerId = queue[0] ?? '';
 
     useEffect(() => {
         switch (phase) {
@@ -125,7 +137,7 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
                 HandleDiceRoll({ dispatch, player, dice });
                 break;
             case 'action':
-                HandlePlayerActions({ dispatch, players, tiles, playerId, player, playerTile, getTile });
+                HandlePlayerActions({ dispatch, players, player, getTile });
                 break;
         }
     }, [phase]);
