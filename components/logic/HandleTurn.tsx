@@ -42,12 +42,13 @@ const HandleDiceRoll = ({ dispatch, player, dice }: { dispatch: THandleGameProps
 
 interface THandlePlayerActions {
     dispatch: THandleGameProps['dispatch'];
-    players: TPlayer[];
     player: Required<TPlayer>,
+    players: TPlayer[];
+    tiles: TTile[];
     getTile: ({ path }: { path: number; }) => TTile;
 }
 
-const HandlePlayerActions = ({ dispatch, players, player, getTile }: THandlePlayerActions) => {
+const HandlePlayerActions = ({ dispatch, player, players, tiles, getTile }: THandlePlayerActions) => {
     let currentPath = player.path;
 
     const endSequence = () => {
@@ -86,12 +87,21 @@ const HandlePlayerActions = ({ dispatch, players, player, getTile }: THandlePlay
     const moveToNextTile = (targetPath: number, prevPath?: number) => {
         const updateTileOccupants = (index: number, occupants: string[]) => dispatch(setTile({ index, key: 'occupants', value: occupants }));
 
-        const nextPath = targetPath + (prevPath ? 0 : 1);
+        const totalPaths = tiles.filter(tile => tile.edge === true).length;
+
+        let nextPath = targetPath + (prevPath ? 0 : 1);
+        if (nextPath > totalPaths) {
+            nextPath = 1;
+            prevPath = totalPaths;
+        }
+
         const lastTile = getTile({ path: prevPath ? prevPath : (nextPath - 1) });
         const nextTile = getTile({ path: nextPath });
 
+
         updateTileOccupants(nextTile.index, [player.id, ...nextTile.occupants]);
         updateTileOccupants(lastTile.index, lastTile.occupants.filter(id => id !== player.id));
+
         currentPath = nextTile.path;
         dispatch(setPlayer({ id: player.id, index: nextTile.index, path: nextTile.path, last_path: lastTile.path }));
     };
@@ -116,7 +126,7 @@ const HandlePlayerActions = ({ dispatch, players, player, getTile }: THandlePlay
     actionInterval;
 };
 
-const HandleTurn = ({ dispatch, game, players, dice }: THandleGameProps) => {
+const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) => {
     const { round } = game;
     const { phase, queue } = round;
     const { getPlayerData, getTile } = GetData();
@@ -128,7 +138,7 @@ const HandleTurn = ({ dispatch, game, players, dice }: THandleGameProps) => {
                 HandleDiceRoll({ dispatch, player, dice });
                 break;
             case 'action':
-                HandlePlayerActions({ dispatch, players, player, getTile });
+                HandlePlayerActions({ dispatch, player, players, tiles, getTile });
                 break;
         }
     }, [phase]);
