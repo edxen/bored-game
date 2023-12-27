@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import Image from 'next/image';
+
 import { updatePhase } from '../reducers/gameReducer';
 import GetData from '../hooks/GetData';
 import { setDice } from '../reducers/diceReducer';
@@ -53,7 +55,7 @@ const RollButton = () => {
         }
     };
 
-    const buttonClass = `bg-white transition-all x-5 p-4 border rounded-2xl w-full shadow-md hover:bg-slate-100 hover:border-x-2 hover:font-semibold whitespace-nowrap`;
+    const buttonClass = `flex flex-col gap-2 justify-center items-center bg-white transition-all x-5 p-4 border rounded-2xl w-full shadow-md hover:bg-slate-100 hover:border-x-2 hover:font-semibold whitespace-nowrap`;
 
     return (
         <>
@@ -98,9 +100,28 @@ const RollButton = () => {
                             ))}
                         </div>
                     :
-                    <button className={buttonClass}>
-                        <span>{dice.display}</span>
-                    </button>
+
+                    dice.display && (
+                        <button className={buttonClass}>
+                            <span className="font-semibold">
+                                {getPlayerData(queue[0]).name}
+                            </span>
+                            {
+                                ((dice.display.indexOf('Rolling') !== -1 || dice.display.indexOf('Rolled') !== -1) && phase !== 'xaction')
+                                    ?
+                                    dice.display.replace('Rolled ', '').replace('Rolling ', '').length === 1 &&
+                                    <div className="flex flex-col items-center justify-center gap-4">
+                                        <div>
+                                            {dice.display.replace('Rolling ', '').length === 1 && 'Rolling'}
+                                            {dice.display.replace('Rolled ', '').length === 1 && 'Rolled'}
+                                        </div>
+                                        <Image src={`/images/dice/dice-${dice.display.replace('Rolled ', '').replace('Rolling ', '')}.png`} alt="dice" width="40" height="40" className={`${dice.display.indexOf('Rolling') !== -1 ? 'animate-bounce' : ''} transition-transform`} />
+                                    </div>
+                                    : <span>{dice.display}</span>
+                            }
+                        </button>
+                    )
+
             }
         </>
     );

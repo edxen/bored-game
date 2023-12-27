@@ -217,6 +217,7 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
 
                 const start = (key: keyof TPlayerAction) => {
                     dispatch(setPlayer({ id: player.id, extra: false, action: { ...player.action, [key]: false } }));
+                    dispatch(setDice({ display: '' }));
                     dispatch(updatePhase({ phase: 'roll' }));
                 };
 

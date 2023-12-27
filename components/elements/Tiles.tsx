@@ -12,7 +12,7 @@ function Tiles() {
     let containerClass = () => {
         return `
         ${config.tiles?.gridColumns || 'grid-cols-11'} 
-        grid gap-4 justify-items-center items-center h-full w-full 
+        grid gap-1 justify-items-center items-center h-full w-full 
         `;
     };
 
@@ -24,8 +24,8 @@ function Tiles() {
         ${isEdge} ${isOver}
         relative
         flex justify-center items-center
-        min-w-[2.5rem] w-10 h-10
-        p-1 rounded-md
+        w-9 h-9
+        p-2 rounded-md
         `;
     };
 
@@ -41,7 +41,7 @@ function Tiles() {
         ${isPlayerActive} ${color}
         absolute z-10
         flex justify-center items-center h-full w-full
-        text-white
+        text-black text-sm
         `;
     };
 
