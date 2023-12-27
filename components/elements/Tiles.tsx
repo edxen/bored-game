@@ -3,7 +3,7 @@ import GetData from "../hooks/GetData";
 import { TTile } from '../reducers/initialStates';
 import GenerateTileWithIcon from "./tiles/GenerateTileWithIcon";
 import GenerateOccupants from "./tiles/GenerateOccupants";
-import config from "../config";
+import config from '../configuration';
 
 function Tiles() {
     const { game, dice, players, tiles, getPlayerData } = GetData();

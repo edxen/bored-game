@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from "next/image";
-import { TTile } from '../../reducers/tilesReducer';
+import { TTile } from '@/components/reducers/initialStates';
 
 type TImageRefArr = Partial<{ [key in TTile['type']]: string; }>;
 

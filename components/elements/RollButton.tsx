@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { updatePhase } from '../reducers/gameReducer';
 import GetData from '../hooks/GetData';
 import { setDice } from '../reducers/diceReducer';
-import config from '../config';
+import config from '../configuration';
 import { TPlayerAction, playerAction } from '../reducers/initialStates';
 import { setPlayer } from '../reducers/playersReducer';
 

@@ -8,7 +8,7 @@ import { toggleGame, updatePhase, updateQueuePlayers, updateRoundCounter } from 
 import { setTile } from "../reducers/tilesReducer";
 import { TDice, TGame, TPlayer, TTile } from "../reducers/initialStates";
 import { UnknownAction } from 'redux';
-import config from '../config';
+import config from '../configuration';
 
 export type THandleGameProps = {
     dispatch: React.Dispatch<UnknownAction>;

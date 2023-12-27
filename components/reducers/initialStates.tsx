@@ -1,4 +1,4 @@
-import config from "../config";
+import config from '../configuration';
 import generateTiles from "../utils/generateTiles";
 
 export type TRound = {

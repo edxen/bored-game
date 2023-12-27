@@ -10,7 +10,7 @@ import { setPlayer } from '../reducers/playersReducer';
 import { setTile } from '../reducers/tilesReducer';
 import { updatePhase } from '../reducers/gameReducer';
 
-import config from '../config';
+import config from '../configuration';
 
 interface THandleTurnProps {
     dispatch: THandleGameProps['dispatch'];

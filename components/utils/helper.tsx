@@ -1,4 +1,4 @@
-import config from "../config";
+import config from '../configuration';
 const columns = config.tiles?.size.columns ?? 11;
 
 /**
