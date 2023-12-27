@@ -250,7 +250,7 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
 
                 break;
         }
-    }, [phase]);
+    }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
 export default HandleTurn;

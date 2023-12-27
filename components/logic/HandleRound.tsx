@@ -30,7 +30,7 @@ const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'disp
                 dispatch(updatePhase({ phase: 'post' }));
             }
         }
-    }, [phase]);
+    }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
 const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGameProps, 'dispatch' | 'game' | 'players'> & { getTile: ({ path }: { path: number; }) => TTile; }) => {
@@ -82,7 +82,7 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
             dispatch(updateRoundCounter());
             dispatch(updatePhase({ phase: 'pre' }));
         }
-    }, [phase]);
+    }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
 
 };
 
