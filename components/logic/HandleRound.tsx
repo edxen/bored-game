@@ -58,7 +58,18 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
     useEffect(() => {
         if (phase === 'post') {
             const currentPlayer = getPlayerData(queue[0]);
+            const currentTile = getTile({ path: currentPlayer.path });
+
             updateRemainingPlayers();
+
+            if (currentTile.type === 'dice') {
+                dispatch(updatePhase({ phase: 'extra' }));
+            } else {
+                dispatch(updatePhase({ phase: 'end' }));
+            }
+        }
+
+        if (phase === 'end') {
             dispatch(updateRoundCounter());
             dispatch(updatePhase({ phase: 'pre' }));
         }

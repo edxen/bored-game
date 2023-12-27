@@ -6,7 +6,7 @@ import GetData from '../hooks/GetData';
 
 import { TDice, TPlayer, TPlayerExtra, TTile, playerExtra } from '../reducers/initialStates';
 import { setDice } from '../reducers/diceReducer';
-import { setPlayer, setPlayers } from '../reducers/playersReducer';
+import playersReducer, { setPlayer, setPlayers } from '../reducers/playersReducer';
 import { setTile } from '../reducers/tilesReducer';
 import { updatePhase } from '../reducers/gameReducer';
 
@@ -53,11 +53,7 @@ const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: Omit<THandleT
 
     const endSequence = () => {
         const currentTile = getCurrentTile();
-        if (currentTile.type !== 'dice') {
-            dispatch(updatePhase({ phase: 'post' }));
-        } else {
-            dispatch(updatePhase({ phase: 'extra' }));
-        }
+        dispatch(updatePhase({ phase: 'post' }));
     };
 
     const isSkip = () => {
@@ -135,7 +131,7 @@ const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: Omit<THandleT
     actionInterval;
 };
 
-const HandleExtraActions = ({ dispatch, player, dice, getTile }: THandleTurnProps) => {
+const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandleTurnProps, 'dice'> & { players: TPlayer[]; }) => {
     const getCurrentTile = () => getTile({ path: player.path });
     let rolled: keyof TPlayerExtra;
     let display: string;
@@ -161,6 +157,8 @@ const HandleExtraActions = ({ dispatch, player, dice, getTile }: THandleTurnProp
     };
 
     const isExtra = () => {
+        if (players.length === 1) dispatch(updatePhase({ phase: 'end' }));
+
         const count = { current: 0, interval: 10 };
 
         const list = getAvailableExtraActions();
@@ -175,7 +173,7 @@ const HandleExtraActions = ({ dispatch, player, dice, getTile }: THandleTurnProp
                 displayRandomFrom(list, 'Rolled');
                 addExtraToPlayer(rolled);
 
-                setTimeout(() => dispatch(updatePhase({ phase: 'post' })), 1000);
+                setTimeout(() => dispatch(updatePhase({ phase: 'end' })), 1000);
             }
         }, config.rollSpeed || 150);
     };
@@ -184,7 +182,7 @@ const HandleExtraActions = ({ dispatch, player, dice, getTile }: THandleTurnProp
     if (currentTile.type === 'dice') isExtra();
 };
 
-const HandleTurn = ({ dispatch, game, tiles, dice }: THandleGameProps) => {
+const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) => {
     const { round } = game;
     const { phase, queue } = round;
     const { getPlayerData, getTile } = GetData();
@@ -199,7 +197,7 @@ const HandleTurn = ({ dispatch, game, tiles, dice }: THandleGameProps) => {
                 HandlePlayerActions({ dispatch, player, tiles, getTile });
                 break;
             case 'extra':
-                HandleExtraActions({ dispatch, player, dice, getTile });
+                HandleExtraActions({ dispatch, player, players, getTile });
                 break;
         }
     }, [phase]);

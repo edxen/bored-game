@@ -5,7 +5,7 @@ export type TRound = {
     queue: string[];
     turn: number;
     count: number;
-    phase: 'unstarted' | 'pre' | 'roll' | 'action' | 'extra' | 'post';
+    phase: 'unstarted' | 'pre' | 'roll' | 'action' | 'extra' | 'post' | 'end';
 };
 
 type TRanking = {
@@ -77,7 +77,7 @@ export const initialTileState = generateTiles({ columns: (columns || 11), rows: 
 **/
 
 
-type TPlayerExtra = {
+export type TPlayerExtra = {
     low?: boolean;
     high?: boolean;
     exact?: boolean;
