@@ -23,6 +23,7 @@ const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'disp
                 }
                 if (players.length === 1) {
                     dispatch(toggleGame({ over: true }));
+                    dispatch(updatePhase({ phase: 'over' }));
                 }
             } else {
                 dispatch(setPlayer({ id: currentPlayer.id, skip: false }));
