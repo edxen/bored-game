@@ -28,64 +28,66 @@ export default function Game() {
                     <h4 className='-rotate-3'>Edxen the Bored Developer</h4>
                 </div>
             }
-            <div className="flex justify-between items-flex-start gap-2 px-2 border-b-2 pb-2 mb-2">
-                {
-                    players.map((player, i: number) => (
-                        <div key={i} className={`flex gap-2 ${player.color} flex-grow-0 ${queue[0] === player.id ? 'border-4 border-red-400' : 'border border-slate-200'} rounded-xl p-2 select-none`}>
-                            <div className="flex flex-col gap-1 text-xs flex-wrap">
-                                <div className="flex gap-2 flex-wrap">
-                                    <div className="flex bg-white rounded-lg px-2 items-center gap-2">
-                                        <Image src={`/images/icons/icon-${player.type}.png`} alt={player.type} width="20" height="20" className="object-contain" />
-                                        <div className="text-lg font-semibold">{player.name}</div>
-                                    </div>
-                                    <div className="flex flex-col items-start gap-1 flex-wrap">
-                                        {
-                                            [{ label: 'Flags', value: ['Blue', 'Red'] }, { label: 'Eliminated', value: ['JSXA', 'SIAM'] }].map((item, i) => (
-                                                <div key={i} className="flex gap-1 flex-wrap">
-                                                    <div className="font-medium">{item.label}:</div>
-                                                    <div>{item.value.map((id, _i, arr) => <span key={id}>{id}{_i !== (arr.length - 1) && ','} </span>)}</div>
-                                                </div>
-                                            ))
-                                        }
-                                    </div>
-                                </div>
-                                <div className="flex flex-wrap gap-2 ">
-                                    {
-                                        player.action && Object.entries(player.action).map(([key, value]) => value && (
-                                            <div key={key} className="bg-white rounded-xl px-2 p-1 whitespace-nowrap">{playerAction[key as keyof TPlayerAction]}</div>
-                                        ))
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    ))
-                }
-            </div>
             {
                 queue.length !== 0 && (
-                    <div className="flex flex-col gap-2 justify-center items-center">
-                        <div className="font-bold">
-                            Round {round.count} Turn {round.turn}
-                        </div>
-                        <div className="flex gap-2">
+                    <>
+                        <div className="flex justify-between items-flex-start gap-2 px-2 border-b-2 pb-2 mb-2 min-h-[110px]">
                             {
-                                queue.map((id, i) => (
-                                    <div key={i} className="flex justify-center items-center gap-2">
-                                        <div className={`${getPlayerData(id).color} relative flex justify-center gap-2 ${getPlayerData(id).skip ? 'opacity-50' : ''} items-center px-2 rounded-lg text-sm font-medium`}>
-                                            <div>
-                                                {getPlayerData(id).name}
+                                players.map((player, i: number) => (
+                                    <div key={i} className={`flex gap-2 ${player.color} flex-grow-0 ${queue[0] === player.id ? 'border-4 border-red-400' : 'border border-slate-200'} rounded-xl p-2 select-none`}>
+                                        <div className="flex flex-col gap-1 text-xs flex-wrap">
+                                            <div className="flex gap-2 flex-wrap">
+                                                <div className="flex bg-white rounded-lg px-2 items-center gap-2">
+                                                    <Image src={`/images/icons/icon-${player.type}.png`} alt={player.type} width="20" height="20" className="object-contain" />
+                                                    <div className="text-lg font-semibold">{player.name}</div>
+                                                </div>
+                                                <div className="flex flex-col items-start gap-1 flex-wrap">
+                                                    {
+                                                        [{ label: 'Flags', value: ['Blue', 'Red'] }, { label: 'Eliminated', value: ['JSXA', 'SIAM'] }].map((item, i) => (
+                                                            <div key={i} className="flex gap-1 flex-wrap">
+                                                                <div className="font-medium">{item.label}:</div>
+                                                                <div>{item.value.map((id, _i, arr) => <span key={id}>{id}{_i !== (arr.length - 1) && ','} </span>)}</div>
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </div>
                                             </div>
-
-                                            <Image src={`/images/icons/icon-${getTile({ path: getPlayerData(id).path }).type}.png`} alt={id} width="14" height="14" className="bg-slate-200 rounded-full" />
+                                            <div className="flex flex-wrap gap-2 ">
+                                                {
+                                                    player.action && Object.entries(player.action).map(([key, value]) => value && (
+                                                        <div key={key} className="bg-white rounded-xl px-2 p-1 whitespace-nowrap">{playerAction[key as keyof TPlayerAction]}</div>
+                                                    ))
+                                                }
+                                            </div>
                                         </div>
-                                        {i !== queue.length - 1 && (
-                                            <Image src="/images/icons/icon-arrow-left.png" alt={id} width="10" height="10" />
-                                        )}
                                     </div>
                                 ))
                             }
                         </div>
-                    </div>
+                        <div className="flex flex-col gap-2 justify-center items-center">
+                            <div className="font-bold">
+                                Round {round.count} Turn {round.turn}
+                            </div>
+                            <div className="flex gap-2">
+                                {
+                                    queue.map((id, i) => (
+                                        <div key={i} className="flex justify-center items-center gap-2">
+                                            <div className={`${getPlayerData(id).color} relative flex justify-center gap-2 ${getPlayerData(id).skip ? 'opacity-50' : ''} items-center px-2 rounded-lg text-sm font-medium`}>
+                                                <div>
+                                                    {getPlayerData(id).name}
+                                                </div>
+
+                                                <Image src={`/images/icons/icon-${getTile({ path: getPlayerData(id).path }).type}.png`} alt={id} width="14" height="14" className="bg-slate-200 rounded-full" />
+                                            </div>
+                                            {i !== queue.length - 1 && (
+                                                <Image src="/images/icons/icon-arrow-left.png" alt={id} width="10" height="10" />
+                                            )}
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                    </>
                 )
             }
             <div className='flex justify-center items center flex-1 relative my-2'>
