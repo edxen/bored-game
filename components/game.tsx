@@ -16,7 +16,7 @@ export default function Game() {
     HandleGame();
 
     return (
-        <div className='flex flex-col h-screen p-4'>
+        <div className='h-[100dvh] flex flex-col p-4'>
             <div className='w-full flex flex-col justify-center items-center my-5 text-sm text-gray-700 font-bold'>
                 <h1 className='text-2xl text-black rotate-6'>Bored Game</h1>
                 <h4 className='m-[-.50rem]'>by</h4>
@@ -36,7 +36,7 @@ export default function Game() {
                         <>
                             <Tiles />
                             <div className="absolute top-0 left-0 h-full w-full flex flex-col justify-center items-center">
-                                <div className="bg-white p-4 rounded-md border border-slate-100 flex flex-col justify-center items-center">
+                                <div className="flex flex-col justify-center items-center">
                                     {
                                         !game.over
                                             ? <ControlBox />

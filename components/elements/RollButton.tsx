@@ -53,13 +53,13 @@ const RollButton = () => {
         }
     };
 
-    const buttonClass = `transition-all x-5 p-4 border rounded-2xl w-full shadow-md hover:bg-slate-100 hover:border-x-2 hover:font-semibold whitespace-nowrap`;
+    const buttonClass = `bg-white transition-all x-5 p-4 border rounded-2xl w-full shadow-md hover:bg-slate-100 hover:border-x-2 hover:font-semibold whitespace-nowrap`;
 
     return (
         <>
             {phase === 'pre' ?
                 <div className="flex flex-col gap-2 w-full ">
-                    <button className={buttonClass} onClick={handleRoll}>
+                    <button className={`${buttonClass} animate-bounce`} onClick={handleRoll}>
                         Roll Dice
                     </button>
                     {
@@ -76,15 +76,17 @@ const RollButton = () => {
                     ?
                     !exactMenuDisplay ?
                         <div className='flex flex-col gap-2 w-full'>
-                            {Object.entries(player.action).map(([key, value]) =>
-                                value && key !== 'dodge' && (
-                                    <div key={key}>
-                                        <button className={buttonClass} onClick={() => handleExtra(key)}>
-                                            Use {playerAction[key as keyof TPlayerAction]}
-                                        </button>
-                                    </div>
-                                )
-                            )}
+                            <div className="flex gap-2 justify-items-center place-items-center">
+                                {Object.entries(player.action).map(([key, value]) =>
+                                    value && key !== 'dodge' && (
+                                        <div key={key} className="flex flex-grow">
+                                            <button className={buttonClass} onClick={() => handleExtra(key)}>
+                                                Use {playerAction[key as keyof TPlayerAction]}
+                                            </button>
+                                        </div>
+                                    )
+                                )}
+                            </div>
                             <button className={buttonClass} onClick={() => handleExtra('cancel')}>
                                 Cancel
                             </button>
