@@ -26,16 +26,16 @@ const HandleDiceRoll = ({ dispatch, player, dice }: Omit<THandleTurnProps, 'getT
     const diceRoll = () => {
         const countInterval = 10;
         let count = dice.force ? countInterval : config.diceInterval ? config.diceInterval : 0;
-
+        let rolled: number;
         const rollingInterval = setInterval(() => {
             if (count !== countInterval) {
-                dispatch(setDice({ display: `rolling ${randomizedNumber({ max: 6 })}`, current: randomizedNumber({ max: 6 }) }));
+                rolled = randomizedNumber({ max: 6 });
+                dispatch(setDice({ display: `rolling ${rolled}` }));
                 count++;
             } else {
                 clearInterval(rollingInterval);
-                dispatch(setDice({ display: `rolled ${dice.current}` }));
-                dispatch(setPlayer({ id: player.id, last_path: player.path, roll: dice.force ? dice.force : dice.current }));
-                dispatch(setDice({ force: 0, display: `rolled ${dice.current}` }));
+                dispatch(setDice({ force: 0, display: `rolled ${rolled}` }));
+                dispatch(setPlayer({ id: player.id, last_path: player.path, roll: dice.force ? dice.force : rolled }));
                 dispatch(updatePhase({ phase: 'action' }));
             }
         }, config.rollSpeed || 150);
