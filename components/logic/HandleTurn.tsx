@@ -27,16 +27,16 @@ const HandleDiceRoll = ({ dispatch, player, dice }: Omit<THandleTurnProps, 'getT
     const diceRoll = () => {
         const countInterval = 10;
         let count = dice.force ? countInterval : config.diceInterval ? config.diceInterval : 0;
-        let rolled: number;
+        let rolled: number = dice.force ? dice.force : 1;
         const rollingInterval = setInterval(() => {
             if (count !== countInterval) {
                 rolled = randomizedNumber({ max: 6 });
-                dispatch(setDice({ display: `rolling ${rolled}` }));
+                dispatch(setDice({ display: `Rolling ${rolled}` }));
                 count++;
             } else {
                 clearInterval(rollingInterval);
-                dispatch(setDice({ force: 0, display: `rolled ${rolled}` }));
-                dispatch(setPlayer({ id: player.id, last_path: player.path, roll: dice.force ? dice.force : rolled }));
+                dispatch(setDice({ force: 0, display: `Rolled ${rolled}` }));
+                dispatch(setPlayer({ id: player.id, last_path: player.path, roll: rolled }));
                 setTimeout(() => dispatch(updatePhase({ phase: 'action' })), 1000);
             }
         }, config.rollSpeed || 150);
@@ -168,11 +168,11 @@ const HandleExtraActions = ({ dispatch, player, dice, getTile }: THandleTurnProp
 
         const extraInterval = setInterval(() => {
             if (count.current !== count.interval) {
-                displayRandomFrom(list, 'rolling');
+                displayRandomFrom(list, 'Rolling');
                 count.current++;
             } else {
                 clearInterval(extraInterval);
-                displayRandomFrom(list, 'rolled');
+                displayRandomFrom(list, 'Rolled');
                 addExtraToPlayer(rolled);
 
                 setTimeout(() => dispatch(updatePhase({ phase: 'post' })), 1000);
