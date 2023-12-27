@@ -207,6 +207,40 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
                 HandleExtraActions({ dispatch, player, players, getTile });
                 break;
             case 'extra':
+
+                const start = (key: keyof TPlayerAction) => {
+                    dispatch(setPlayer({ id: player.id, extra: false, action: { ...player.action, [key]: false } }));
+                    dispatch(updatePhase({ phase: 'roll' }));
+                };
+
+                const handleExtra = (key: string) => {
+                    switch (key) {
+                        case 'exact':
+                            start(key);
+                            break;
+                        case 'high':
+                            dispatch(setDice({ min: 4, max: 3 }));
+                            start(key);
+                            break;
+                        case 'low':
+                            dispatch(setDice({ min: 1, max: 3 }));
+                            start(key);
+                            break;
+                        case 'extra':
+                            dispatch(updatePhase({ phase: 'roll' }));
+                            start(key);
+                            break;
+                        case 'cancel': dispatch(updatePhase({ phase: 'end' })); break;
+                    }
+                };
+
+                if (player.type === 'computer') {
+                    const keys = ['cancel'];
+                    Object.entries(player.action).forEach(([key, value]) => value && keys.push(key));
+                    const key = keys[Math.floor(Math.random() * keys.length)];
+                    handleExtra(key);
+                }
+
                 break;
         }
     }, [phase]);
