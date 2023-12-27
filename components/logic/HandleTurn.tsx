@@ -35,9 +35,10 @@ const HandleDiceRoll = ({ dispatch, player, dice }: Omit<THandleTurnProps, 'getT
                 count++;
             } else {
                 clearInterval(rollingInterval);
+                rolled = randomizedNumber({ min: dice.min, max: dice.max });
                 dispatch(setDice({ min: 1, max: 6, force: 0, display: `Rolled ${rolled}` }));
                 dispatch(setPlayer({ id: player.id, last_path: player.path, roll: rolled }));
-                setTimeout(() => dispatch(updatePhase({ phase: 'action' })), 1000);
+                setTimeout(() => dispatch(updatePhase({ phase: 'action' })), config.delay || 1000);
             }
         }, config.rollSpeed || 150);
 
@@ -171,6 +172,7 @@ const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandle
         const list = getAvailableExtraActions();
         if (!list.length) doExtra();
 
+        displayRandomFrom(list, 'Rolling');
         const actionInterval = setInterval(() => {
             if (count.current !== count.interval) {
                 displayRandomFrom(list, 'Rolling');
@@ -180,7 +182,7 @@ const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandle
                 displayRandomFrom(list, 'Rolled');
                 addExtraToPlayer(rolled);
 
-                setTimeout(() => doExtra(), 1000);
+                setTimeout(() => doExtra(), config.delay || 1000);
             }
         }, config.rollSpeed || 150);
     };
