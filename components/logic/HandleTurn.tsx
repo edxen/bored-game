@@ -4,7 +4,7 @@ import { THandleGameProps } from './HandleGame';
 import { getSameSideColumn } from '../utils/helper';
 import GetData from '../hooks/GetData';
 
-import { TDice, TPlayer, TTile } from '../reducers/initialStates';
+import { TDice, TPlayer, TPlayerExtra, TTile, playerExtra } from '../reducers/initialStates';
 import { setDice } from '../reducers/diceReducer';
 import { setPlayer, setPlayers } from '../reducers/playersReducer';
 import { setTile } from '../reducers/tilesReducer';
@@ -12,25 +12,31 @@ import { updatePhase } from '../reducers/gameReducer';
 
 import config from '../config';
 
+interface THandleTurnProps {
+    dispatch: THandleGameProps['dispatch'];
+    player: Required<TPlayer>,
+    dice: TDice,
+    getTile: ({ path }: { path: number; }) => TTile;
+}
 
-const HandleDiceRoll = ({ dispatch, player, dice }: { dispatch: THandleGameProps['dispatch'], player: TPlayer, dice: TDice; }) => {
-    const randomize = () => Math.floor(Math.random() * 6) + 1;
+const randomizedNumber = ({ max }: { max: number; }) => Math.floor(Math.random() * max) + 1;
 
-    const randomizeDiceDisplay = () => dispatch(setDice({ display: randomize() }));
 
+const HandleDiceRoll = ({ dispatch, player, dice }: Omit<THandleTurnProps, 'getTile'>) => {
     const diceRoll = () => {
         const countInterval = 10;
         let count = dice.force ? countInterval : config.diceInterval ? config.diceInterval : 0;
 
         const rollingInterval = setInterval(() => {
             if (count !== countInterval) {
-                randomizeDiceDisplay();
+                dispatch(setDice({ display: `rolling ${randomizedNumber({ max: 6 })}`, current: randomizedNumber({ max: 6 }) }));
                 count++;
             } else {
                 clearInterval(rollingInterval);
-                dispatch(setPlayer({ id: player.id, last_path: player.path, roll: dice.force ? dice.force : randomize() }));
+                dispatch(setDice({ display: `rolled ${dice.current}` }));
+                dispatch(setPlayer({ id: player.id, last_path: player.path, roll: dice.force ? dice.force : dice.current }));
+                dispatch(setDice({ force: 0, display: `rolled ${dice.current}` }));
                 dispatch(updatePhase({ phase: 'action' }));
-                dispatch(setDice({ force: 0, display: 0 }));
             }
         }, config.rollSpeed || 150);
 
@@ -40,19 +46,17 @@ const HandleDiceRoll = ({ dispatch, player, dice }: { dispatch: THandleGameProps
     diceRoll();
 };
 
-interface THandlePlayerActions {
-    dispatch: THandleGameProps['dispatch'];
-    player: Required<TPlayer>,
-    tiles: TTile[];
-    getTile: ({ path }: { path: number; }) => TTile;
-}
-
-const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: THandlePlayerActions) => {
+const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: Omit<THandleTurnProps, 'dice'> & { tiles: TTile[]; }) => {
     let currentPath = player.path;
     const getCurrentTile = () => getTile({ path: currentPath });
 
     const endSequence = () => {
-        dispatch(updatePhase({ phase: 'post' }));
+        const currentTile = getCurrentTile();
+        if (currentTile.type !== 'dice') {
+            dispatch(updatePhase({ phase: 'post' }));
+        } else {
+            dispatch(updatePhase({ phase: 'extra' }));
+        }
     };
 
     const isSkip = () => {
@@ -130,6 +134,55 @@ const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: THandlePlayer
     actionInterval;
 };
 
+const HandleExtraActions = ({ dispatch, player, dice, getTile }: THandleTurnProps) => {
+    const getCurrentTile = () => getTile({ path: player.path });
+    let rolled: keyof TPlayerExtra;
+    let display: string;
+
+    const displayRandomFrom = (list: string[], label: string) => {
+        rolled = list[randomizedNumber({ max: list.length }) - 1] as keyof TPlayerExtra;
+        display = playerExtra[rolled];
+        dispatch(setDice({ display: `${label} ${display}` }));
+    };
+
+    const addExtraToPlayer = (rolled: keyof TPlayerExtra) => {
+        const extra = { [rolled]: true };
+        dispatch(setPlayer({ id: player.id, extra: { ...player.extra, ...extra } }));
+    };
+
+    const getAvailableExtraActions = () => {
+        const list: string[] = [];
+        Object.keys(playerExtra).forEach((key) => {
+            if (!player.extra) list.push(key);
+            if (player.extra && !Object.keys(player.extra).includes(key)) list.push(key);
+        });
+        return list;
+    };
+
+    const isExtra = () => {
+        const count = { current: 0, interval: 10 };
+
+        const list = getAvailableExtraActions();
+        if (!list.length) return;
+
+        const extraInterval = setInterval(() => {
+            if (count.current !== count.interval) {
+                displayRandomFrom(list, 'rolling');
+                count.current++;
+            } else {
+                clearInterval(extraInterval);
+                displayRandomFrom(list, 'rolled');
+                addExtraToPlayer(rolled);
+
+                dispatch(updatePhase({ phase: 'post' }));
+            }
+        }, config.rollSpeed || 150);
+    };
+
+    const currentTile = getCurrentTile();
+    if (currentTile.type === 'dice') isExtra();
+};
+
 const HandleTurn = ({ dispatch, game, tiles, dice }: THandleGameProps) => {
     const { round } = game;
     const { phase, queue } = round;
@@ -143,6 +196,9 @@ const HandleTurn = ({ dispatch, game, tiles, dice }: THandleGameProps) => {
                 break;
             case 'action':
                 HandlePlayerActions({ dispatch, player, tiles, getTile });
+                break;
+            case 'extra':
+                HandleExtraActions({ dispatch, player, dice, getTile });
                 break;
         }
     }, [phase]);

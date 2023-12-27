@@ -40,10 +40,7 @@ const RollButton = () => {
                 </div>
                 :
                 <button className={buttonClass}>
-                    {phase === 'roll'
-                        ? <span>Rolling {dice.display}</span>
-                        : <span>Rolled {player.roll}</span>
-                    }
+                    <span>{dice.display}</span>
                 </button>
             }
         </>

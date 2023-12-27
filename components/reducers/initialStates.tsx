@@ -5,7 +5,7 @@ export type TRound = {
     queue: string[];
     turn: number;
     count: number;
-    phase: 'unstarted' | 'pre' | 'roll' | 'action' | 'post';
+    phase: 'unstarted' | 'pre' | 'roll' | 'action' | 'extra' | 'post';
 };
 
 type TRanking = {
@@ -37,7 +37,7 @@ export const initialGameState: TGame = {
 };
 
 export type TDice = {
-    display: number;
+    display: string;
     current: number;
     force: number;
 };
@@ -46,7 +46,7 @@ export type TDice = {
  * Data to initialize Dice state
 **/
 export const initialDiceState: TDice = {
-    display: 0,
+    display: '',
     current: 1,
     force: 0
 };
@@ -72,6 +72,29 @@ const rows = config.tiles?.size.rows;
 const columns = config.tiles?.size.columns;
 export const initialTileState = generateTiles({ columns: (columns || 11), rows: (rows || 11) });
 
+/**
+ * Data to initialize Player state
+**/
+
+
+type TPlayerExtra = {
+    low?: boolean;
+    high?: boolean;
+    exact?: boolean;
+    extra?: boolean;
+    back?: boolean;
+    dodge?: boolean;
+};
+
+export const playerExtra = {
+    exact: 'Exact Roll',
+    low: 'Low Roll',
+    high: 'High Roll',
+    extra: 'Extra Roll',
+    back: 'Roll Back',
+    dodge: 'Dodge'
+};
+
 export type TPlayer = {
     id: string;
     type: 'human' | 'computer';
@@ -82,9 +105,7 @@ export type TPlayer = {
     last_path?: number;
     roll?: number;
     skip?: boolean;
+    extra?: TPlayerExtra;
 };
 
-/**
- * Data to initialize Player state
-**/
 export const initialPlayerState: TPlayer[] = config.customPlayer?.enabled ? config.customPlayer.state : [];

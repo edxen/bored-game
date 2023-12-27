@@ -19,6 +19,15 @@ const PlayerInformation = () => {
                                 </div>
                             ))}
                         </div>
+                        <div>
+                            {
+                                player.extra && Object.entries(player.extra).map(([key, value]) => (
+                                    <div key={key}>
+                                        {key}
+                                    </div>
+                                ))
+                            }
+                        </div>
                     </div>
                 ))
             }
