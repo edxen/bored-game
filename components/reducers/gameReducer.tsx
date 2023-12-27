@@ -9,10 +9,11 @@ const gameSlice = createSlice({
     reducers: {
         /**
          * Toggle boolean game state.
+         * @param started - set game initialize status
          * @param started - set game started status
          * @param over - set game over status 
         **/
-        toggleGame: (state: TGame, action: PayloadAction<Partial<{ started: boolean, over: boolean; }>>) => {
+        toggleGame: (state: TGame, action: PayloadAction<Partial<{ initialize: boolean, started: boolean, over: boolean; }>>) => {
             const { ...updates } = action.payload;
             return produce(state, draftState => Object.assign(draftState, updates));
         },

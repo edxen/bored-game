@@ -8,6 +8,7 @@ import { toggleGame, updatePhase, updateQueuePlayers, updateRoundCounter } from 
 import { setTile } from "../reducers/tilesReducer";
 import { TDice, TGame, TPlayer, TTile } from "../reducers/initialStates";
 import { UnknownAction } from 'redux';
+import config from '../config';
 
 export type THandleGameProps = {
     dispatch: React.Dispatch<UnknownAction>;
@@ -37,6 +38,7 @@ const HandleInitialize = ({ dispatch, game, players, tiles }: Omit<THandleGamePr
     };
 
     const initialRender = useRef(true);
+
     useEffect(() => {
         if (!initialRender.current && !game.started) {
             dispatch(updatePhase({ phase: 'pre' }));
@@ -51,7 +53,9 @@ const HandleGame = () => {
     const dispatch = useDispatch();
     const { game, players, tiles, dice } = GetData();
 
-    HandleInitialize({ dispatch, game, players, tiles });
+    if (config.customPlayer.enabled) dispatch(toggleGame({ initialize: true }));
+
+    if (game.initialize) HandleInitialize({ dispatch, game, players, tiles });
     HandleRound({ dispatch, game, players, tiles, dice });
 };
 

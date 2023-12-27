@@ -1,16 +1,17 @@
+import React from 'react';
+
 import getData from './hooks/GetData';
 
 import Turns from './elements/Turns';
 import Tiles from './elements/Tiles';
 import Menu from './elements/Menu';
-import RollDiceButton from './elements/RollDiceButton';
 import PlayerInformation from './elements/PlayerInformation';
 import WinBox from './elements/WinBox';
 import HandleGame from './logic/HandleGame';
 import RollButton from './elements/RollButton';
 
 export default function Game() {
-    const { game, players } = getData();
+    const { game } = getData();
 
     HandleGame();
 
@@ -21,7 +22,9 @@ export default function Game() {
                 <h4 className='m-[-.50rem]'>by</h4>
                 <h4 className='-rotate-3'>Edxen the Bored Developer</h4>
             </div>
-            <Turns />
+            {game.started &&
+                <Turns />
+            }
             <div className='flex justify-center items center flex-1 relative my-2'>
                 {
                     !game.started

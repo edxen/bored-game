@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import HandleTurn from "./HandleTurn";
 import { THandleGameProps } from './HandleGame';

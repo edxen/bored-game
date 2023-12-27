@@ -19,8 +19,6 @@ interface THandleTurnProps {
     getTile: ({ path }: { path: number; }) => TTile;
 }
 
-
-
 const randomizedNumber = ({ min = 1, max = 6 }: Partial<Pick<TDice, 'min' | 'max'>>) => Math.floor(Math.random() * max) + min;
 
 const HandleDiceRoll = ({ dispatch, player, dice }: Omit<THandleTurnProps, 'getTile'>) => {

@@ -20,6 +20,7 @@ type TRanking = {
 };
 
 export type TGame = {
+    initialize: boolean;
     started: boolean;
     over: boolean;
     round: TRound;
@@ -30,6 +31,7 @@ export type TGame = {
  * Data to initialize Game state
 **/
 export const initialGameState: TGame = {
+    initialize: false,
     started: false,
     over: false,
     round: {

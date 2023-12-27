@@ -5,7 +5,7 @@ import PlayerCard, { TColorsList, bgColors } from './menu/PlayerCard';
 import { setPlayers as setGamePlayers } from '../reducers/playersReducer';
 import { setTile } from '../reducers/tilesReducer';
 import { getSameSideColumn } from '../utils/helper';
-import { updateGame } from '../reducers/gameReducer';
+import { toggleGame, updateGame, updatePhase } from '../reducers/gameReducer';
 import { TTile, TPlayer } from '../reducers/initialStates';
 import GetData from '../hooks/GetData';
 
@@ -17,7 +17,7 @@ interface TDefaultPlayer extends Pick<TPlayer, 'name' | 'type'> {
 }
 
 export const defaultPlayer = ({ name, type, color }: TDefaultPlayer): TPlayer => {
-    const player: TPlayer = { name, type, color, id: name.toLowerCase(), path: 1 };
+    const player: TPlayer = { name, type, color, id: name.toLowerCase(), path: 1, action: {} };
     return player;
 };
 
@@ -77,6 +77,8 @@ const Menu = () => {
             dispatch(setGamePlayers(players));
             addPlayersToBoard(players);
             initializeTurnDisplay(players);
+            dispatch(toggleGame({ started: true }));
+            dispatch(updatePhase({ phase: 'pre' }));
             setStart(false);
         }
     }, [start]);  // eslint-disable-line react-hooks/exhaustive-deps
