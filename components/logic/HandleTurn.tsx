@@ -167,8 +167,7 @@ const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandle
     const isAction = () => {
         if (players.length === 1) dispatch(updatePhase({ phase: 'end' }));
 
-        const count = { current: 0, interval: 10 };
-
+        const count = { current: config.actionInterval ?? 0, interval: 10 };
         const list = getAvailableExtraActions();
         if (!list.length) doExtra();
 
