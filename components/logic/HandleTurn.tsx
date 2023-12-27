@@ -19,8 +19,9 @@ interface THandleTurnProps {
     getTile: ({ path }: { path: number; }) => TTile;
 }
 
-const randomizedNumber = ({ max }: { max: number; }) => Math.floor(Math.random() * max) + 1;
 
+
+const randomizedNumber = ({ max }: { max: number; }) => Math.floor(Math.random() * max) + 1;
 
 const HandleDiceRoll = ({ dispatch, player, dice }: Omit<THandleTurnProps, 'getTile'>) => {
     const diceRoll = () => {
@@ -36,7 +37,7 @@ const HandleDiceRoll = ({ dispatch, player, dice }: Omit<THandleTurnProps, 'getT
                 clearInterval(rollingInterval);
                 dispatch(setDice({ force: 0, display: `rolled ${rolled}` }));
                 dispatch(setPlayer({ id: player.id, last_path: player.path, roll: dice.force ? dice.force : rolled }));
-                dispatch(updatePhase({ phase: 'action' }));
+                setTimeout(() => dispatch(updatePhase({ phase: 'action' })), 1000);
             }
         }, config.rollSpeed || 150);
 
@@ -174,7 +175,7 @@ const HandleExtraActions = ({ dispatch, player, dice, getTile }: THandleTurnProp
                 displayRandomFrom(list, 'rolled');
                 addExtraToPlayer(rolled);
 
-                dispatch(updatePhase({ phase: 'post' }));
+                setTimeout(() => dispatch(updatePhase({ phase: 'post' })), 1000);
             }
         }, config.rollSpeed || 150);
     };
