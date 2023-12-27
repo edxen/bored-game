@@ -148,10 +148,18 @@ const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandle
     };
 
     const getAvailableExtraActions = () => {
-        const list: string[] = [];
-        Object.keys(playerAction).forEach((key) => {
-            if (!player.action) list.push(key);
-            if (player.action && !player.action[key as keyof TPlayerAction]) list.push(key);
+        const actions = player.action ?? false;
+        const objActions = Object.keys(actions);
+        const objActionsList = Object.keys(playerAction);
+
+        let list: string[] = [];
+        objActionsList.forEach((key) => {
+            if (!actions) {
+                list.push(key);
+            } else {
+                if (!actions[key as keyof TPlayerAction]) list.push(key);
+                if (objActionsList.length === objActions.length) list = objActionsList;
+            }
         });
         return list;
     };
