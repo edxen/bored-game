@@ -15,6 +15,8 @@ const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'disp
     useEffect(() => {
         if (phase === 'pre') {
             const currentPlayer = getPlayerData(queue[0]);
+            dispatch(setPlayer({ id: currentPlayer.id, extra: true }));
+
             if (!currentPlayer.skip) {
                 if (currentPlayer?.type === 'computer') {
                     dispatch(updatePhase({ phase: 'roll' }));
@@ -63,9 +65,15 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
             updateRemainingPlayers();
 
             if (currentTile.type === 'dice') {
-                dispatch(updatePhase({ phase: 'extra' }));
+                dispatch(updatePhase({ phase: 'xaction' }));
             } else {
-                dispatch(updatePhase({ phase: 'end' }));
+                const extra = currentPlayer.action && Object.values(currentPlayer.action).some((value) => value === true);
+                if (currentPlayer.extra && extra) {
+                    dispatch(setPlayer({ id: currentPlayer.id, extra: false }));
+                    dispatch(updatePhase({ phase: 'extra' }));
+                } else {
+                    dispatch(updatePhase({ phase: 'end' }));
+                }
             }
         }
 

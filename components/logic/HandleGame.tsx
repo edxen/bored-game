@@ -18,7 +18,6 @@ export type THandleGameProps = {
 };
 
 const HandleInitialize = ({ dispatch, game, players, tiles }: Omit<THandleGameProps, 'dice'>) => {
-    // console.log('initialize game');
 
     const updatePlayers = () => {
         const addPlayerToTile = (player: TPlayer) => {

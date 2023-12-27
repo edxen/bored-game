@@ -21,10 +21,12 @@ const PlayerInformation = () => {
                         </div>
                         <div>
                             {
-                                player.extra && Object.entries(player.extra).map(([key, value]) => (
-                                    <div key={key}>
-                                        {key}
-                                    </div>
+                                player.action && Object.entries(player.action).map(([key, value]) => (
+                                    value && (
+                                        <div key={key}>
+                                            {key}
+                                        </div>
+                                    )
                                 ))
                             }
                         </div>

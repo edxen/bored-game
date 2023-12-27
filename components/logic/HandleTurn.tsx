@@ -4,9 +4,9 @@ import { THandleGameProps } from './HandleGame';
 import { getSameSideColumn } from '../utils/helper';
 import GetData from '../hooks/GetData';
 
-import { TDice, TPlayer, TPlayerExtra, TTile, playerExtra } from '../reducers/initialStates';
+import { TDice, TPlayer, TPlayerAction, TTile, playerAction } from '../reducers/initialStates';
 import { setDice } from '../reducers/diceReducer';
-import playersReducer, { setPlayer, setPlayers } from '../reducers/playersReducer';
+import { setPlayer } from '../reducers/playersReducer';
 import { setTile } from '../reducers/tilesReducer';
 import { updatePhase } from '../reducers/gameReducer';
 
@@ -21,7 +21,7 @@ interface THandleTurnProps {
 
 
 
-const randomizedNumber = ({ max }: { max: number; }) => Math.floor(Math.random() * max) + 1;
+const randomizedNumber = ({ min = 1, max = 6 }: Partial<Pick<TDice, 'min' | 'max'>>) => Math.floor(Math.random() * max) + min;
 
 const HandleDiceRoll = ({ dispatch, player, dice }: Omit<THandleTurnProps, 'getTile'>) => {
     const diceRoll = () => {
@@ -30,12 +30,12 @@ const HandleDiceRoll = ({ dispatch, player, dice }: Omit<THandleTurnProps, 'getT
         let rolled: number = dice.force ? dice.force : 1;
         const rollingInterval = setInterval(() => {
             if (count !== countInterval) {
-                rolled = randomizedNumber({ max: 6 });
+                rolled = randomizedNumber({ min: dice.min, max: dice.max });
                 dispatch(setDice({ display: `Rolling ${rolled}` }));
                 count++;
             } else {
                 clearInterval(rollingInterval);
-                dispatch(setDice({ force: 0, display: `Rolled ${rolled}` }));
+                dispatch(setDice({ min: 1, max: 6, force: 0, display: `Rolled ${rolled}` }));
                 dispatch(setPlayer({ id: player.id, last_path: player.path, roll: rolled }));
                 setTimeout(() => dispatch(updatePhase({ phase: 'action' })), 1000);
             }
@@ -132,54 +132,61 @@ const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: Omit<THandleT
 };
 
 const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandleTurnProps, 'dice'> & { players: TPlayer[]; }) => {
-    const getCurrentTile = () => getTile({ path: player.path });
-    let rolled: keyof TPlayerExtra;
+    let rolled: keyof TPlayerAction;
     let display: string;
 
     const displayRandomFrom = (list: string[], label: string) => {
-        rolled = list[randomizedNumber({ max: list.length }) - 1] as keyof TPlayerExtra;
-        display = playerExtra[rolled];
+        rolled = list[randomizedNumber({ max: list.length }) - 1] as keyof TPlayerAction;
+        display = playerAction[rolled];
         dispatch(setDice({ display: `${label} ${display}` }));
     };
 
-    const addExtraToPlayer = (rolled: keyof TPlayerExtra) => {
-        const extra = { [rolled]: true };
-        dispatch(setPlayer({ id: player.id, extra: { ...player.extra, ...extra } }));
+    const addExtraToPlayer = (rolled: keyof TPlayerAction) => {
+        const action = { [rolled]: true };
+        dispatch(setPlayer({ id: player.id, action: { ...player.action, ...action } }));
     };
 
     const getAvailableExtraActions = () => {
         const list: string[] = [];
-        Object.keys(playerExtra).forEach((key) => {
-            if (!player.extra) list.push(key);
-            if (player.extra && !Object.keys(player.extra).includes(key)) list.push(key);
+        Object.keys(playerAction).forEach((key) => {
+            if (!player.action) list.push(key);
+            if (player.action && !player.action[key as keyof TPlayerAction]) list.push(key);
         });
         return list;
     };
 
-    const isExtra = () => {
+    const doExtra = () => {
+        if (player.extra) {
+            dispatch(setPlayer({ id: player.id, extra: false }));
+            dispatch(updatePhase({ phase: 'extra' }));
+        } else {
+            dispatch(updatePhase({ phase: 'end' }));
+        }
+    };
+
+    const isAction = () => {
         if (players.length === 1) dispatch(updatePhase({ phase: 'end' }));
 
         const count = { current: 0, interval: 10 };
 
         const list = getAvailableExtraActions();
-        if (!list.length) return;
+        if (!list.length) doExtra();
 
-        const extraInterval = setInterval(() => {
+        const actionInterval = setInterval(() => {
             if (count.current !== count.interval) {
                 displayRandomFrom(list, 'Rolling');
                 count.current++;
             } else {
-                clearInterval(extraInterval);
+                clearInterval(actionInterval);
                 displayRandomFrom(list, 'Rolled');
                 addExtraToPlayer(rolled);
 
-                setTimeout(() => dispatch(updatePhase({ phase: 'end' })), 1000);
+                setTimeout(() => doExtra(), 1000);
             }
         }, config.rollSpeed || 150);
     };
 
-    const currentTile = getCurrentTile();
-    if (currentTile.type === 'dice') isExtra();
+    isAction();
 };
 
 const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) => {
@@ -196,8 +203,10 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
             case 'action':
                 HandlePlayerActions({ dispatch, player, tiles, getTile });
                 break;
-            case 'extra':
+            case 'xaction':
                 HandleExtraActions({ dispatch, player, players, getTile });
+                break;
+            case 'extra':
                 break;
         }
     }, [phase]);

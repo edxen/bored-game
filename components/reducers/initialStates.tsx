@@ -5,8 +5,15 @@ export type TRound = {
     queue: string[];
     turn: number;
     count: number;
-    phase: 'unstarted' | 'pre' | 'roll' | 'action' | 'extra' | 'post' | 'end';
+    phase: 'unstarted' | 'pre' | 'roll' | 'action' | 'xaction' | 'extra' | 'post' | 'end';
 };
+
+// unstarted is start of game, initial set
+// pre is before the turn start, mostly to kickstart AI turn
+// roll either switched dynamically in pre with AI or by human when clicking roll dice button
+// action is for moving regards dice result, checking occupied tile effect 
+// eliminating initial occupant, checking if has portal effect, checking if dice 
+// if player has extra action, player will be displayed extra menu, if not will proceed
 
 type TRanking = {
     list: string[];
@@ -39,6 +46,8 @@ export const initialGameState: TGame = {
 export type TDice = {
     display: string;
     current: number;
+    min: number,
+    max: number,
     force: number;
 };
 
@@ -48,6 +57,8 @@ export type TDice = {
 export const initialDiceState: TDice = {
     display: '',
     current: 1,
+    min: 1,
+    max: 6,
     force: 0
 };
 
@@ -77,22 +88,18 @@ export const initialTileState = generateTiles({ columns: (columns || 11), rows: 
 **/
 
 
-export type TPlayerExtra = {
+export type TPlayerAction = {
     low?: boolean;
     high?: boolean;
     exact?: boolean;
     extra?: boolean;
-    back?: boolean;
-    dodge?: boolean;
 };
 
-export const playerExtra = {
+export const playerAction = {
     exact: 'Exact Roll',
     low: 'Low Roll',
     high: 'High Roll',
     extra: 'Extra Roll',
-    back: 'Roll Back',
-    dodge: 'Dodge'
 };
 
 export type TPlayer = {
@@ -105,7 +112,8 @@ export type TPlayer = {
     last_path?: number;
     roll?: number;
     skip?: boolean;
-    extra?: TPlayerExtra;
+    action: TPlayerAction;
+    extra?: boolean;
 };
 
 export const initialPlayerState: TPlayer[] = config.customPlayer?.enabled ? config.customPlayer.state : [];
