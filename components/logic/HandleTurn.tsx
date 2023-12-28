@@ -51,7 +51,13 @@ const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: Omit<THandleT
     const getCurrentTile = () => getTile({ path: currentPath });
 
     const endSequence = () => {
-        dispatch(updatePhase({ phase: 'post' }));
+        const currentTile = getCurrentTile();
+        if (currentTile.type === 'stop') {
+            dispatch(updatePhase({ phase: 'end' }));
+        } else {
+            dispatch(updatePhase({ phase: 'post' }));
+        }
+
     };
 
     const isFlag = () => {

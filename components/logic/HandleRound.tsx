@@ -30,7 +30,7 @@ const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'disp
             } else {
                 dispatch(setPlayer({ id: currentPlayer.id, skip: false }));
                 dispatch(updateGame({ target: 'history', value: [`${getPlayerData(currentPlayer.id).name} is currenly in stop zone, movement will be allowed in next turn`] }));
-                dispatch(updatePhase({ phase: 'post' }));
+                dispatch(updatePhase({ phase: 'end' }));
             }
         }
     }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
