@@ -42,7 +42,7 @@ const HandleInitialize = ({ dispatch, game, players, tiles }: Omit<THandleGamePr
 
     useEffect(() => {
         if (!initialRender.current && !game.started) {
-            dispatch(updatePhase({ phase: 'pre' }));
+            dispatch(updatePhase({ phase: 'change' }));
             updatePlayers();
         } else {
             initialRender.current = false;

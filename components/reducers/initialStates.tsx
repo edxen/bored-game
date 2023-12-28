@@ -5,7 +5,7 @@ export type TRound = {
     queue: string[];
     turn: number;
     count: number;
-    phase: 'unstarted' | 'pre' | 'roll' | 'action' | 'xaction' | 'extra' | 'post' | 'end' | 'over';
+    phase: 'unstarted' | 'pre' | 'change' | 'roll' | 'action' | 'xaction' | 'extra' | 'post' | 'end' | 'over';
 };
 
 // unstarted is start of game, initial set

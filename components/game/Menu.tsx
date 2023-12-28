@@ -79,7 +79,7 @@ const Menu = () => {
             initializeTurnDisplay(players);
             dispatch(toggleGame({ started: true }));
             dispatch(updateGame({ target: 'history', value: ['Game started'] }));
-            dispatch(updatePhase({ phase: 'pre' }));
+            dispatch(updatePhase({ phase: 'change' }));
             setStart(false);
         }
     }, [start]);  // eslint-disable-line react-hooks/exhaustive-deps

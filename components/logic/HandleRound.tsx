@@ -7,12 +7,19 @@ import GetData from '../hooks/GetData';
 import { updatePhase } from '../reducers/gameReducer';
 import { TTile } from '../reducers/initialStates';
 import { setPlayer, setPlayers } from '../reducers/playersReducer';
+import config from '../configuration';
 
 const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'dispatch' | 'game' | 'players'>) => {
     const { phase, queue, count, turn } = game.round;
     const { getPlayerData } = GetData();
 
     useEffect(() => {
+        if (phase === 'change') {
+            setTimeout(() => {
+                dispatch(updatePhase({ phase: 'pre' }));
+            }, config.delay || 1000);
+        }
+
         if (phase === 'pre') {
             const currentPlayer = getPlayerData(queue[0]);
             dispatch(setPlayer({ id: currentPlayer.id, extra: true }));
@@ -89,7 +96,7 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
 
         if (phase === 'end') {
             dispatch(updateRoundCounter());
-            dispatch(updatePhase({ phase: 'pre' }));
+            dispatch(updatePhase({ phase: 'change' }));
         }
     }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
 
