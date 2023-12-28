@@ -38,7 +38,7 @@ export default function Game() {
                                         <div className="flex flex-col gap-1 text-xs flex-wrap">
                                             <div className="flex gap-2 flex-wrap">
                                                 <div className="flex bg-white rounded-lg px-2 items-center gap-2">
-                                                    <Image src={`/images/icons/icon-${player.type}.png`} alt={player.type} width="20" height="20" className="object-contain" />
+                                                    <Image src={`/images/icons/icon-${player.type}.png`} alt={player.type} width="20" height="20" className="object-contain h-auto w-auto" />
                                                     <div className="text-lg font-semibold">{player.name}</div>
                                                 </div>
                                                 <div className="flex flex-col items-start gap-1 flex-wrap">
@@ -77,10 +77,10 @@ export default function Game() {
                                                     {getPlayerData(id).name}
                                                 </div>
 
-                                                <Image src={`/images/icons/icon-${getTile({ path: getPlayerData(id).path }).type}.png`} alt={id} width="14" height="14" className="bg-slate-200 rounded-full" />
+                                                <Image src={`/images/icons/icon-${getTile({ path: getPlayerData(id).path }).type}.png`} alt={id} width="14" height="14" className="bg-slate-200 h-auto w-auto rounded-full" />
                                             </div>
                                             {i !== queue.length - 1 && (
-                                                <Image src="/images/icons/icon-arrow-left.png" alt={id} width="10" height="10" />
+                                                <Image src="/images/icons/icon-arrow-left.png" alt={id} width="10" height="10" className="h-auto w-auto" />
                                             )}
                                         </div>
                                     ))
