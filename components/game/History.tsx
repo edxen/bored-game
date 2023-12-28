@@ -14,7 +14,7 @@ const History = () => {
             <ul className="flex flex-col list-inside list-disc overflow-y-scroll">
                 {
                     history.map((item, i) => (
-                        <li key={i}>
+                        <li key={i} className='text-sm'>
                             {item}
                         </li>
                     ))

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Image from 'next/image';
 
-import { updatePhase } from '../reducers/gameReducer';
+import { updateGame, updatePhase } from '../reducers/gameReducer';
 import GetData from '../hooks/GetData';
 import { setDice } from '../reducers/diceReducer';
 import config from '../configuration';
@@ -31,6 +31,7 @@ const RollButton = () => {
 
     const start = (key: keyof TPlayerAction) => {
         dispatch(setPlayer({ id: player.id, extra: false, action: { ...player.action, [key]: false } }));
+        dispatch(updateGame({ target: 'history', value: [`Extra Action: ${player.name} used ${playerAction[key]}`] }));
         dispatch(setDice({ current: '' }));
         dispatch(updatePhase({ phase: 'roll' }));
     };
@@ -52,7 +53,10 @@ const RollButton = () => {
                 dispatch(updatePhase({ phase: 'roll' }));
                 start(key);
                 break;
-            case 'cancel': dispatch(updatePhase({ phase: 'end' })); break;
+            case 'cancel':
+                dispatch(updatePhase({ phase: 'end' }));
+                dispatch(updateGame({ target: 'history', value: [`${player.name} skipped extra action`] }));
+                break;
         }
     };
 

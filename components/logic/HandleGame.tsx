@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 
 import GetData from "../hooks/GetData";
 import HandleRound from "./HandleRound";
-import { toggleGame, updatePhase, updateQueuePlayers, updateRoundCounter } from "../reducers/gameReducer";
+import { toggleGame, updateGame, updatePhase, updateQueuePlayers, updateRoundCounter } from "../reducers/gameReducer";
 import { setTile } from "../reducers/tilesReducer";
 import { TDice, TGame, TPlayer, TTile } from "../reducers/initialStates";
 import { UnknownAction } from 'redux';
@@ -35,6 +35,7 @@ const HandleInitialize = ({ dispatch, game, players, tiles }: Omit<THandleGamePr
         });
         dispatch(updateQueuePlayers(currentPlayers));
         dispatch(toggleGame({ started: true }));
+        dispatch(updateGame({ target: 'history', value: ['Game started'] }));
     };
 
     const initialRender = useRef(true);

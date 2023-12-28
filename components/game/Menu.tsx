@@ -78,6 +78,7 @@ const Menu = () => {
             addPlayersToBoard(players);
             initializeTurnDisplay(players);
             dispatch(toggleGame({ started: true }));
+            dispatch(updateGame({ target: 'history', value: ['Game started'] }));
             dispatch(updatePhase({ phase: 'pre' }));
             setStart(false);
         }

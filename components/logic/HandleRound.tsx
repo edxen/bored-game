@@ -2,14 +2,14 @@ import { useEffect } from 'react';
 
 import HandleTurn from "./HandleTurn";
 import { THandleGameProps } from './HandleGame';
-import { toggleGame, updateQueuePlayers, updateRoundCounter } from '../reducers/gameReducer';
+import { toggleGame, updateGame, updateQueuePlayers, updateRoundCounter } from '../reducers/gameReducer';
 import GetData from '../hooks/GetData';
 import { updatePhase } from '../reducers/gameReducer';
 import { TTile } from '../reducers/initialStates';
 import { setPlayer, setPlayers } from '../reducers/playersReducer';
 
 const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'dispatch' | 'game' | 'players'>) => {
-    const { phase, queue } = game.round;
+    const { phase, queue, count, turn } = game.round;
     const { getPlayerData } = GetData();
 
     useEffect(() => {
@@ -24,9 +24,12 @@ const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'disp
                 if (players.length === 1) {
                     dispatch(toggleGame({ over: true }));
                     dispatch(updatePhase({ phase: 'over' }));
+                    dispatch(updateGame({ target: 'history', value: [`Game ended in ${count} rounds, total of ${turn}`] }));
+                    dispatch(updateGame({ target: 'history', value: [`Winner: ${getPlayerData(queue[0]).name}`] }));
                 }
             } else {
                 dispatch(setPlayer({ id: currentPlayer.id, skip: false }));
+                dispatch(updateGame({ target: 'history', value: [`${getPlayerData(currentPlayer.id).name} is currenly in stop zone, movement will be allowed in next turn`] }));
                 dispatch(updatePhase({ phase: 'post' }));
             }
         }
@@ -54,6 +57,9 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
         });
 
         const remainingQueuePlayers = queue.filter(id => !removedPlayers.includes(id));
+        removedPlayers.map((removedPlayer => {
+            dispatch(updateGame({ target: 'history', value: [`${getPlayerData(queue[0]).name} eliminated ${getPlayerData(removedPlayer).name}`] }));
+        }));
         dispatch(updateQueuePlayers(remainingQueuePlayers));
         dispatch(setPlayers(players.filter(player => !removedPlayers.includes(player.id))));
     };

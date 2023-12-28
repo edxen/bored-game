@@ -8,7 +8,7 @@ import { TDice, TPlayer, TPlayerAction, TTile, playerAction } from '../reducers/
 import { setDice } from '../reducers/diceReducer';
 import { setPlayer } from '../reducers/playersReducer';
 import { setTile } from '../reducers/tilesReducer';
-import { updatePhase } from '../reducers/gameReducer';
+import { updateGame, updatePhase } from '../reducers/gameReducer';
 
 import config from '../configuration';
 
@@ -34,6 +34,7 @@ const HandleDiceRoll = ({ dispatch, player, dice }: Omit<THandleTurnProps, 'getT
             } else {
                 clearInterval(rollingInterval);
                 dispatch(setDice({ min: 1, max: 6, force: 0, display: 'Rolled', current: rolled }));
+                dispatch(updateGame({ target: 'history', value: [`${player.name} rolled ${rolled}`] }));
                 dispatch(setPlayer({ id: player.id, last_path: player.path, roll: rolled }));
                 setTimeout(() => dispatch(updatePhase({ phase: 'action' })), config.delay || 1000);
             }
@@ -50,14 +51,21 @@ const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: Omit<THandleT
     const getCurrentTile = () => getTile({ path: currentPath });
 
     const endSequence = () => {
-        const currentTile = getCurrentTile();
         dispatch(updatePhase({ phase: 'post' }));
+    };
+
+    const isFlag = () => {
+        const currentTile = getCurrentTile();
+        if (currentTile.type === 'flag') {
+            dispatch(updateGame({ target: 'history', value: [`${player.name} landed on flag`] }));
+        }
     };
 
     const isSkip = () => {
         const currentTile = getCurrentTile();
         if (currentTile.type === 'stop') {
             dispatch(setPlayer({ id: player.id, skip: true }));
+            dispatch(updateGame({ target: 'history', value: [`${player.name} landed on stop zone, next turn will cancelled`] }));
         }
     };
 
@@ -66,6 +74,9 @@ const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: Omit<THandleT
         if (currentTile.type !== 'safe' && currentTile.occupants.length) {
             const removeOccupants = () => dispatch(setTile({ index: currentTile.index, key: 'occupants', value: [player.id] }));
             removeOccupants();
+            dispatch(updateGame({ target: 'history', value: [`${player.name} landed on an occupied tile`] }));
+        } else if (currentTile.type === 'safe') {
+            dispatch(updateGame({ target: 'history', value: [`${player.name} landed on safe zone, no elimination allowed`] }));
         }
     };
 
@@ -75,6 +86,7 @@ const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: Omit<THandleT
             const getPortalPath = (index: number) => getSameSideColumn(index, 6);
             const warpTo = (portalPath: number) => {
                 const warpPath = getTile({ path: getPortalPath(portalPath) }).path;
+                dispatch(updateGame({ target: 'history', value: [`${player.name} landed on portal, warping to portal at path: ${warpPath}`] }));
                 moveToNextTile(warpPath, currentPath);
             };
 
@@ -112,6 +124,7 @@ const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: Omit<THandleT
         isPortal();
         isOccupied();
         isSkip();
+        isFlag();
         endSequence();
     };
 
@@ -133,6 +146,7 @@ const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandle
 
     const addExtraToPlayer = (rolled: keyof TPlayerAction) => {
         const action = { [rolled]: true };
+        dispatch(updateGame({ target: 'history', value: [`${player.name} rolled ${playerAction[rolled]}`] }));
         dispatch(setPlayer({ id: player.id, action: { ...player.action, ...action } }));
     };
 
@@ -173,10 +187,15 @@ const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandle
 
     const isAction = () => {
         if (players.length === 1) dispatch(updatePhase({ phase: 'end' }));
+        dispatch(updateGame({ target: 'history', value: [`${player.name} landed on extra dice zone`] }));
 
         const count = { current: config.actionInterval ?? 0, interval: 10 };
         const list = getAvailableExtraActions();
-        if (!list.length) doExtra();
+        if (!list.length) {
+            dispatch(updateGame({ target: 'history', value: [`${player.name} skipped extra dice picking, all extra dice already obtained`] }));
+            doExtra();
+        }
+
 
         displayRandomFrom(list, 'Rolling');
         const actionInterval = setInterval(() => {
@@ -214,9 +233,9 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
                 HandleExtraActions({ dispatch, player, players, getTile });
                 break;
             case 'extra':
-
                 const start = (key: keyof TPlayerAction) => {
                     dispatch(setPlayer({ id: player.id, extra: false, action: { ...player.action, [key]: false } }));
+                    dispatch(updateGame({ target: 'history', value: [`Extra Action: ${player.name} used ${playerAction[key]}`] }));
                     dispatch(setDice({ display: '' }));
                     dispatch(updatePhase({ phase: 'roll' }));
                 };
@@ -238,7 +257,10 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
                             dispatch(updatePhase({ phase: 'roll' }));
                             start(key);
                             break;
-                        case 'cancel': dispatch(updatePhase({ phase: 'end' })); break;
+                        case 'cancel':
+                            dispatch(updatePhase({ phase: 'end' }));
+                            dispatch(updateGame({ target: 'history', value: [`${player.name} skipped extra action`] }));
+                            break;
                     }
                 };
 
@@ -254,4 +276,4 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
     }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
-export default HandleTurn;
+export default HandleTurn;;;;
