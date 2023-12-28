@@ -21,7 +21,7 @@ type TConfig = {
 };
 
 let config: TConfig = {
-    enableSpecificDice: false,
+    enableSpecificDice: true,
     customPlayer: {
         enabled: false,
         state: []

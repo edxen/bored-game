@@ -75,16 +75,20 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
 
             updateRemainingPlayers();
 
-            if (currentTile.type === 'dice') {
-                dispatch(updatePhase({ phase: 'xaction' }));
-            } else {
-                const extra = currentPlayer.action && Object.values(currentPlayer.action).some((value) => value === true);
-                if (currentPlayer.extra && extra) {
+            const extra = currentPlayer.action && Object.values(currentPlayer.action).some((value) => value === true);
+            switch (true) {
+                case currentPlayer.skip:
+                    dispatch(updatePhase({ phase: 'end' }));
+                    break;
+                case (currentTile.type === 'dice'):
+                    dispatch(updatePhase({ phase: 'xaction' }));
+                    break;
+                case (currentPlayer.extra && extra):
                     dispatch(setPlayer({ id: currentPlayer.id, extra: false }));
                     dispatch(updatePhase({ phase: 'extra' }));
-                } else {
+                    break;
+                default:
                     dispatch(updatePhase({ phase: 'end' }));
-                }
             }
         }
 
