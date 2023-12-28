@@ -71,7 +71,7 @@ const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: Omit<THandleT
         const currentTile = getCurrentTile();
         if (currentTile.type === 'stop') {
             dispatch(setPlayer({ id: player.id, skip: true }));
-            dispatch(updateGame({ target: 'history', value: [`${player.name} landed on stop zone, next turn will cancelled`] }));
+            dispatch(updateGame({ target: 'history', value: [`${player.name} landed on stop zone, this and next turn is cancelled`] }));
         }
     };
 

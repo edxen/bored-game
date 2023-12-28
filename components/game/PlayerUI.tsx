@@ -11,7 +11,7 @@ const PlayerUI = () => {
         <div className="flex justify-around items-flex-start gap-2 px-2 border-b-2 pb-2 mb-2 min-h-[80px]">
             {
                 players.map((player, i: number) => (
-                    <div key={i} className={`flex gap-2 ${player.color} flex-grow-0 ${queue[0] === player.id ? 'border-4 border-red-400' : 'border border-slate-200'} rounded-xl p-2 select-none`}>
+                    <div key={i} className={`flex gap-2 ${player.color} flex-grow-0 ${queue[0] === player.id ? 'border-4 border-red-400' : 'border-4 border-slate-200'} rounded-xl p-2 select-none`}>
                         <div className="flex flex-col gap-1 text-xs flex-wrap">
                             <div className="flex gap-2 flex-wrap">
                                 <div className="flex bg-white rounded-lg px-2 items-center gap-2">
