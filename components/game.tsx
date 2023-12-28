@@ -20,7 +20,7 @@ export default function Game() {
     HandleGame();
 
     return (
-        <div className='h-[100dvh] flex flex-col p-4'>
+        <div className='h-[100dvh] flex flex-col p-4 select-none'>
             {!game.started &&
                 <div className='w-full flex flex-col justify-center items-center my-5 text-sm text-gray-700 font-bold'>
                     <h1 className='text-2xl text-black rotate-6'>Bored Game</h1>
@@ -31,7 +31,7 @@ export default function Game() {
             {
                 queue.length !== 0 && (
                     <>
-                        <div className="flex justify-between items-flex-start gap-2 px-2 border-b-2 pb-2 mb-2 min-h-[110px]">
+                        <div className="flex justify-around items-flex-start gap-2 px-2 border-b-2 pb-2 mb-2 min-h-[110px]">
                             {
                                 players.map((player, i: number) => (
                                     <div key={i} className={`flex gap-2 ${player.color} flex-grow-0 ${queue[0] === player.id ? 'border-4 border-red-400' : 'border border-slate-200'} rounded-xl p-2 select-none`}>
