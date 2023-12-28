@@ -21,12 +21,6 @@ const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'disp
                 if (currentPlayer?.type === 'computer') {
                     dispatch(updatePhase({ phase: 'roll' }));
                 }
-                if (players.length === 1) {
-                    dispatch(toggleGame({ over: true }));
-                    dispatch(updatePhase({ phase: 'over' }));
-                    dispatch(updateGame({ target: 'history', value: [`Game ended in ${count} rounds, total of ${turn}`] }));
-                    dispatch(updateGame({ target: 'history', value: [`Winner: ${getPlayerData(queue[0]).name}`] }));
-                }
             } else {
                 dispatch(setPlayer({ id: currentPlayer.id, skip: false }));
                 dispatch(updateGame({ target: 'history', value: [`${getPlayerData(currentPlayer.id).name} is currenly in stop zone, movement will be allowed in next turn`] }));
@@ -34,6 +28,15 @@ const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'disp
             }
         }
     }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        if (queue.length === 1) {
+            dispatch(toggleGame({ over: true }));
+            dispatch(updatePhase({ phase: 'over' }));
+            dispatch(updateGame({ target: 'history', value: [`Game ended in ${count} rounds, total of ${turn}`] }));
+            dispatch(updateGame({ target: 'history', value: [`Winner: ${getPlayerData(queue[0]).name}`] }));
+        }
+    }, [queue.length]);
 };
 
 const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGameProps, 'dispatch' | 'game' | 'players'> & { getTile: ({ path }: { path: number; }) => TTile; }) => {
