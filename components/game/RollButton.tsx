@@ -79,10 +79,10 @@ const RollButton = () => {
                     ?
                     !exactMenuDisplay ?
                         <div className='flex flex-col gap-2 w-full'>
-                            <div className="flex gap-2 justify-items-center place-items-center">
+                            <div className="flex gap-2 justify-center items-center flex-wrap">
                                 {Object.entries(player.action).map(([key, value]) =>
                                     value && key !== 'dodge' && (
-                                        <div key={key} className="flex flex-grow">
+                                        <div key={key} className="flex flex-grow max-w-[140px]">
                                             <button className={buttonClass} onClick={() => handleExtra(key)}>
                                                 Use {playerAction[key as keyof TPlayerAction]}
                                             </button>
