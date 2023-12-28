@@ -10,40 +10,33 @@ import { setPlayer, setPlayers } from '../reducers/playersReducer';
 import config from '../configuration';
 
 const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'dispatch' | 'game' | 'players'>) => {
-    const { phase, queue, count, turn } = game.round;
+    const { phase, queue } = game.round;
     const { getPlayerData } = GetData();
 
     useEffect(() => {
-        if (phase === 'change') {
-            setTimeout(() => {
-                dispatch(updatePhase({ phase: 'pre' }));
-            }, config.delay || 1000);
-        }
+        if (!game.over) {
+            if (phase === 'change') {
+                setTimeout(() => {
+                    dispatch(updatePhase({ phase: 'pre' }));
+                }, config.delay || 1000);
+            }
 
-        if (phase === 'pre') {
-            const currentPlayer = getPlayerData(queue[0]);
-            dispatch(setPlayer({ id: currentPlayer.id, extra: true }));
+            if (phase === 'pre') {
+                const currentPlayer = getPlayerData(queue[0]);
+                dispatch(setPlayer({ id: currentPlayer.id, extra: true }));
 
-            if (!currentPlayer.skip) {
-                if (currentPlayer?.type === 'computer') {
-                    dispatch(updatePhase({ phase: 'roll' }));
+                if (!currentPlayer.skip) {
+                    if (currentPlayer?.type === 'computer') {
+                        dispatch(updatePhase({ phase: 'roll' }));
+                    }
+                } else {
+                    dispatch(setPlayer({ id: currentPlayer.id, skip: false }));
+                    dispatch(updateGame({ target: 'history', value: [`${getPlayerData(currentPlayer.id).name} is currenly in stop zone, movement will be allowed in next turn`] }));
+                    dispatch(updatePhase({ phase: 'end' }));
                 }
-            } else {
-                dispatch(setPlayer({ id: currentPlayer.id, skip: false }));
-                dispatch(updateGame({ target: 'history', value: [`${getPlayerData(currentPlayer.id).name} is currenly in stop zone, movement will be allowed in next turn`] }));
-                dispatch(updatePhase({ phase: 'end' }));
             }
         }
     }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
-
-    useEffect(() => {
-        if (queue.length === 1) {
-            dispatch(toggleGame({ over: true }));
-            dispatch(updatePhase({ phase: 'over' }));
-            dispatch(updateGame({ target: 'history', value: [`Game ended in ${count} rounds, total of ${turn}`] }));
-            dispatch(updateGame({ target: 'history', value: [`Winner: ${getPlayerData(queue[0]).name}`] }));
-        }
-    }, [queue.length]);
 };
 
 const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGameProps, 'dispatch' | 'game' | 'players'> & { getTile: ({ path }: { path: number; }) => TTile; }) => {
@@ -103,12 +96,28 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
 
 };
 
+const HandleGameEnd = ({ dispatch, game }: Pick<THandleGameProps, 'dispatch' | 'game' | 'players'> & { getTile: ({ path }: { path: number; }) => TTile; }) => {
+    const { getPlayerData } = GetData();
+    const { queue, count, turn } = game.round;
+
+    useEffect(() => {
+        if (queue.length === 1) {
+            dispatch(toggleGame({ over: true }));
+            dispatch(updateGame({ target: 'history', value: [`Game ended in ${count} rounds, total of ${turn}`] }));
+            dispatch(updateGame({ target: 'history', value: [`Winner: ${getPlayerData(queue[0]).name}`] }));
+        }
+    }, [queue.length]);
+};
+
 const HandleRound = ({ dispatch, game, players, tiles, dice }: THandleGameProps) => {
     const { getTile } = GetData();
 
-    HandlePreTurn({ dispatch, game, players });
-    HandleTurn({ dispatch, game, players, tiles, dice });
-    HandlePostTurn({ dispatch, game, players, getTile });
+    if (!game.over) {
+        HandlePreTurn({ dispatch, game, players });
+        HandleTurn({ dispatch, game, players, tiles, dice });
+        HandlePostTurn({ dispatch, game, players, getTile });
+    }
+    HandleGameEnd({ dispatch, game, players, getTile });
 };
 
 export default HandleRound;

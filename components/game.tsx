@@ -13,7 +13,7 @@ import Header from './game/Header';
 import History from './game/History';
 
 export default function Game() {
-    const { game, players } = getData();
+    const { game } = getData();
     HandleGame();
 
     return (
@@ -29,7 +29,7 @@ export default function Game() {
                     <div className='flex justify-center flex-grow items center flex-1 relative my-2'>
                         <Tiles />
                         <div className={`absolute top-0 left-0 flex flex-col gap-4 h-full w-full justify-center items-center px-24`}>
-                            {players.length !== 1
+                            {!game.over
                                 ? <RollButton />
                                 : <WinBox />
                             }
