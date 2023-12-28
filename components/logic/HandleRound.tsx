@@ -110,7 +110,7 @@ const HandleGameEnd = ({ dispatch, game }: Pick<THandleGameProps, 'dispatch' | '
             dispatch(updateGame({ target: 'history', value: [`Game ended in ${count} rounds, total of ${turn} turns`] }));
             dispatch(updateGame({ target: 'history', value: [`Winner: ${getPlayerData(queue[0]).name}`] }));
         }
-    }, [queue.length]);
+    }, [queue.length]); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
 const HandleRound = ({ dispatch, game, players, tiles, dice }: THandleGameProps) => {

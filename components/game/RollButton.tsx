@@ -68,7 +68,7 @@ const RollButton = () => {
             {
                 phase === 'change'
                     ? <button className={actionClass}>
-                        <span className="font-medium">{player.name}'s Turn</span>
+                        <span className="font-medium">{`${player.name}'s Turn `}</span>
                     </button>
                     : phase === 'pre' ?
                         <div className="flex flex-col gap-2 ">
