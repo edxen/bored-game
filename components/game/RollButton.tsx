@@ -31,6 +31,7 @@ const RollButton = () => {
 
     const start = (key: keyof TPlayerAction) => {
         dispatch(setPlayer({ id: player.id, extra: false, action: { ...player.action, [key]: false } }));
+        dispatch(setDice({ current: '' }));
         dispatch(updatePhase({ phase: 'roll' }));
     };
 
@@ -101,7 +102,7 @@ const RollButton = () => {
                         </div>
                     :
 
-                    dice.display && (
+                    dice.display && dice.current && (
                         <button className={buttonClass}>
                             <span className="font-semibold">
                                 {getPlayerData(queue[0]).name}
@@ -123,6 +124,10 @@ const RollButton = () => {
                     )
 
             }
+            <div className="absolute h-full">
+                <div></div>
+                <div></div>
+            </div>
         </>
     );
 };
