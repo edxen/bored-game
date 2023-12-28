@@ -67,6 +67,7 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
         });
 
         const remainingQueuePlayers = queue.filter(id => !removedPlayers.includes(id));
+        dispatch(updateGame({ target: 'ranking', value: removedPlayers }));
         removedPlayers.map((removedPlayer => {
             dispatch(updateGame({ target: 'history', value: [`${getPlayerData(queue[0]).name} eliminated ${getPlayerData(removedPlayer).name}`] }));
         }));
