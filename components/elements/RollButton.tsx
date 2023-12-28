@@ -23,8 +23,8 @@ const RollButton = () => {
         dispatch(setDice({ force }));
         setExactMenuDisplay(false);
 
-        if (phase === 'extra') start('exact');
-        else dispatch(updatePhase({ phase: 'roll' }));
+        if (phase === 'pre') dispatch(updatePhase({ phase: 'roll' }));
+        else start('exact');
     };
 
     const [exactMenuDisplay, setExactMenuDisplay] = useState<boolean>(false);
