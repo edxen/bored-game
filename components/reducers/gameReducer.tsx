@@ -63,7 +63,7 @@ const gameSlice = createSlice({
          * @param target - Update selected target array string. Accepted values: 'nextTurn','queue', 'ranking'
          * @param value - Value to overwrite selected target data. Accepts string array value.
         **/
-        updateGame: (state, action: PayloadAction<{ target: 'queue' | 'ranking', value: string[]; }>) => {
+        updateGame: (state, action: PayloadAction<{ target: 'queue' | 'ranking' | 'history', value: string[]; }>) => {
             const { target, value } = action.payload;
             return produce(state, draftState => {
                 switch (target) {
@@ -72,6 +72,9 @@ const gameSlice = createSlice({
                         break;
                     case 'ranking':
                         draftState.ranking.list = [...value, ...draftState.ranking.list];
+                        break;
+                    case 'history':
+                        draftState.history = [];
                         break;
                 }
             });

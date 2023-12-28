@@ -25,6 +25,7 @@ export type TGame = {
     over: boolean;
     round: TRound;
     ranking: TRanking;
+    history: string[];
 };
 
 /**
@@ -42,7 +43,8 @@ export const initialGameState: TGame = {
     },
     ranking: {
         list: []
-    }
+    },
+    history: []
 };
 
 export type TDice = {

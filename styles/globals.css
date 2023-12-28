@@ -25,3 +25,21 @@ html, body {
 .flip-360 {
   transform: rotateY(360deg);
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #dcdcdc;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: black;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: gray
+}

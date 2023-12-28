@@ -10,6 +10,7 @@ import RollButton from './game/RollButton';
 import PlayerUI from './game/PlayerUI';
 import TurnUI from './game/TurnUI';
 import Header from './game/Header';
+import History from './game/History';
 
 export default function Game() {
     const { game, players } = getData();
@@ -25,20 +26,16 @@ export default function Game() {
                 : <>
                     <PlayerUI />
                     <TurnUI />
-                    <div className='flex justify-center items center flex-1 relative my-2'>
+                    <div className='flex justify-center flex-grow items center flex-1 relative my-2'>
                         <Tiles />
                         <div className={`absolute top-0 left-0 flex flex-col gap-4 h-full w-full justify-center items-center px-24`}>
                             {players.length !== 1
-                                ?
-                                (
-                                    <div className="flex justify-center item-center size-full">
-                                        <RollButton />
-                                    </div>
-                                )
+                                ? <RollButton />
                                 : <WinBox />
                             }
                         </div>
                     </div>
+                    <History />
                 </>
             }
         </div >
