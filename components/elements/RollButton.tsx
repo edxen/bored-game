@@ -107,17 +107,17 @@ const RollButton = () => {
                                 {getPlayerData(queue[0]).name}
                             </span>
                             {
-                                ((dice.display.indexOf('Rolling') !== -1 || dice.display.indexOf('Rolled') !== -1) && phase !== 'xaction')
-                                    ?
-                                    dice.display.replace('Rolled ', '').replace('Rolling ', '').length === 1 &&
-                                    <div className="flex flex-col items-center justify-center gap-4">
-                                        <div>
-                                            {dice.display.replace('Rolling ', '').length === 1 && 'Rolling'}
-                                            {dice.display.replace('Rolled ', '').length === 1 && 'Rolled'}
-                                        </div>
-                                        <Image src={`/images/dice/dice-${dice.display.replace('Rolled ', '').replace('Rolling ', '')}.png`} alt="dice" width="40" height="40" className={`${dice.display.indexOf('Rolling') !== -1 ? 'animate-bounce' : ''} transition-transform`} />
+                                <div className="flex flex-col items-center justify-center gap-4">
+                                    <div>
+                                        {dice.display}
                                     </div>
-                                    : <span>{dice.display}</span>
+                                    <Image src={`/images/dice/dice-${dice.current}.png`} alt="dice" width="40" height="40" className={`${dice.display === 'Rolling' ? 'animate-bounce' : ''} transition-transform`} />
+                                    {phase === 'xaction' && (
+                                        <div>
+                                            {dice.current.toString().replace('-', ' ')}
+                                        </div>
+                                    )}
+                                </div>
                             }
                         </button>
                     )

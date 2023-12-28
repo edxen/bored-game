@@ -24,17 +24,16 @@ const randomizedNumber = ({ min = 1, max = 6 }: Partial<Pick<TDice, 'min' | 'max
 const HandleDiceRoll = ({ dispatch, player, dice }: Omit<THandleTurnProps, 'getTile'>) => {
     const diceRoll = () => {
         const countInterval = 10;
-        let count = dice.force ? countInterval : config.diceInterval ? config.diceInterval : 0;
-        let rolled: number = dice.force ? dice.force : 1;
+        let count = dice.force !== 0 ? countInterval : config.diceInterval ? config.diceInterval : 0;
+        let rolled: number = dice.force !== 0 ? dice.force : 1;
         const rollingInterval = setInterval(() => {
             if (count !== countInterval) {
                 rolled = randomizedNumber({ min: dice.min, max: dice.max });
-                dispatch(setDice({ display: `Rolling ${rolled}` }));
+                dispatch(setDice({ display: 'Rolling', current: rolled }));
                 count++;
             } else {
                 clearInterval(rollingInterval);
-                rolled = randomizedNumber({ min: dice.min, max: dice.max });
-                dispatch(setDice({ min: 1, max: 6, force: 0, display: `Rolled ${rolled}` }));
+                dispatch(setDice({ min: 1, max: 6, force: 0, display: 'Rolled', current: rolled }));
                 dispatch(setPlayer({ id: player.id, last_path: player.path, roll: rolled }));
                 setTimeout(() => dispatch(updatePhase({ phase: 'action' })), config.delay || 1000);
             }
@@ -131,14 +130,6 @@ const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: Omit<THandleT
 };
 
 const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandleTurnProps, 'dice'> & { players: TPlayer[]; }) => {
-    let rolled: keyof TPlayerAction;
-    let display: string;
-
-    const displayRandomFrom = (list: string[], label: string) => {
-        rolled = list[randomizedNumber({ max: list.length }) - 1] as keyof TPlayerAction;
-        display = playerAction[rolled];
-        dispatch(setDice({ display: `${label} ${display}` }));
-    };
 
     const addExtraToPlayer = (rolled: keyof TPlayerAction) => {
         const action = { [rolled]: true };
@@ -169,6 +160,15 @@ const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandle
         } else {
             dispatch(updatePhase({ phase: 'end' }));
         }
+    };
+
+    let rolled: keyof TPlayerAction;
+    let display: string;
+
+    const displayRandomFrom = (list: string[], label: string) => {
+        rolled = list[randomizedNumber({ max: list.length }) - 1] as keyof TPlayerAction;
+        display = playerAction[rolled];
+        dispatch(setDice({ display: label, current: display.replace(' ', '-').toLowerCase() }));
     };
 
     const isAction = () => {
