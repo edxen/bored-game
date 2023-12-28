@@ -1,7 +1,7 @@
 import { TPlayer } from '@/components/reducers/initialStates';
 import CardOptions from './card/CardOptions';
 import CardDetails from './card/CardDetails';
-import { maxPlayer } from '../Menu';
+import { maxPlayer } from '../../game/Menu';
 
 export type TPlayerState = {
     playerState: {

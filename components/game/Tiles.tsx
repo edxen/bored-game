@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import GetData from "../hooks/GetData";
 import { TTile } from '../reducers/initialStates';
 import GenerateTileWithIcon from "./tiles/GenerateTileWithIcon";
@@ -6,7 +6,7 @@ import GenerateOccupants from "./tiles/GenerateOccupants";
 import config from '../configuration';
 
 function Tiles() {
-    const { game, dice, players, tiles, getPlayerData } = GetData();
+    const { game, dice, tiles, getPlayerData } = GetData();
     const { queue } = game.round;
 
     let containerClass = () => {
