@@ -91,7 +91,6 @@ export const initialTileState = generateTiles({ columns: (columns || 11), rows: 
  * Data to initialize Player state
 **/
 
-
 export type TPlayerAction = {
     low?: boolean;
     high?: boolean;

@@ -8,7 +8,7 @@ const PlayerUI = () => {
     const { queue, players } = GetData();
 
     return (
-        <div className="flex justify-around items-flex-start gap-2 px-2 border-b-2 pb-2 mb-2 min-h-[110px]">
+        <div className="flex justify-around items-flex-start gap-2 px-2 border-b-2 pb-2 mb-2 min-h-[80px]">
             {
                 players.map((player, i: number) => (
                     <div key={i} className={`flex gap-2 ${player.color} flex-grow-0 ${queue[0] === player.id ? 'border-4 border-red-400' : 'border border-slate-200'} rounded-xl p-2 select-none`}>
@@ -32,7 +32,7 @@ const PlayerUI = () => {
                             <div className="flex flex-wrap gap-2 ">
                                 {
                                     player.action && Object.entries(player.action).map(([key, value]) => value && (
-                                        <div key={key} className="bg-white rounded-xl px-2 p-1 whitespace-nowrap">{playerAction[key as keyof TPlayerAction]}</div>
+                                        <Image key={key} src={`/images/dice/dice-${playerAction[key as keyof TPlayerAction].replace(' ', '-').toLowerCase()}.png`} alt="dice" width="20" height="20" className='' />
                                     ))
                                 }
                             </div>
