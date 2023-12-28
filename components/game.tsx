@@ -43,7 +43,7 @@ export default function Game() {
                                                 </div>
                                                 <div className="flex flex-col items-start gap-1 flex-wrap">
                                                     {
-                                                        [{ label: 'Flags', value: ['Blue', 'Red'] }, { label: 'Eliminated', value: ['JSXA', 'SIAM'] }].map((item, i) => (
+                                                        [{ label: 'Flags', value: [] }, { label: 'Eliminated', value: [] }].map((item, i) => (
                                                             <div key={i} className="flex gap-1 flex-wrap">
                                                                 <div className="font-medium">{item.label}:</div>
                                                                 <div>{item.value.map((id, _i, arr) => <span key={id}>{id}{_i !== (arr.length - 1) && ','} </span>)}</div>
