@@ -9,7 +9,7 @@ const gameSlice = createSlice({
     reducers: {
         /**
          * Toggle boolean game state.
-         * @param started - set game initialize status
+         * @param initialize - set game initialize status
          * @param started - set game started status
          * @param over - set game over status 
         **/
