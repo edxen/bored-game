@@ -6,7 +6,7 @@ import { updateGame, updatePhase } from '../reducers/gameReducer';
 import GetData from '../hooks/GetData';
 import { setDice } from '../reducers/diceReducer';
 import config from '../configuration';
-import { TPlayerAction, playerAction } from '../reducers/initialStates';
+import { TPlayerActions, playerActions } from '../reducers/initialStates';
 import { setPlayer } from '../reducers/playersReducer';
 
 const RollButton = () => {
@@ -29,9 +29,9 @@ const RollButton = () => {
 
     const [exactMenuDisplay, setExactMenuDisplay] = useState<boolean>(false);
 
-    const start = (key: keyof TPlayerAction) => {
-        dispatch(setPlayer({ id: player.id, extra: false, action: { ...player.action, [key]: false } }));
-        dispatch(updateGame({ target: 'history', value: [`Extra Action: ${player.name} used ${playerAction[key]}`] }));
+    const start = (key: keyof TPlayerActions) => {
+        dispatch(setPlayer({ id: player.id, extra: false, actions: { ...player.actions, [key]: false } }));
+        dispatch(updateGame({ target: 'history', value: [`Extra Action: ${player.name} used ${playerActions[key]}`] }));
         dispatch(setDice({ current: '' }));
         dispatch(updatePhase({ phase: 'roll' }));
     };
@@ -89,13 +89,13 @@ const RollButton = () => {
                             ? !exactMenuDisplay ?
                                 <div className='flex flex-col gap-2'>
                                     <div className="flex gap-2 justify-center items-center flex-wrap">
-                                        {Object.entries(player.action).map(([key, value]) =>
+                                        {Object.entries(player.actions).map(([key, value]) =>
                                             value && key !== 'dodge' && (
                                                 <div key={key} className="flex flex-grow max-w-[140px]">
                                                     <button className={actionClass} onClick={() => handleExtra(key)}>
-                                                        <Image src={`/images/dice/dice-${playerAction[key as keyof TPlayerAction].replace(' ', '-').toLowerCase()}.png`} alt={`${key} dice`} width="20" height="20" className='' />
+                                                        <Image src={`/images/dice/dice-${playerActions[key as keyof TPlayerActions].replace(' ', '-').toLowerCase()}.png`} alt={`${key} dice`} width="20" height="20" className='' />
                                                         <span>Use</span>
-                                                        <span>{playerAction[key as keyof TPlayerAction]}</span>
+                                                        <span>{playerActions[key as keyof TPlayerActions]}</span>
                                                     </button>
                                                 </div>
                                             )

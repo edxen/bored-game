@@ -1,4 +1,4 @@
-import { TPlayer, TPlayerAction, playerAction } from "@/components/reducers/initialStates";
+import { TPlayer, TPlayerActions, playerActions } from "@/components/reducers/initialStates";
 import { THandleTurnProps, randomizedNumber } from "../HandleTurn";
 import { updateGame, updatePhase } from "@/components/reducers/gameReducer";
 import { setPlayer } from "@/components/reducers/playersReducer";
@@ -7,23 +7,23 @@ import config from "@/components/configuration";
 
 const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandleTurnProps, 'dice'> & { players: TPlayer[]; }) => {
 
-    const addExtraToPlayer = (rolled: keyof TPlayerAction) => {
-        const action = { [rolled]: true };
-        dispatch(updateGame({ target: 'history', value: [`${player.name} rolled ${playerAction[rolled]}`] }));
-        dispatch(setPlayer({ id: player.id, action: { ...player.action, ...action } }));
+    const addExtraToPlayer = (rolled: keyof TPlayerActions) => {
+        const actions = { [rolled]: true };
+        dispatch(updateGame({ target: 'history', value: [`${player.name} rolled ${playerActions[rolled]}`] }));
+        dispatch(setPlayer({ id: player.id, actions: { ...player.actions, ...actions } }));
     };
 
     const getAvailableExtraActions = () => {
-        const actions = player.action ?? false;
+        const actions = player.actions ?? false;
         const objActions = Object.values(actions);
-        const objActionsList = Object.keys(playerAction);
+        const objActionsList = Object.keys(playerActions);
 
         const list: string[] = [];
 
         if (objActions.every(prop => prop === true)) return list;
 
         objActionsList.forEach((key) => {
-            if (!actions || !actions[key as keyof TPlayerAction]) {
+            if (!actions || !actions[key as keyof TPlayerActions]) {
                 list.push(key);
             }
         });
@@ -39,12 +39,12 @@ const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandle
         }
     };
 
-    let rolled: keyof TPlayerAction;
+    let rolled: keyof TPlayerActions;
     let display: string;
 
     const displayRandomFrom = (list: string[], label: string) => {
-        rolled = list[randomizedNumber({ max: list.length }) - 1] as keyof TPlayerAction;
-        display = playerAction[rolled];
+        rolled = list[randomizedNumber({ max: list.length }) - 1] as keyof TPlayerActions;
+        display = playerActions[rolled];
         dispatch(setDice({ display: label, current: display.replace(' ', '-').toLowerCase() }));
     };
 

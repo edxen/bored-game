@@ -73,7 +73,7 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
 
             updateRemainingPlayers();
 
-            const extra = currentPlayer.action && Object.values(currentPlayer.action).some((value) => value === true);
+            const extra = currentPlayer.actions && Object.values(currentPlayer.actions).some((value) => value === true);
             switch (true) {
                 case currentPlayer.skip:
                     dispatch(updatePhase({ phase: 'end' }));

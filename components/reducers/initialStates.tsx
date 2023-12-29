@@ -91,14 +91,14 @@ export const initialTileState = generateTiles({ columns: (columns || 11), rows: 
  * Data to initialize Player state
 **/
 
-export type TPlayerAction = {
+export type TPlayerActions = {
     low?: boolean;
     high?: boolean;
     exact?: boolean;
     extra?: boolean;
 };
 
-export const playerAction = {
+export const playerActions = {
     exact: 'Exact Roll',
     low: 'Low Roll',
     high: 'High Roll',
@@ -115,7 +115,7 @@ export type TPlayer = {
     last_path?: number;
     roll?: number;
     skip?: boolean;
-    action: TPlayerAction;
+    actions: TPlayerActions;
     extra?: boolean;
 };
 

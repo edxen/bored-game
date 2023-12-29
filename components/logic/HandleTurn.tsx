@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { THandleGameProps } from './HandleGame';
 import GetData from '../hooks/GetData';
 
-import { TDice, TPlayer, TPlayerAction, TTile, playerAction } from '../reducers/initialStates';
+import { TDice, TPlayer, TPlayerActions, TTile, playerActions } from '../reducers/initialStates';
 import { setDice } from '../reducers/diceReducer';
 import { setPlayer } from '../reducers/playersReducer';
 import { updateGame, updatePhase } from '../reducers/gameReducer';
@@ -39,9 +39,9 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
                 HandleExtraActions({ dispatch, player, players, getTile });
                 break;
             case 'extra':
-                const start = (key: keyof TPlayerAction) => {
-                    dispatch(setPlayer({ id: player.id, extra: false, action: { ...player.action, [key]: false } }));
-                    dispatch(updateGame({ target: 'history', value: [`Extra Action: ${player.name} used ${playerAction[key]}`] }));
+                const start = (key: keyof TPlayerActions) => {
+                    dispatch(setPlayer({ id: player.id, extra: false, actions: { ...player.actions, [key]: false } }));
+                    dispatch(updateGame({ target: 'history', value: [`Extra Action: ${player.name} used ${playerActions[key]}`] }));
                     dispatch(setDice({ display: '' }));
                     dispatch(updatePhase({ phase: 'roll' }));
                 };
@@ -72,7 +72,7 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
 
                 if (player.type === 'computer') {
                     const keys = ['cancel'];
-                    Object.entries(player.action).forEach(([key, value]) => value && keys.push(key));
+                    Object.entries(player.actions).forEach(([key, value]) => value && keys.push(key));
                     const key = keys[Math.floor(Math.random() * keys.length)];
                     handleExtra(key);
                 }

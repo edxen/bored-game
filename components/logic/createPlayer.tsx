@@ -31,7 +31,7 @@ const defaultPlayer = (): TPlayer => {
     roll: 0,
     skip: false,
     extra: false,
-    action: {
+    actions: {
       extra: false,
       exact: false,
       high: false,

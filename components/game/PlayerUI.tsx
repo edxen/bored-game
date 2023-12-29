@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 
 import GetData from "@/components/hooks/GetData";
-import { TPlayerAction, playerAction } from "@/components/reducers/initialStates";
+import { TPlayerActions, playerActions } from "@/components/reducers/initialStates";
 
 const PlayerUI = () => {
     const { queue, players } = GetData();
@@ -31,8 +31,8 @@ const PlayerUI = () => {
                             </div>
                             <div className="flex flex-wrap gap-2 ">
                                 {
-                                    player.action && Object.entries(player.action).map(([key, value]) => value && (
-                                        <Image key={key} src={`/images/dice/dice-${playerAction[key as keyof TPlayerAction].replace(' ', '-').toLowerCase()}.png`} alt="dice" width="20" height="20" className='' />
+                                    player.actions && Object.entries(player.actions).map(([key, value]) => value && (
+                                        <Image key={key} src={`/images/dice/dice-${playerActions[key as keyof TPlayerActions].replace(' ', '-').toLowerCase()}.png`} alt="dice" width="20" height="20" className='' />
                                     ))
                                 }
                             </div>
