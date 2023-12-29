@@ -1,218 +1,25 @@
 import React, { useEffect } from 'react';
 
 import { THandleGameProps } from './HandleGame';
-import { getSameSideColumn } from '../utils/helper';
 import GetData from '../hooks/GetData';
 
 import { TDice, TPlayer, TPlayerAction, TTile, playerAction } from '../reducers/initialStates';
 import { setDice } from '../reducers/diceReducer';
 import { setPlayer } from '../reducers/playersReducer';
-import { setTile } from '../reducers/tilesReducer';
 import { updateGame, updatePhase } from '../reducers/gameReducer';
 
-import config from '../configuration';
+import HandleDiceRoll from './handleTurn/handleDiceRoll';
+import HandlePlayerActions from './handleTurn/handlePlayerActions';
+import HandleExtraActions from './handleTurn/handleExtraActions';
 
-interface THandleTurnProps {
+export interface THandleTurnProps {
     dispatch: THandleGameProps['dispatch'];
     player: Required<TPlayer>,
     dice: TDice,
     getTile: ({ path }: { path: number; }) => TTile;
 }
 
-const randomizedNumber = ({ min = 1, max = 6 }: Partial<Pick<TDice, 'min' | 'max'>>) => Math.floor(Math.random() * max) + min;
-
-const HandleDiceRoll = ({ dispatch, player, dice }: Omit<THandleTurnProps, 'getTile'>) => {
-    const diceRoll = () => {
-        const countInterval = 10;
-        let count = dice.force !== 0 ? countInterval : config.diceInterval ? config.diceInterval : 0;
-        let rolled: number = dice.force !== 0 ? dice.force : 1;
-        const rollingInterval = setInterval(() => {
-            if (count !== countInterval) {
-                rolled = randomizedNumber({ min: dice.min, max: dice.max });
-                dispatch(setDice({ display: 'Rolling', current: rolled }));
-                count++;
-            } else {
-                clearInterval(rollingInterval);
-                dispatch(setDice({ min: 1, max: 6, force: 0, display: 'Rolled', current: rolled }));
-                dispatch(updateGame({ target: 'history', value: [`${player.name} rolled ${rolled}`] }));
-                dispatch(setPlayer({ id: player.id, last_path: player.path, roll: rolled }));
-                setTimeout(() => dispatch(updatePhase({ phase: 'action' })), config.delay || 1000);
-            }
-        }, config.rollSpeed || 150);
-
-        if (player) rollingInterval;
-    };
-
-    diceRoll();
-};
-
-const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: Omit<THandleTurnProps, 'dice'> & { tiles: TTile[]; }) => {
-    let currentPath = player.path;
-    const getCurrentTile = () => getTile({ path: currentPath });
-
-    const endSequence = () => {
-        dispatch(updatePhase({ phase: 'post' }));
-    };
-
-    const isFlag = () => {
-        const currentTile = getCurrentTile();
-        if (currentTile.type === 'flag') {
-            dispatch(updateGame({ target: 'history', value: [`${player.name} landed on flag`] }));
-        }
-    };
-
-    const isSkip = () => {
-        const currentTile = getCurrentTile();
-        if (currentTile.type === 'stop') {
-            dispatch(setPlayer({ id: player.id, skip: true }));
-            dispatch(updateGame({ target: 'history', value: [`${player.name} landed on stop zone, this and next turn is cancelled`] }));
-        }
-    };
-
-    const isOccupied = () => {
-        const currentTile = getTile({ path: currentPath });
-        if (currentTile.type !== 'safe' && currentTile.occupants.length) {
-            const removeOccupants = () => dispatch(setTile({ index: currentTile.index, key: 'occupants', value: [player.id] }));
-            removeOccupants();
-            dispatch(updateGame({ target: 'history', value: [`${player.name} landed on an occupied tile`] }));
-        } else if (currentTile.type === 'safe') {
-            dispatch(updateGame({ target: 'history', value: [`${player.name} landed on safe zone, no elimination allowed`] }));
-        }
-    };
-
-    const isPortal = () => {
-        const currentTile = getTile({ path: currentPath });
-        if (currentTile.type === 'portal') {
-            const getPortalPath = (index: number) => getSameSideColumn(index, 6);
-            const warpTo = (portalPath: number) => {
-                const warpPath = getTile({ path: getPortalPath(portalPath) }).path;
-                dispatch(updateGame({ target: 'history', value: [`${player.name} landed on portal, warping to portal at path: ${warpPath}`] }));
-                moveToNextTile(warpPath, currentPath);
-            };
-
-            switch (currentTile.path) {
-                case getPortalPath(0): warpTo(2); break;
-                case getPortalPath(1): warpTo(3); break;
-                case getPortalPath(2): warpTo(0); break;
-                case getPortalPath(3): warpTo(1); break;
-            }
-        }
-    };
-
-    const moveToNextTile = (targetPath: number, prevPath?: number) => {
-        const updateTileOccupants = (index: number, occupants: string[]) => dispatch(setTile({ index, key: 'occupants', value: occupants }));
-
-        const totalPaths = tiles.filter(tile => tile.edge === true).length;
-
-        let nextPath = targetPath + (prevPath ? 0 : 1);
-        if (nextPath > totalPaths) {
-            nextPath = 1;
-            prevPath = totalPaths;
-        }
-
-        const lastTile = getTile({ path: prevPath ? prevPath : (nextPath - 1) });
-        const nextTile = getTile({ path: nextPath });
-
-        updateTileOccupants(nextTile.index, [player.id, ...nextTile.occupants]);
-        updateTileOccupants(lastTile.index, lastTile.occupants.filter(id => id !== player.id));
-
-        currentPath = nextTile.path;
-        dispatch(setPlayer({ id: player.id, index: nextTile.index, path: nextTile.path, last_path: lastTile.path }));
-    };
-
-    const actionSequence = () => {
-        isPortal();
-        isOccupied();
-        isSkip();
-        isFlag();
-        endSequence();
-    };
-
-    let moveCounter = 0;
-    const actionInterval = setInterval(() => {
-        if (moveCounter !== player.roll) {
-            moveToNextTile(currentPath);
-            moveCounter++;
-        } else {
-            clearInterval(actionInterval);
-            actionSequence();
-        }
-    }, config.moveSpeed || 150);
-
-    actionInterval;
-};
-
-const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandleTurnProps, 'dice'> & { players: TPlayer[]; }) => {
-
-    const addExtraToPlayer = (rolled: keyof TPlayerAction) => {
-        const action = { [rolled]: true };
-        dispatch(updateGame({ target: 'history', value: [`${player.name} rolled ${playerAction[rolled]}`] }));
-        dispatch(setPlayer({ id: player.id, action: { ...player.action, ...action } }));
-    };
-
-    const getAvailableExtraActions = () => {
-        const actions = player.action ?? false;
-        const objActions = Object.keys(actions);
-        const objActionsList = Object.keys(playerAction);
-
-        let list: string[] = [];
-
-        if (objActionsList.length === objActions.length) return list;
-        objActionsList.forEach((key) => {
-            if (!actions || !actions[key as keyof TPlayerAction]) {
-                list.push(key);
-            }
-        });
-        return list;
-    };
-
-    const doExtra = () => {
-        if (player.extra) {
-            dispatch(setPlayer({ id: player.id, extra: false }));
-            dispatch(updatePhase({ phase: 'extra' }));
-        } else {
-            dispatch(updatePhase({ phase: 'end' }));
-        }
-    };
-
-    let rolled: keyof TPlayerAction;
-    let display: string;
-
-    const displayRandomFrom = (list: string[], label: string) => {
-        rolled = list[randomizedNumber({ max: list.length }) - 1] as keyof TPlayerAction;
-        display = playerAction[rolled];
-        dispatch(setDice({ display: label, current: display.replace(' ', '-').toLowerCase() }));
-    };
-
-    const isAction = () => {
-        if (players.length === 1) dispatch(updatePhase({ phase: 'end' }));
-        dispatch(updateGame({ target: 'history', value: [`${player.name} landed on extra dice zone`] }));
-
-        const count = { current: config.actionInterval ?? 0, interval: 10 };
-        const list = getAvailableExtraActions();
-        if (!list.length) {
-            dispatch(updateGame({ target: 'history', value: [`${player.name} skipped extra dice picking, all extra dice already obtained`] }));
-            doExtra();
-        } else {
-            displayRandomFrom(list, 'Rolling');
-            const actionInterval = setInterval(() => {
-                if (count.current !== count.interval) {
-                    displayRandomFrom(list, 'Rolling');
-                    count.current++;
-                } else {
-                    clearInterval(actionInterval);
-                    displayRandomFrom(list, 'Rolled');
-                    addExtraToPlayer(rolled);
-
-                    setTimeout(() => doExtra(), config.delay || 1000);
-                }
-            }, config.rollSpeed || 150);
-        }
-
-    };
-
-    isAction();
-};
+export const randomizedNumber = ({ min = 1, max = 6 }: Partial<Pick<TDice, 'min' | 'max'>>) => Math.floor(Math.random() * max) + min;
 
 const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) => {
     const { round } = game;
