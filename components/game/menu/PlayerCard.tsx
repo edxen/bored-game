@@ -12,13 +12,6 @@ export type TPlayerState = {
     };
 };
 
-export const getRemainingColors = (players: TPlayer[], colors: string[]): string[] => {
-    const usedColors = players.map(player => player.color);
-    console.log(usedColors);
-    const remainingColors = colors.filter(color => !usedColors.includes(color));
-    return remainingColors;
-};
-
 const PlayerCard = ({ playerState }: TPlayerState) => {
     const { index, players } = playerState;
     const id = players[index]?.id;

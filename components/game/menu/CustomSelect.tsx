@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { TPlayerState, getRemainingColors } from './PlayerCard';
+import { TPlayerState } from './PlayerCard';
 import { bgColors } from '@/components/logic/createPlayer';
+import { getRemainingColorsList } from './card/CardDetails';
 
 interface ICustomSelectProps {
     props: {
@@ -51,7 +52,7 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
     const showOptions = () => {
         setDisplay(true);
         if (label.toLowerCase() === 'color') {
-            setItems(getRemainingColors(players, list));
+            setItems(getRemainingColorsList(players));
         }
     };
 
