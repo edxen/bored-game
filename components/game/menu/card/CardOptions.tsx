@@ -1,29 +1,26 @@
+import { useDispatch } from 'react-redux';
 import CustomButton from '../CustomButton';
-
 import { TPlayer } from '@/components/reducers/initialStates';
-import { getUniquePlayer, maxPlayer } from '../../../game/Menu';
-import { TPlayerState } from '../PlayerCard';
+import { setPlayers } from '@/components/reducers/playersReducer';
+import { setPlayer } from '@/components/reducers/playersReducer';
+import { getUniquePlayer } from '@/components/logic/createPlayer';
+import GetData from '@/components/hooks/GetData';
+import { maxPlayers } from '../../Menu';
 
-const CardOptions = ({ playerState }: TPlayerState) => {
-    const { players, setPlayers } = playerState;
-
-    const newPlayer = getUniquePlayer(players);
+const CardOptions = () => {
+    const dispatch = useDispatch();
+    const { players } = GetData();
 
     const click = (value: TPlayer['type']) => {
-        if (players.length < maxPlayer.length) {
-            setPlayers(prevPlayers => [...prevPlayers, { ...newPlayer, type: value }]);
+        if (players.length < maxPlayers.length) {
+            const newPlayer = getUniquePlayer(players);
+            dispatch(setPlayers([...players, newPlayer]));
+            dispatch(setPlayer({ id: newPlayer.id, type: value }));
         }
     };
 
-    const addHuman = {
-        label: 'Add Human',
-        click: () => click('human')
-    };
-
-    const addComputer = {
-        label: 'Add Computer',
-        click: () => click('computer')
-    };
+    const addHuman = { label: 'Add Human', click: () => click('human') };
+    const addComputer = { label: 'Add Computer', click: () => click('computer') };
 
     return (
         <>

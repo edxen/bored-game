@@ -1,28 +1,17 @@
-import React, { ChangeEvent } from 'react';
-import { useEffect, useState } from 'react';
-import { TPlayerState } from './PlayerCard';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { TCardProps } from './card/CardDetails';
+import { setPlayer } from '@/components/reducers/playersReducer';
 
-interface ICustomInputProps {
-    props: {
-        label: string;
-        subLabel: string;
-        value: string;
-        playerState: TPlayerState['playerState'];
-    };
-}
+const CustomInput = ({ props }: TCardProps) => {
+    const { label, subLabel, value, state } = props;
+    const { dispatch, player } = state;
 
-const CustomInput = ({ props }: ICustomInputProps) => {
-    const { label, subLabel, value, playerState } = props;
-    const { id, setPlayers } = playerState;
     const [inputValue, setInputValue] = useState<string>(value);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
-        setPlayers((prevPlayers) =>
-            prevPlayers.map((prevPlayer) =>
-                prevPlayer.id === id ? { ...prevPlayer, name: e.target.value } : prevPlayer
-            )
-        );
+        const name = e.target.value;
+        setInputValue(name);
+        dispatch(setPlayer({ id: player.id, name }));
     };
 
     useEffect(() => {

@@ -2,50 +2,30 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import PlayerCard from './menu/PlayerCard';
 
-import { setPlayers as setGamePlayers } from '../reducers/playersReducer';
-import { setTile } from '../reducers/tilesReducer';
+import { setPlayer, setPlayers } from '../reducers/playersReducer';
 import { getSameSideColumn } from '../utils/helper';
-import { toggleGame, updateGame, updatePhase } from '../reducers/gameReducer';
-import { TTile, TPlayer } from '../reducers/initialStates';
+import { toggleGame } from '../reducers/gameReducer';
+import defaultPlayers from '../logic/createPlayer';
 import GetData from '../hooks/GetData';
-import createPlayer from '../logic/createPlayer';
+import config from '../configuration';
 
-type TNav = 'menu' | 'start';
-
-export const maxPlayer = Array.from({ length: 4 });
-
-
-export const getUniquePlayer = (players: TPlayer[]): TPlayer => {
-    const isUniquePlayer = (players: TPlayer[], newPlayer: TPlayer): boolean => {
-        const isUniqueID = !players.some(player => player.id === newPlayer.id);
-        const isUniqueColor = !players.some(player => player.color === newPlayer.color);
-        return isUniqueID && isUniqueColor;
-    };
-
-    let newPlayer = createPlayer({});
-    while (!isUniquePlayer(players, newPlayer)) newPlayer = createPlayer({});
-    return newPlayer;
-};
-
-
-const defaultPlayers = (playersLength: number): TPlayer[] => {
-    const players: TPlayer[] = [];
-
-    while (players.length < playersLength) {
-        const newPlayer = getUniquePlayer(players);
-        players.push(newPlayer);
-    }
-
-    return players;
-};
-
+export const maxPlayers = Array.from({ length: 4 });
 
 const Menu = () => {
     const dispatch = useDispatch();
-    const [nav, setNav] = useState<TNav>('menu');
-    const [players, setPlayers] = useState<TPlayer[]>(defaultPlayers(3));
+    const { players } = GetData();
+    const [nav, setNav] = useState<'menu' | 'start'>('menu');
 
-    const [start, setStart] = useState(false);
+    const initializeMenu = () => {
+        useEffect(() => {
+            if (!config.customPlayer.enabled) {
+                dispatch(setPlayers(defaultPlayers(2)));
+            }
+        }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    };
+
+    initializeMenu();
+
 
     const handleBack = () => {
         setNav('menu');
@@ -53,25 +33,19 @@ const Menu = () => {
 
     const handleStart = () => {
         const setPlayerStartingPoint = () => {
-            let availablePath = Array.from({ length: maxPlayer.length }).map((_, i) => getSameSideColumn(i, 1)).sort(() => Math.random() - 0.5);
-            setPlayers(prevPlayers => prevPlayers.map((prevPlayer, i) => ({ ...prevPlayer, path: availablePath[i] })));
+            let availablePath = Array.from({ length: maxPlayers.length }).map((_, i) => getSameSideColumn(i, 1)).sort(() => Math.random() - 0.5);
+            players.forEach((player, i) => {
+                dispatch((setPlayer({ id: player.id, path: availablePath[i] })));
+            });
         };
 
         if (nav === 'menu') {
             setNav('start');
         } else {
             setPlayerStartingPoint();
-            setStart(true);
+            dispatch(toggleGame({ initialize: true }));
         }
     };
-
-    useEffect(() => {
-        if (start) {
-            dispatch(setGamePlayers(players));
-            dispatch(toggleGame({ initialize: true }));
-            setStart(false);
-        }
-    }, [start]);  // eslint-disable-line react-hooks/exhaustive-deps
 
     const buttonClass = 'px-4 py-2 bg-white text-black font-bold border rounded-md hover:bg-slate-100 cursor-pointer whitespace-nowrap';
     const startButtonClass = (nav === 'start' && players.length < 2) ? 'hidden' : '';
@@ -91,9 +65,7 @@ const Menu = () => {
             <div className={`flex justify-center items-flex-start w-full gap-4 transition-height duration-500 ${nav === 'start' ? 'delay-150 visible opacity-100 h-full' : 'delay-0 invisible opacity-0 h-0'}`}>
                 <div className={`w-full grid grid-cols-1 sm:grid-cols-2 justify-center items-start gap-4 p-4 border rounded-md transition-height duration-500 ${nav === 'start' ? 'delay-150 visible scale-y-100 origin-top' : 'delay-0 invisible opacity-0 scale-y-0'}`}>
                     {
-                        nav === 'start' && Array.from({ length: players.length + 1 }).map((_, i) => (
-                            <PlayerCard key={i} playerState={{ index: i, players, setPlayers }} />
-                        ))
+                        nav === 'start' && <PlayerCard />
                     }
                 </div>
             </div>

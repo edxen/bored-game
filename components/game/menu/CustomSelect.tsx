@@ -1,41 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { TPlayerState } from './PlayerCard';
+import { TCardProps, getRemainingColorsList } from './card/CardDetails';
+import { setPlayer } from '@/components/reducers/playersReducer';
 import { bgColors } from '@/components/logic/createPlayer';
-import { getRemainingColorsList } from './card/CardDetails';
-
-interface ICustomSelectProps {
-    props: {
-        label: string;
-        list: string[];
-        value: string;
-        playerState: TPlayerState['playerState'];
-    };
-}
-
-const CaretDown = ({ size = 20 }: Partial<{ size: number; }>) => {
-    return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            width={size} height={size}
-            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-        >
-            <polyline points="6 9 12 15 18 9" />
-        </svg>
-    );
-};
 
 const toCapitalize = (str: string): string => {
     const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
     return capitalized;
 };
 
-const CustomSelect = ({ props }: ICustomSelectProps) => {
-    const { label, list, value, playerState } = props;
-    const { id, players, setPlayers } = playerState;
+const CustomSelect = ({ props }: TCardProps) => {
+    const { label, list, value, state } = props;
+    const { dispatch, player, players } = state;
 
-    const [items, setItems] = useState<string[]>(list);
+    const [items, setItems] = useState<string[]>(list ?? []);
     const [display, setDisplay] = useState<boolean>(false);
 
     const inputRef = useRef<HTMLInputElement>(null);
@@ -57,19 +34,12 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
     };
 
     const optionSelect = (selectedItem: string) => {
+        const target = label.toLowerCase();
+        const update = { [target]: target === 'color' ? bgColors[selectedItem] : selectedItem };
+
+        dispatch(setPlayer({ id: player.id, ...update }));
         if (inputRef.current) inputRef.current.value = toCapitalize(selectedItem);
         setDisplay(false);
-        setPlayers(prevPlayers =>
-            prevPlayers.map(prevPlayer => {
-                if (prevPlayer.id === id) {
-                    return {
-                        ...prevPlayer,
-                        [label.toLowerCase()]: label.toLowerCase() === 'color' ? bgColors[selectedItem] : selectedItem
-                    };
-                }
-                return prevPlayer;
-            })
-        );
     };
 
     useEffect(() => {
@@ -79,9 +49,7 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     return (
@@ -105,3 +73,11 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
 };
 
 export default CustomSelect;
+
+const CaretDown = ({ size = 20 }: Partial<{ size: number; }>) => {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width={size} height={size} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" >
+            <polyline points="6 9 12 15 18 9" />
+        </svg>
+    );
+};

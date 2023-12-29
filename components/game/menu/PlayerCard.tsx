@@ -1,7 +1,9 @@
-import { TPlayer } from '@/components/reducers/initialStates';
 import CardOptions from './card/CardOptions';
 import CardDetails from './card/CardDetails';
-import { maxPlayer } from '../../game/Menu';
+import { maxPlayers } from '../../game/Menu';
+
+import { TPlayer } from '@/components/reducers/initialStates';
+import GetData from '@/components/hooks/GetData';
 
 export type TPlayerState = {
     playerState: {
@@ -12,35 +14,33 @@ export type TPlayerState = {
     };
 };
 
-const PlayerCard = ({ playerState }: TPlayerState) => {
-    const { index, players } = playerState;
-    const id = players[index]?.id;
-    playerState.id = id;
-
-    const currentPlayer = players.find(player => player.id === id) as TPlayer;
-    const bgClass = currentPlayer?.color || '';
+const PlayerCard = () => {
+    const { players } = GetData();
 
     const cardClass = 'min-h-[322px] flex flex-col gap-4 p-4 justify-center items-center border rounded-md';
-    const transitionClass = `
-        ${players.length === 0 || (players.length === 2 && index === 2) ? 'sm:col-span-2' : ''}
-        transition-all
-        ${id
-            ? `${bgClass} flip-360`
-            : 'bg-slate-100'
-        }
-    `;
+
+    const transitionClass = (index: number) => {
+        const player = players[index];
+
+        return `
+            transition-all
+            ${players.length === 0 || (players.length === 2 && index === 2) ? 'sm:col-span-2' : ''}
+            ${player?.id ? `${player.color} flip-360` : 'bg-slate-100'}
+        `;
+    };
 
     return (
         <>
             {
-                index < maxPlayer.length &&
-                <div className={`${cardClass} ${transitionClass}`}>
-                    {
-                        id
-                            ? <CardDetails playerState={playerState} />
-                            : <CardOptions playerState={playerState} />
-                    }
-                </div>
+                Array.from({ length: players.length + 1 }).map((_, index) => index < maxPlayers.length && (
+                    <div key={index} className={`${cardClass} ${transitionClass(index)}`}>
+                        {
+                            players[index]?.id
+                                ? <CardDetails index={index} />
+                                : <CardOptions />
+                        }
+                    </div>
+                ))
             }
         </>
     );

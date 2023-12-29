@@ -48,4 +48,27 @@ const createPlayer = (customPlayer: Partial<TPlayer>): TPlayer => {
   return player;
 };
 
-export default createPlayer;
+export const getUniquePlayer = (players: TPlayer[]): TPlayer => {
+  const isUniquePlayer = (players: TPlayer[], newPlayer: TPlayer): boolean => {
+    const isUniqueID = !players.some(player => player.id === newPlayer.id);
+    const isUniqueColor = !players.some(player => player.color === newPlayer.color);
+    return isUniqueID && isUniqueColor;
+  };
+
+  let newPlayer = createPlayer({});
+  while (!isUniquePlayer(players, newPlayer)) newPlayer = createPlayer({});
+  return newPlayer;
+};
+
+const defaultPlayers = (playersLength: number): TPlayer[] => {
+  const players: TPlayer[] = [];
+
+  while (players.length < playersLength) {
+    const newPlayer = getUniquePlayer(players);
+    players.push(newPlayer);
+  }
+
+  return players;
+};
+
+export default defaultPlayers;
