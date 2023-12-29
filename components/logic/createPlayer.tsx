@@ -1,5 +1,5 @@
 import { TPlayer } from "../reducers/initialStates";
-
+import names from '../data/names.json';
 
 export const colorsList = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'pink', 'violet'];
 
@@ -21,11 +21,11 @@ const randomizeList = <T,>(list: T[]): T => list[randomIndex({ max: list.length 
 
 const defaultPlayer = (): TPlayer => {
   return {
+    id: '',
     index: 0,
-    id: 'default',
-    name: 'default',
-    type: 'computer',
+    name: randomizeList(names),
     color: randomizeList(colorsList),
+    type: 'computer',
     path: 0,
     last_path: 0,
     roll: 0,

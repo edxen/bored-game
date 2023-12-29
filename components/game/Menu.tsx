@@ -14,16 +14,40 @@ type TNav = 'menu' | 'start';
 
 export const maxPlayer = Array.from({ length: 4 });
 
-const defaultPlayers = [
-    createPlayer({ name: 'Pl', type: 'human', color: 'red' }),
-    createPlayer({ name: 'P2', type: 'human', color: 'blue' }),
-    createPlayer({ name: 'P3', type: 'human', color: 'violet' }),
-];
+
+export const getUniquePlayer = (players: TPlayer[]): TPlayer => {
+    const isUniquePlayer = (players: TPlayer[], newPlayer: TPlayer): boolean => {
+        const isUniqueID = !players.some(player => player.id === newPlayer.id);
+        const isUniqueColor = !players.some(player => player.color === newPlayer.color);
+        return isUniqueID && isUniqueColor;
+    };
+
+    let newPlayer = createPlayer({});
+
+    while (!isUniquePlayer(players, newPlayer)) {
+        newPlayer = createPlayer({});
+    }
+
+    return newPlayer;
+};
+
+
+const defaultPlayers = (playersLength: number): TPlayer[] => {
+    const players: TPlayer[] = [];
+
+    while (players.length < playersLength) {
+        const newPlayer = getUniquePlayer(players);
+        players.push(newPlayer);
+    }
+
+    return players;
+};
+
 
 const Menu = () => {
     const dispatch = useDispatch();
     const [nav, setNav] = useState<TNav>('menu');
-    const [players, setPlayers] = useState<TPlayer[]>(defaultPlayers);
+    const [players, setPlayers] = useState<TPlayer[]>(defaultPlayers(3));
 
     const [start, setStart] = useState(false);
 
@@ -81,7 +105,7 @@ const Menu = () => {
             <div className={`flex justify-center items-flex-start w-full gap-4 transition-height duration-500 ${nav === 'start' ? 'delay-150 visible opacity-100 h-full' : 'delay-0 invisible opacity-0 h-0'}`}>
                 <div className={`w-full grid grid-cols-1 sm:grid-cols-2 justify-center items-start gap-4 p-4 border rounded-md transition-height duration-500 ${nav === 'start' ? 'delay-150 visible scale-y-100 origin-top' : 'delay-0 invisible opacity-0 scale-y-0'}`}>
                     {
-                        Array.from({ length: players.length + 1 }).map((_, i) => (
+                        nav === 'start' && Array.from({ length: players.length + 1 }).map((_, i) => (
                             <PlayerCard key={i} playerState={{ index: i, players, setPlayers }} />
                         ))
                     }
