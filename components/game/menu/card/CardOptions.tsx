@@ -1,14 +1,13 @@
 import CustomButton from '../CustomButton';
 
 import { TPlayer } from '@/components/reducers/initialStates';
-import { maxPlayer } from '../../../game/Menu';
+import { getUniquePlayer, maxPlayer } from '../../../game/Menu';
 import { TPlayerState } from '../PlayerCard';
-import createPlayer from '@/components/logic/createPlayer';
 
 const CardOptions = ({ playerState }: TPlayerState) => {
     const { players, setPlayers } = playerState;
 
-    const newPlayer = createPlayer({});
+    const newPlayer = getUniquePlayer(players);
 
     const click = (value: TPlayer['type']) => {
         if (players.length < maxPlayer.length) {
