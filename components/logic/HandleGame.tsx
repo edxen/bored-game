@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 
 import GetData from "../hooks/GetData";
@@ -41,22 +40,21 @@ const HandleInitialize = ({ dispatch, game, players, tiles }: Omit<THandleGamePr
     const initialRender = useRef(true);
 
     useEffect(() => {
-        if (!initialRender.current && !game.started) {
+        if (!initialRender.current && game.initialize && !game.started) {
             dispatch(updatePhase({ phase: 'change' }));
             updatePlayers();
         } else {
             initialRender.current = false;
         }
-    }, [game.started]);  // eslint-disable-line react-hooks/exhaustive-deps
+    }, [game.initialize, game.started]); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
 const HandleGame = () => {
     const dispatch = useDispatch();
     const { game, players, tiles, dice } = GetData();
-
     if (config.customPlayer.enabled) dispatch(toggleGame({ initialize: true }));
 
-    if (game.initialize) HandleInitialize({ dispatch, game, players, tiles });
+    HandleInitialize({ dispatch, game, players, tiles });
     HandleRound({ dispatch, game, players, tiles, dice });
 };
 

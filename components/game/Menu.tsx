@@ -23,11 +23,7 @@ export const getUniquePlayer = (players: TPlayer[]): TPlayer => {
     };
 
     let newPlayer = createPlayer({});
-
-    while (!isUniquePlayer(players, newPlayer)) {
-        newPlayer = createPlayer({});
-    }
-
+    while (!isUniquePlayer(players, newPlayer)) newPlayer = createPlayer({});
     return newPlayer;
 };
 
@@ -56,41 +52,23 @@ const Menu = () => {
     };
 
     const handleStart = () => {
-        if (nav === 'menu') {
-            setNav('start'); ``;
-        } else {
-            let availablePath = Array.from({ length: 4 }).map((_, i) => getSameSideColumn(i, 1)).sort(() => Math.random() - 0.5);
+        const setPlayerStartingPoint = () => {
+            let availablePath = Array.from({ length: maxPlayer.length }).map((_, i) => getSameSideColumn(i, 1)).sort(() => Math.random() - 0.5);
             setPlayers(prevPlayers => prevPlayers.map((prevPlayer, i) => ({ ...prevPlayer, path: availablePath[i] })));
+        };
+
+        if (nav === 'menu') {
+            setNav('start');
+        } else {
+            setPlayerStartingPoint();
             setStart(true);
         }
-    };
-
-    const { tiles } = GetData();
-
-    const addPlayersToBoard = (players: TPlayer[]) => {
-        const addPlayerToTile = (player: TPlayer) => {
-            const tile = tiles.find((tile) => tile.path === player.path) as TTile;
-            if (!tile.occupants.includes(player.id)) {
-                const updatedOccupants = [...tile.occupants, player.id];
-                dispatch(setTile({ index: tile.index, key: 'occupants', value: updatedOccupants }));
-            }
-        };
-        players.map((player) => addPlayerToTile(player));
-    };
-
-    const initializeTurnDisplay = (players: TPlayer[]) => {
-        const getPlayerIds = players.map((player) => player.id);
-        dispatch(updateGame({ target: 'queue', value: getPlayerIds }));
     };
 
     useEffect(() => {
         if (start) {
             dispatch(setGamePlayers(players));
-            addPlayersToBoard(players);
-            initializeTurnDisplay(players);
-            dispatch(toggleGame({ started: true }));
-            dispatch(updateGame({ target: 'history', value: ['Game started'] }));
-            dispatch(updatePhase({ phase: 'change' }));
+            dispatch(toggleGame({ initialize: true }));
             setStart(false);
         }
     }, [start]);  // eslint-disable-line react-hooks/exhaustive-deps
