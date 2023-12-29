@@ -8,7 +8,8 @@ const CardDetails = ({ playerState }: TPlayerState) => {
     const { index, id, players, setPlayers } = playerState;
 
     const name = {
-        label: 'Name (Max 3 Characters)',
+        label: 'Name',
+        subLabel: "Max 3 Characters",
         playerState,
         value: players[index]?.name
     };
