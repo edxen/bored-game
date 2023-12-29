@@ -4,8 +4,7 @@ import CustomSelect from '../CustomSelect';
 import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton';
 
-import { TPlayer } from '@/components/reducers/initialStates';
-import { colorsList } from '@/components/logic/createPlayer';
+import { TPlayer, colorsList } from '@/components/logic/createPlayer';
 import { setPlayers } from '@/components/reducers/playersReducer';
 
 import GetData from '@/components/hooks/GetData';

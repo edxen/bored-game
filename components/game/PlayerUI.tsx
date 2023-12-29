@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 
 import GetData from "@/components/hooks/GetData";
-import { TPlayerActions, playerActions } from "@/components/reducers/initialStates";
+import { TPlayerActions, playerActions } from "../logic/createPlayer";
 
 const PlayerUI = () => {
     const { queue, players } = GetData();

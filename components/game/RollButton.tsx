@@ -6,8 +6,8 @@ import { updateGame, updatePhase } from '../reducers/gameReducer';
 import GetData from '../hooks/GetData';
 import { setDice } from '../reducers/diceReducer';
 import config from '../configuration';
-import { TPlayerActions, playerActions } from '../reducers/initialStates';
 import { setPlayer } from '../reducers/playersReducer';
+import { TPlayerActions, playerActions } from '../logic/createPlayer';
 
 const RollButton = () => {
     const dispatch = useDispatch();
@@ -90,7 +90,7 @@ const RollButton = () => {
                                 <div className='flex flex-col gap-2'>
                                     <div className="flex gap-2 justify-center items-center flex-wrap">
                                         {Object.entries(player.actions).map(([key, value]) =>
-                                            value && key !== 'dodge' && (
+                                            value === true && (
                                                 <div key={key} className="flex flex-grow max-w-[140px]">
                                                     <button className={actionClass} onClick={() => handleExtra(key)}>
                                                         <Image src={`/images/dice/dice-${playerActions[key as keyof TPlayerActions].replace(' ', '-').toLowerCase()}.png`} alt={`${key} dice`} width="20" height="20" className='' />

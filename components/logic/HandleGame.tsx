@@ -5,9 +5,10 @@ import GetData from "../hooks/GetData";
 import HandleRound from "./HandleRound";
 import { toggleGame, updateGame, updatePhase, updateQueuePlayers, updateRoundCounter } from "../reducers/gameReducer";
 import { setTile } from "../reducers/tilesReducer";
-import { TDice, TGame, TPlayer, TTile } from "../reducers/initialStates";
+import { TDice, TGame, TTile } from "../reducers/initialStates";
 import { UnknownAction } from 'redux';
 import config from '../configuration';
+import { TPlayer } from "./createPlayer";
 
 export type THandleGameProps = {
     dispatch: React.Dispatch<UnknownAction>;

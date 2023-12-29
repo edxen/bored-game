@@ -1,9 +1,9 @@
-import { TPlayer, TPlayerActions, playerActions } from "@/components/reducers/initialStates";
 import { THandleTurnProps, randomizedNumber } from "../HandleTurn";
 import { updateGame, updatePhase } from "@/components/reducers/gameReducer";
 import { setPlayer } from "@/components/reducers/playersReducer";
 import { setDice } from "@/components/reducers/diceReducer";
 import config from "@/components/configuration";
+import { TPlayer, TPlayerActions, playerActions } from "../createPlayer";
 
 const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandleTurnProps, 'dice'> & { players: TPlayer[]; }) => {
 

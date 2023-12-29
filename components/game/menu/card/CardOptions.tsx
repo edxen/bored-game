@@ -1,9 +1,8 @@
 import { useDispatch } from 'react-redux';
 import CustomButton from '../CustomButton';
-import { TPlayer } from '@/components/reducers/initialStates';
 import { setPlayers } from '@/components/reducers/playersReducer';
 import { setPlayer } from '@/components/reducers/playersReducer';
-import { getUniquePlayer } from '@/components/logic/createPlayer';
+import { TPlayer, getUniquePlayer } from '@/components/logic/createPlayer';
 import GetData from '@/components/hooks/GetData';
 import { maxPlayers } from '../../Menu';
 

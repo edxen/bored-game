@@ -1,4 +1,4 @@
-import { TPlayer } from "./reducers/initialStates";
+import { TPlayer } from "./logic/createPlayer";
 
 type TConfig = {
     enableSpecificDice: boolean,

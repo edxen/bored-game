@@ -1,5 +1,11 @@
-import { TPlayer } from "../reducers/initialStates";
 import names from '../data/names.json';
+
+export const playerActions = {
+  exact: 'Exact Roll',
+  low: 'Low Roll',
+  high: 'High Roll',
+  extra: 'Extra Roll',
+};
 
 export const colorsList = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'pink', 'violet'];
 
@@ -18,6 +24,27 @@ export const bgColors: Record<TColorsList, string> = {
 
 const randomIndex = ({ min = 0, max }: { [key: string]: number; }) => Math.floor(Math.random() * max) - min;
 const randomizeList = <T,>(list: T[]): T => list[randomIndex({ max: list.length })];
+
+export type TPlayerActions = {
+  low?: boolean;
+  high?: boolean;
+  exact?: boolean;
+  extra?: boolean;
+};
+
+export type TPlayer = {
+  id: string;
+  type: 'human' | 'computer';
+  name: string;
+  path: number;
+  color: string;
+  index?: number;
+  last_path?: number;
+  roll?: number;
+  skip?: boolean;
+  actions: TPlayerActions;
+  extra?: boolean;
+};
 
 const defaultPlayer = (): TPlayer => {
   return {

@@ -2,8 +2,8 @@ import CardOptions from './card/CardOptions';
 import CardDetails from './card/CardDetails';
 import { maxPlayers } from '../../game/Menu';
 
-import { TPlayer } from '@/components/reducers/initialStates';
 import GetData from '@/components/hooks/GetData';
+import { TPlayer } from '@/components/logic/createPlayer';
 
 export type TPlayerState = {
     playerState: {

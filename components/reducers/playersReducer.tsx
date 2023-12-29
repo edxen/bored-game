@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { produce } from 'immer';
 
-import { initialPlayerState, TPlayer } from "./initialStates";
+import { initialPlayerState } from "./initialStates";
+import { TPlayer } from "../logic/createPlayer";
 
 const playersSlice = createSlice({
     name: 'players',

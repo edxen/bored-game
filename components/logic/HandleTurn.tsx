@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { THandleGameProps } from './HandleGame';
 import GetData from '../hooks/GetData';
 
-import { TDice, TPlayer, TPlayerActions, TTile, playerActions } from '../reducers/initialStates';
+import { TDice, TTile } from '../reducers/initialStates';
 import { setDice } from '../reducers/diceReducer';
 import { setPlayer } from '../reducers/playersReducer';
 import { updateGame, updatePhase } from '../reducers/gameReducer';
@@ -11,6 +11,7 @@ import { updateGame, updatePhase } from '../reducers/gameReducer';
 import HandleDiceRoll from './handleTurn/handleDiceRoll';
 import HandlePlayerActions from './handleTurn/handlePlayerActions';
 import HandleExtraActions from './handleTurn/handleExtraActions';
+import { TPlayer, TPlayerActions, playerActions } from './createPlayer';
 
 export interface THandleTurnProps {
     dispatch: THandleGameProps['dispatch'];

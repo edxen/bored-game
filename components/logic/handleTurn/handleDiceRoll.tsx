@@ -6,7 +6,7 @@ import { setPlayer } from "@/components/reducers/playersReducer";
 
 const HandleDiceRoll = ({ dispatch, player, dice }: Omit<THandleTurnProps, 'getTile'>) => {
     const diceRoll = () => {
-        const countInterval = 10;
+        const countInterval = 15;
         let count = dice.force !== 0 ? countInterval : config.diceInterval ? config.diceInterval : 0;
         let rolled: number = dice.force !== 0 ? dice.force : 1;
         const rollingInterval = setInterval(() => {
