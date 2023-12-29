@@ -33,13 +33,13 @@ function Tiles() {
         const { id, color } = getPlayerData(occupant);
         const isPlayerActive = (
             queue[0] === id ?
-                `border-4 border-red-800 ${!dice.display ? 'animate-bounce' : 'animate-spin'}`
-                : 'animate-shake animate-duration-[2000ms] animate-infinite animate-alternate'
+                `z-20 border-4 border-red-800 ${!dice.display ? 'animate-bounce' : 'animate-spin'}`
+                : 'z-10 animate-shake animate-duration-[2000ms] animate-infinite animate-alternate'
         );
 
         return `
         ${isPlayerActive} ${color}
-        absolute z-10
+        absolute
         flex justify-center items-center h-full w-full
         text-black text-sm
         `;
