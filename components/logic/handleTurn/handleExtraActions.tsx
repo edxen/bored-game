@@ -15,12 +15,13 @@ const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandle
 
     const getAvailableExtraActions = () => {
         const actions = player.action ?? false;
-        const objActions = Object.keys(actions);
+        const objActions = Object.values(actions);
         const objActionsList = Object.keys(playerAction);
 
-        let list: string[] = [];
+        const list: string[] = [];
 
-        if (objActionsList.length === objActions.length) return list;
+        if (objActions.every(prop => prop === true)) return list;
+
         objActionsList.forEach((key) => {
             if (!actions || !actions[key as keyof TPlayerAction]) {
                 list.push(key);
