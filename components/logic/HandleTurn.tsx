@@ -156,12 +156,11 @@ const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandle
         const objActionsList = Object.keys(playerAction);
 
         let list: string[] = [];
+
+        if (objActionsList.length === objActions.length) return list;
         objActionsList.forEach((key) => {
-            if (!actions) {
+            if (!actions || !actions[key as keyof TPlayerAction]) {
                 list.push(key);
-            } else {
-                if (!actions[key as keyof TPlayerAction]) list.push(key);
-                if (objActionsList.length === objActions.length) list = objActionsList;
             }
         });
         return list;
@@ -194,22 +193,22 @@ const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandle
         if (!list.length) {
             dispatch(updateGame({ target: 'history', value: [`${player.name} skipped extra dice picking, all extra dice already obtained`] }));
             doExtra();
+        } else {
+            displayRandomFrom(list, 'Rolling');
+            const actionInterval = setInterval(() => {
+                if (count.current !== count.interval) {
+                    displayRandomFrom(list, 'Rolling');
+                    count.current++;
+                } else {
+                    clearInterval(actionInterval);
+                    displayRandomFrom(list, 'Rolled');
+                    addExtraToPlayer(rolled);
+
+                    setTimeout(() => doExtra(), config.delay || 1000);
+                }
+            }, config.rollSpeed || 150);
         }
 
-
-        displayRandomFrom(list, 'Rolling');
-        const actionInterval = setInterval(() => {
-            if (count.current !== count.interval) {
-                displayRandomFrom(list, 'Rolling');
-                count.current++;
-            } else {
-                clearInterval(actionInterval);
-                displayRandomFrom(list, 'Rolled');
-                addExtraToPlayer(rolled);
-
-                setTimeout(() => doExtra(), config.delay || 1000);
-            }
-        }, config.rollSpeed || 150);
     };
 
     isAction();
