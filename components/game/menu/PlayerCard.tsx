@@ -12,22 +12,9 @@ export type TPlayerState = {
     };
 };
 
-export const colorsList = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'pink', 'violet'];
-export type TColorsList = typeof colorsList[number];
-
-export const bgColors: Record<TColorsList, string> = {
-    red: 'bg-red-300',
-    blue: 'bg-blue-300',
-    green: 'bg-green-300',
-    yellow: 'bg-yellow-300',
-    orange: 'bg-orange-300',
-    purple: 'bg-purple-300',
-    pink: 'bg-pink-300',
-    violet: 'bg-violet-300'
-};
-
 export const getRemainingColors = (players: TPlayer[], colors: string[]): string[] => {
     const usedColors = players.map(player => player.color);
+    console.log(usedColors);
     const remainingColors = colors.filter(color => !usedColors.includes(color));
     return remainingColors;
 };
@@ -37,8 +24,8 @@ const PlayerCard = ({ playerState }: TPlayerState) => {
     const id = players[index]?.id;
     playerState.id = id;
 
-    const selectedColor = players.find(player => player.id === id)?.color || '';
-    const bgClass = bgColors[selectedColor as keyof typeof bgColors];
+    const currentPlayer = players.find(player => player.id === id) as TPlayer;
+    const bgClass = currentPlayer?.color || '';
 
     const cardClass = 'min-h-[322px] flex flex-col gap-4 p-4 justify-center items-center border rounded-md';
     const transitionClass = `

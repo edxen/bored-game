@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TPlayerState, getRemainingColors } from './PlayerCard';
+import { bgColors } from '@/components/logic/createPlayer';
 
 interface ICustomSelectProps {
     props: {
@@ -62,7 +63,7 @@ const CustomSelect = ({ props }: ICustomSelectProps) => {
                 if (prevPlayer.id === id) {
                     return {
                         ...prevPlayer,
-                        [label.toLowerCase()]: selectedItem
+                        [label.toLowerCase()]: label.toLowerCase() === 'color' ? bgColors[selectedItem] : selectedItem
                     };
                 }
                 return prevPlayer;

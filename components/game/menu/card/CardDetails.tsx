@@ -1,7 +1,8 @@
 import CustomSelect from '../CustomSelect';
 import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton';
-import { TPlayerState, colorsList } from '../PlayerCard';
+import { TPlayerState } from '../PlayerCard';
+import { colorsList } from '@/components/logic/createPlayer';
 
 const CardDetails = ({ playerState }: TPlayerState) => {
     const { index, id, players, setPlayers } = playerState;
@@ -15,7 +16,7 @@ const CardDetails = ({ playerState }: TPlayerState) => {
         label: 'Color',
         list: colorsList,
         playerState,
-        value: players[index]?.color
+        value: players[index]?.color.replace(/^bg-(\w+)-\d+$/, '$1')
     };
     const type = {
         label: 'Type',

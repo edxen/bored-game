@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import PlayerCard, { TColorsList, bgColors } from './menu/PlayerCard';
+import PlayerCard from './menu/PlayerCard';
 
 import { setPlayers as setGamePlayers } from '../reducers/playersReducer';
 import { setTile } from '../reducers/tilesReducer';
@@ -8,30 +8,22 @@ import { getSameSideColumn } from '../utils/helper';
 import { toggleGame, updateGame, updatePhase } from '../reducers/gameReducer';
 import { TTile, TPlayer } from '../reducers/initialStates';
 import GetData from '../hooks/GetData';
+import createPlayer from '../logic/createPlayer';
 
 type TNav = 'menu' | 'start';
 
-
-interface TDefaultPlayer extends Pick<TPlayer, 'name' | 'type'> {
-    color: TColorsList;
-}
-
-export const defaultPlayer = ({ name, type, color }: TDefaultPlayer): TPlayer => {
-    const player: TPlayer = { name, type, color, id: name.toLowerCase(), path: 1, action: {} };
-    return player;
-};
-
 export const maxPlayer = Array.from({ length: 4 });
+
+const defaultPlayers = [
+    createPlayer({ name: 'Pl', type: 'human', color: 'red' }),
+    createPlayer({ name: 'P2', type: 'human', color: 'blue' }),
+    createPlayer({ name: 'P3', type: 'human', color: 'violet' }),
+];
 
 const Menu = () => {
     const dispatch = useDispatch();
     const [nav, setNav] = useState<TNav>('menu');
-    const [players, setPlayers] = useState<TPlayer[]>(
-        [
-            defaultPlayer({ name: 'PL1', type: 'human', color: 'red' }),
-            defaultPlayer({ name: 'AI1', type: 'computer', color: 'blue' })
-        ]
-    );
+    const [players, setPlayers] = useState<TPlayer[]>(defaultPlayers);
 
     const [start, setStart] = useState(false);
 
@@ -39,17 +31,8 @@ const Menu = () => {
         if (nav === 'menu') {
             setNav('start');
         } else {
-
             let availablePath = Array.from({ length: 4 }).map((_, i) => getSameSideColumn(i, 1)).sort(() => Math.random() - 0.5);
-            setPlayers(prevPlayers => (
-                prevPlayers.map((prevPlayer, i) => (
-                    {
-                        ...prevPlayer,
-                        path: availablePath[i],
-                        color: bgColors[prevPlayer.color]
-                    }
-                ))
-            ));
+            setPlayers(prevPlayers => prevPlayers.map((prevPlayer, i) => ({ ...prevPlayer, path: availablePath[i] })));
             setStart(true);
         }
     };
