@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { produce } from "immer";
 
-import { initialGameState, TGame, TPlayer, TRound } from "./initialStates";
+import { initialGameState, TGame, TRound } from "./initialStates";
 
 const gameSlice = createSlice({
     name: 'game',
@@ -71,7 +71,7 @@ const gameSlice = createSlice({
                         draftState.round.queue = value;
                         break;
                     case 'ranking':
-                        draftState.ranking.list = [...value, ...draftState.ranking.list];
+                        draftState.ranking = [...value, ...draftState.ranking];
                         break;
                     case 'history':
                         draftState.history = [...value, ...draftState.history];

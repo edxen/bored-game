@@ -9,16 +9,12 @@ export type TRound = {
     phase: 'unstarted' | 'pre' | 'change' | 'roll' | 'action' | 'xaction' | 'extra' | 'post' | 'end';
 };
 
-type TRanking = {
-    list: string[];
-};
-
 export type TGame = {
     initialize: boolean;
     started: boolean;
     over: boolean;
     round: TRound;
-    ranking: TRanking;
+    ranking: string[];
     history: string[];
 };
 
@@ -36,9 +32,7 @@ export const initialGameState: TGame = {
         count: 1,
         phase: 'unstarted'
     },
-    ranking: {
-        list: []
-    },
+    ranking: [],
     history: []
 };
 

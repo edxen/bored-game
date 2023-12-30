@@ -2,21 +2,21 @@ import GetData from "../hooks/GetData";
 import RenderPage from "../hooks/RenderPage";
 
 const WinBox = () => {
-    const { game, players } = GetData();
+    const { game, queue, players, getPlayerData } = GetData();
     const { refresh } = RenderPage();
 
     const rankSuffix = ['nd', 'rd', 'th'];
     return (
         <>
             <div className='text-3xl underline font-bold mb-2 animate-jump animate-infinite animate-duration-1000 animate-alternate '>
-                {`Winner: ${players[0].name}`}
+                {`Winner: ${getPlayerData(queue[0]).name}`}
             </div>
             <div className='mb-2 flex flex-col items-start'>
                 {
-                    game.ranking.list.map((rank, i) => (
-                        rank !== players[0].name && (
+                    game.ranking.map((rank, i) => (
+                        rank !== queue[0] && (
                             <div className='text-xl' key={i}>
-                                {`${i + 2}${rankSuffix[i]}: ${rank} `}
+                                {`${i + 2}${rankSuffix[i]}: ${getPlayerData(rank).name} `}
                             </div>
                         )
                     ))
