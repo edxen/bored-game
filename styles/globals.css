@@ -22,6 +22,14 @@ html, body {
   box-sizing: border-box;
 }
 
+.pixelated {
+  -ms-interpolation-mode: nearest-neighbor;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -o-pixelated;
+  image-rendering: pixelated;
+}
+
 .flip-360 {
   transform: rotateY(360deg);
 }

@@ -37,7 +37,7 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
                 HandlePlayerActions({ dispatch, player, tiles, getTile });
                 break;
             case 'xaction':
-                HandleExtraActions({ dispatch, player, players, getTile });
+                HandleExtraActions({ dispatch, player, queue, getTile });
                 break;
             case 'extra':
                 const start = (key: keyof TPlayerActions) => {

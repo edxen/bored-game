@@ -32,7 +32,13 @@ const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: Omit<THandleT
     const isOccupied = () => {
         const currentTile = getTile({ path: currentPath });
         if (currentTile.type !== 'safe' && currentTile.occupants.length) {
-            const removeOccupants = () => dispatch(setTile({ index: currentTile.index, key: 'occupants', value: [player.id] }));
+            const removeOccupants = () => {
+                currentTile.occupants.forEach(occupant => {
+                    dispatch(setPlayer({ id: occupant, dead: true }));
+                    dispatch(setPlayer({ id: player.id, killed: [...player.killed, occupant] }));
+                });
+                dispatch(setTile({ index: currentTile.index, key: 'occupants', value: [player.id] }));
+            };
             removeOccupants();
             dispatch(updateGame({ target: 'history', value: [`${player.name} landed on an occupied tile`] }));
         } else if (currentTile.type === 'safe') {

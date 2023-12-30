@@ -6,8 +6,9 @@ import { toggleGame, updateGame, updateQueuePlayers, updateRoundCounter } from '
 import GetData from '../hooks/GetData';
 import { updatePhase } from '../reducers/gameReducer';
 import { TTile } from '../reducers/initialStates';
-import { setPlayer, setPlayers } from '../reducers/playersReducer';
+import { setPlayer } from '../reducers/playersReducer';
 import config from '../configuration';
+import { TPlayer } from './createPlayer';
 
 const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'dispatch' | 'game' | 'players'>) => {
     const { phase, queue } = game.round;
@@ -41,29 +42,20 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
     const { phase, queue } = game.round;
     const { getPlayerData } = GetData();
 
-    const updateRemainingPlayers = () => {
-        const remainingPlayers = [] as string[];
-        const removedPlayers = [] as string[];
-
-        players.forEach((player) => {
-            const occupants = getTile({ path: player.path }).occupants;
-            occupants.forEach(occupant => {
-                if (!remainingPlayers.includes(occupant)) {
-                    remainingPlayers.push(occupant);
+    const updateRemainingPlayers = (currentPlayer: TPlayer) => {
+        const deadPlayers = players.reduce((count, current) => count += current.dead ? 1 : 0, 0);
+        if ((deadPlayers + queue.length) !== players.length) {
+            queue.forEach(queuePlayer => {
+                const deadPlayer = getPlayerData(queuePlayer);
+                if (deadPlayer.dead) {
+                    dispatch(updateGame({ target: 'ranking', value: [deadPlayer.id] }));
+                    dispatch(updateGame({ target: 'history', value: [`${currentPlayer.name} eliminated ${deadPlayer.name}`] }));
+                    const remainingQueuePlayers = queue.filter(queuePlayer => queuePlayer !== deadPlayer.id);
+                    dispatch(updateQueuePlayers(remainingQueuePlayers));
                 }
             });
-            if (!remainingPlayers.includes(player.id)) {
-                removedPlayers.push(player.id);
-            }
-        });
+        }
 
-        const remainingQueuePlayers = queue.filter(id => !removedPlayers.includes(id));
-        dispatch(updateGame({ target: 'ranking', value: removedPlayers }));
-        removedPlayers.map((removedPlayer => {
-            dispatch(updateGame({ target: 'history', value: [`${getPlayerData(queue[0]).name} eliminated ${getPlayerData(removedPlayer).name}`] }));
-        }));
-        dispatch(updateQueuePlayers(remainingQueuePlayers));
-        dispatch(setPlayers(players.filter(player => !removedPlayers.includes(player.id))));
     };
 
     useEffect(() => {
@@ -71,7 +63,7 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
             const currentPlayer = getPlayerData(queue[0]);
             const currentTile = getTile({ path: currentPlayer.path });
 
-            updateRemainingPlayers();
+            updateRemainingPlayers(currentPlayer);
 
             const extra = currentPlayer.actions && Object.values(currentPlayer.actions).some((value) => value === true);
             switch (true) {

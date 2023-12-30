@@ -5,7 +5,7 @@ import { setDice } from "@/components/reducers/diceReducer";
 import config from "@/components/configuration";
 import { TPlayer, TPlayerActions, playerActions } from "../createPlayer";
 
-const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandleTurnProps, 'dice'> & { players: TPlayer[]; }) => {
+const HandleExtraActions = ({ dispatch, player, queue }: Omit<THandleTurnProps, 'dice'> & { queue: string[]; }) => {
 
     const addExtraToPlayer = (rolled: keyof TPlayerActions) => {
         const actions = { [rolled]: true };
@@ -49,7 +49,7 @@ const HandleExtraActions = ({ dispatch, player, players, getTile }: Omit<THandle
     };
 
     const isAction = () => {
-        if (players.length === 1) dispatch(updatePhase({ phase: 'end' }));
+        if (queue.length === 1) dispatch(updatePhase({ phase: 'end' }));
         dispatch(updateGame({ target: 'history', value: [`${player.name} landed on extra dice zone`] }));
 
         const count = { current: config.actionInterval ?? 0, interval: 10 };

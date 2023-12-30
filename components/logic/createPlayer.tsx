@@ -42,6 +42,8 @@ export type TPlayer = {
   last_path?: number;
   roll?: number;
   skip?: boolean;
+  dead: boolean;
+  killed: string[];
   actions: TPlayerActions;
   extra?: boolean;
 };
@@ -58,6 +60,8 @@ const defaultPlayer = (): TPlayer => {
     roll: 0,
     skip: false,
     extra: false,
+    dead: false,
+    killed: [],
     actions: {
       extra: false,
       exact: false,
