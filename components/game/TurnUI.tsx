@@ -24,7 +24,7 @@ const TurnUI = () => {
             <div className="flex gap-2">
                 {
                     queue.map((id, i) => (
-                        <div key={i} className="flex justify-center items-center gap-2">
+                        <div key={i} className="flex justify-center items-center gap-2 h-6">
                             <div className={`${getPlayerData(id).color} relative flex justify-center gap-2 ${getPlayerData(id).skip ? 'opacity-50' : ''} items-center px-2 rounded-lg text-sm font-medium`}>
                                 <div>
                                     {getPlayerData(id).name}
