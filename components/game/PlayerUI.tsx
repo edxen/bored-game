@@ -13,41 +13,54 @@ const PlayerUI = () => {
                 players.map((player, i: number) => (
                     <div key={i} className={`relative flex gap-2 ${player.color} flex-grow-0 ${queue[0] === player.id ? 'border-4 border-red-400' : 'border-4 border-slate-200'} ${player.dead ? 'opacity-50' : ''} rounded-xl p-2 select-none`}>
                         <div className="flex flex-col gap-1 text-xs flex-wrap">
-                            <div className="flex gap-2 flex-wrap">
-                                <div className="flex bg-white rounded-lg px-2 items-center gap-2">
+                            <div className="flex gap-1 flex-wrap">
+                                <div className="flex flex-grow items-center gap-2 px-2 bg-white rounded-lg ">
                                     <Image src={`/images/icons/icon-${player.type}.png`} alt={player.type} width="20" height="20" className="object-contain h-auto w-auto" />
                                     <div className="text-lg font-semibold">{player.name}</div>
                                 </div>
-                                <div className="flex items-start">
-                                    <div className='flex bg-white rounded-lg flex-nowrap w-full'>
-                                        <Image src='/images/icons/icon-knife.png' alt="dice" width="20" height="20" className='rotate-45' />
-                                        <div className="flex">
-                                            {player.killed.length
-                                                ? player.killed.map((id: string, i, arr) => (
-                                                    <div key={id} className={`${getPlayerData(id).color} flex bg-opacity-50 font-medium h-full px-1 ${i == arr.length - 1 ? 'rounded-e-lg' : ''}`}>
+                                <div className="flex flex-col flex-grow gap-1 w-full">
+                                    <div className='flex flex-grow bg-white rounded-lg flex-nowrap h-6 w-full'>
+                                        <Image src='/images/icons/icon-knife.png' alt="dice" width="20" height="20" className='rotate-45 h-auto w-auto' />
+                                        <div className="flex flex-grow justify-around items-center">
+                                            {player.killed.length > 0 &&
+                                                player.killed.map((id: string, i, arr) => (
+                                                    <div key={id} className={`${getPlayerData(id).color} flex flex-grow items-center font-medium h-full px-2 ${i == arr.length - 1 ? 'rounded-e-lg' : ''}`}>
                                                         {getPlayerData(id).name}
-                                                        {i !== arr.length - 1 ? ',' : ''}
                                                     </div>
                                                 ))
-                                                :
-                                                <div className='font-medium h-full px-1'>
-                                                    Empty
-                                                </div>
+
                                             }
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <div className='flex bg-white p-1 rounded-lg flex-nowrap h-6 w-full'>
+                                            <Image src='/images/icons/icon-flag.png' alt="dice" width="20" height="20" className='object-contain h-auto w-auto' />
+                                            <div className="flex flex-grow justify-evenly gap-0.5">
+                                                {player.flags.map((color: string, i, arr) => (
+                                                    <div key={color} className={`${color} flex font-medium p-1.5 rounded-full`}>
+                                                    </div>
+                                                ))
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <div className='flex bg-white p-1 rounded-lg flex-nowrap h-6 w-full'>
+                                            <Image src='/images/icons/icon-dice.png' alt="dice" width="20" height="20" className='object-contain h-auto w-auto' />
+                                            <div className="flex flex-grow justify-evenly gap-0.5">
+                                                {
+                                                    player.actions && Object.entries(player.actions).map(([key, value]) => value && (
+                                                        <Image key={key} src={`/images/dice/dice-${playerActions[key as keyof TPlayerActions].replace(' ', '-').toLowerCase()}.png`} alt="dice" width="20" height="20" className='object-contain' />
+                                                    ))
+                                                }
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex flex-wrap gap-2 ">
-                                {
-                                    player.actions && Object.entries(player.actions).map(([key, value]) => value && (
-                                        <Image key={key} src={`/images/dice/dice-${playerActions[key as keyof TPlayerActions].replace(' ', '-').toLowerCase()}.png`} alt="dice" width="20" height="20" className='' />
-                                    ))
-                                }
-                            </div>
                         </div>
                         {player.dead &&
-                            <div className="absolute top-0 left-0 h-full w-full flex justify-center">
+                            <div className="absolute top-0 left-0 h-full w-full p-2 flex justify-center">
                                 <Image src='/images/icons/icon-knife.png' alt="dead icon" width="125" height="125" className='pixelated h-auto w-auto rotate-45 z-10' />
                             </div>
                         }
