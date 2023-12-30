@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import GetData from "../hooks/GetData";
 import { TTile } from '../reducers/initialStates';
 import GenerateTileWithIcon from "./tiles/GenerateTileWithIcon";
@@ -6,8 +6,13 @@ import GenerateOccupants from "./tiles/GenerateOccupants";
 import config from '../configuration';
 
 function Tiles() {
-    const { game, dice, tiles, getPlayerData } = GetData();
+    const { game, players, tiles, getPlayerData } = GetData();
     const { queue } = game.round;
+
+
+    useEffect(() => {
+
+    }, []);
 
     let containerClass = () => {
         return `
@@ -17,7 +22,21 @@ function Tiles() {
     };
 
     let tileClass = (tile: TTile) => {
-        const isEdge = tile.edge ? 'bg-slate-200' : '';
+        const isFlag = () => {
+            let bgColor = '';
+            if (tile.type === 'flag') {
+                const flags = tiles.filter(_tile => _tile.type === 'flag');
+                for (let i = 0; i < flags.length; i++) {
+                    if (flags[i].path === tile.path) {
+                        bgColor = game.flags[i];
+                        break;
+                    }
+                }
+                return bgColor;
+            }
+            return 'bg-slate-200';
+        };
+        const isEdge = tile.edge ? isFlag() : '';
         const isOver = game.over ? 'animate-jump-out animate-duration-[2500ms]' : '';
 
         return `

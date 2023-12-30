@@ -1,12 +1,12 @@
 import { THandleTurnProps } from "../HandleTurn";
-import { updateGame, updatePhase } from "@/components/reducers/gameReducer";
-import { TTile } from "@/components/reducers/initialStates";
+import gameReducer, { updateGame, updatePhase } from "@/components/reducers/gameReducer";
+import { TGame, TTile } from "@/components/reducers/initialStates";
 import { setPlayer } from "@/components/reducers/playersReducer";
 import { setTile } from "@/components/reducers/tilesReducer";
 import { getSameSideColumn } from "@/components/utils/helper";
 import config from "@/components/configuration";
 
-const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: Omit<THandleTurnProps, 'dice'> & { tiles: TTile[]; }) => {
+const HandlePlayerActions = ({ dispatch, game, player, tiles, getTile }: Omit<THandleTurnProps, 'dice'> & { game: TGame, tiles: TTile[]; }) => {
     let currentPath = player.path;
     const getCurrentTile = () => getTile({ path: currentPath });
 
@@ -17,6 +17,14 @@ const HandlePlayerActions = ({ dispatch, player, tiles, getTile }: Omit<THandleT
     const isFlag = () => {
         const currentTile = getCurrentTile();
         if (currentTile.type === 'flag') {
+            const flagPaths = tiles.filter(tile => tile.type === 'flag');
+            let obtainableFlag = '';
+            flagPaths.forEach((tile, i) => {
+                if (currentTile.path === tile.path) obtainableFlag = game.flags[i];
+            });
+            if (!player.flags.includes(obtainableFlag)) {
+                dispatch(setPlayer({ id: player.id, flags: [...player.flags, obtainableFlag] }));
+            }
             dispatch(updateGame({ target: 'history', value: [`${player.name} landed on flag`] }));
         }
     };

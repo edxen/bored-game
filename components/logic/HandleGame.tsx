@@ -8,7 +8,11 @@ import { setTile } from "../reducers/tilesReducer";
 import { TDice, TGame, TTile } from "../reducers/initialStates";
 import { UnknownAction } from 'redux';
 import config from '../configuration';
-import { TPlayer } from "./createPlayer";
+import { TPlayer, bgColors } from "./createPlayer";
+import { setPlayer } from "../reducers/playersReducer";
+import { maxPlayers } from "../game/Menu";
+import { getRemainingColorsList } from "../game/menu/card/CardDetails";
+import { getSameSideColumn } from "../utils/helper";
 
 export type THandleGameProps = {
     dispatch: React.Dispatch<UnknownAction>;
@@ -20,7 +24,7 @@ export type THandleGameProps = {
 
 const HandleInitialize = ({ dispatch, game, players, tiles }: Omit<THandleGameProps, 'dice'>) => {
 
-    const updatePlayers = () => {
+    const setTileFlagsColor = (currentPlayers: string[], tileFlags: string[]) => {
         const addPlayerToTile = (player: TPlayer) => {
             const tile = tiles.find((tile) => tile.path === player.path) as TTile;
             if (!tile.occupants.includes(player.id)) {
@@ -28,11 +32,54 @@ const HandleInitialize = ({ dispatch, game, players, tiles }: Omit<THandleGamePr
                 dispatch(setTile({ index: tile.index, key: 'occupants', value: updatedOccupants }));
             }
         };
-        const currentPlayers = [] as string[];
+
+        const switchTileFlags = () => {
+            const tileFlagTemp = tileFlags[3];
+            tileFlags[3] = tileFlags[2];
+            tileFlags[2] = tileFlagTemp;
+        };
+
+        const getRemainingFlagColors = () => {
+            if (players.length < maxPlayers.length) {
+                let count = maxPlayers.length - players.length;
+                let list = getRemainingColorsList(players);
+                outer: while (count > 0) {
+                    const newColor = list[Math.floor(Math.random() * list.length)];
+                    for (let i = 0; i < tileFlags.length; i++) {
+                        if (tileFlags[i].indexOf('bg-') === -1) {
+                            tileFlags[i] = bgColors[newColor];
+                            break;
+                        }
+                    }
+                    list = list.filter(item => item !== newColor);
+                    count--;
+                }
+            }
+        };
+
         players.map((player) => {
+            dispatch(setPlayer({ id: player.id, starting_path: player.path }));
+            for (let i = 0; i < tileFlags.length; i++) {
+                const strPath = player.path.toString();
+                if (tileFlags[i] === strPath) {
+                    tileFlags[i] = player.color;
+                }
+            }
             currentPlayers.push(player.id);
             addPlayerToTile(player);
+            dispatch(setPlayer({ id: player.id, flags: [player.color] }));
         });
+
+        switchTileFlags();
+        getRemainingFlagColors();
+    };
+
+    const updatePlayers = () => {
+        const currentPlayers = [] as string[];
+        let tileFlags: string[] = Array.from({ length: maxPlayers.length }).map((_, i) => getSameSideColumn(i, 1).toString());
+
+        setTileFlagsColor(currentPlayers, tileFlags);
+        dispatch(updateGame({ target: 'flags', value: tileFlags }));
         dispatch(updateQueuePlayers(currentPlayers));
         dispatch(toggleGame({ started: true }));
         dispatch(updateGame({ target: 'history', value: ['Game started'] }));

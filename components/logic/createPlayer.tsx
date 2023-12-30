@@ -37,6 +37,7 @@ export type TPlayer = {
   type: 'human' | 'computer';
   name: string;
   path: number;
+  starting_path: number;
   color: string;
   index?: number;
   last_path?: number;
@@ -44,6 +45,7 @@ export type TPlayer = {
   skip?: boolean;
   dead: boolean;
   killed: string[];
+  flags: string[];
   actions: TPlayerActions;
   extra?: boolean;
 };
@@ -56,12 +58,14 @@ const defaultPlayer = (): TPlayer => {
     color: randomizeList(colorsList),
     type: 'computer',
     path: 0,
+    starting_path: 0,
     last_path: 0,
     roll: 0,
     skip: false,
     extra: false,
     dead: false,
     killed: [],
+    flags: [],
     actions: {
       extra: false,
       exact: false,

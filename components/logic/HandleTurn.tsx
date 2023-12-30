@@ -34,7 +34,7 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
                 HandleDiceRoll({ dispatch, player, dice });
                 break;
             case 'action':
-                HandlePlayerActions({ dispatch, player, tiles, getTile });
+                HandlePlayerActions({ dispatch, game, player, tiles, getTile });
                 break;
             case 'xaction':
                 HandleExtraActions({ dispatch, player, queue, getTile });

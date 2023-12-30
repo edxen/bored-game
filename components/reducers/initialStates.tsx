@@ -16,6 +16,7 @@ export type TGame = {
     round: TRound;
     ranking: string[];
     history: string[];
+    flags: string[];
 };
 
 /**
@@ -33,7 +34,8 @@ export const initialGameState: TGame = {
         phase: 'unstarted'
     },
     ranking: [],
-    history: []
+    history: [],
+    flags: []
 };
 
 export type TDice = {
