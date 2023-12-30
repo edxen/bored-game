@@ -24,7 +24,7 @@ const PlayerUI = () => {
                                         <div className="flex">
                                             {player.killed.length
                                                 ? player.killed.map((id: string, i, arr) => (
-                                                    <div key={id} className={`${getPlayerData(id).color} flex bg-opacity-50 font-medium h-full px-1`}>
+                                                    <div key={id} className={`${getPlayerData(id).color} flex bg-opacity-50 font-medium h-full px-1 ${i == arr.length - 1 ? 'rounded-e-lg' : ''}`}>
                                                         {getPlayerData(id).name}
                                                         {i !== arr.length - 1 ? ',' : ''}
                                                     </div>
