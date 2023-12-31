@@ -17,15 +17,8 @@ const HandlePlayerActions = ({ dispatch, game, player, tiles, getTile }: Omit<TH
     const isFlag = () => {
         const currentTile = getCurrentTile();
         if (currentTile.type === 'flag') {
-            const flagPaths = tiles.filter(tile => tile.type === 'flag');
-            let obtainableFlag = '';
-            flagPaths.forEach((tile, i) => {
-                if (currentTile.path === tile.path) obtainableFlag = game.flags[i];
-            });
-            if (!player.flags.includes(obtainableFlag)) {
-                dispatch(setPlayer({ id: player.id, flags: [...player.flags, obtainableFlag] }));
-            }
-            dispatch(updateGame({ target: 'history', value: [`${player.name} landed on flag zone, ${obtainableFlag.replace(/^bg-(\w+)-\d+$/, '$1')} flag collected`] }));
+            dispatch(setPlayer({ id: player.id, flags: [...player.flags, currentTile.flag] }));
+            dispatch(updateGame({ target: 'history', value: [`${player.name} landed on flag zone, ${currentTile.flag.replace(/^bg-(\w+)-\d+$/, '$1')} flag collected`] }));
         }
     };
 

@@ -22,21 +22,7 @@ function Tiles() {
     };
 
     let tileClass = (tile: TTile) => {
-        const isFlag = () => {
-            let bgColor = '';
-            if (tile.type === 'flag') {
-                const flags = tiles.filter(_tile => _tile.type === 'flag');
-                for (let i = 0; i < flags.length; i++) {
-                    if (flags[i].path === tile.path) {
-                        bgColor = game.flags[i];
-                        break;
-                    }
-                }
-                return bgColor;
-            }
-            return 'bg-slate-200';
-        };
-        const isEdge = tile.edge ? isFlag() : '';
+        const isEdge = tile.edge ? (tile.flag ? tile.flag : 'bg-slate-200') : '';
         const isOver = game.over ? 'animate-jump-out animate-duration-[2500ms]' : '';
 
         return `

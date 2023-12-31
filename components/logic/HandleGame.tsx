@@ -72,6 +72,11 @@ const HandleInitialize = ({ dispatch, game, players, tiles }: Omit<THandleGamePr
 
         switchTileFlags();
         getRemainingFlagColors();
+
+        const flagPaths = tiles.filter(tile => tile.type === 'flag');
+        flagPaths.forEach((flagPath, i) => {
+            dispatch(setTile({ index: flagPath.index, key: 'flag', value: tileFlags[i] }));
+        });
     };
 
     const updatePlayers = () => {
@@ -79,7 +84,6 @@ const HandleInitialize = ({ dispatch, game, players, tiles }: Omit<THandleGamePr
         let tileFlags: string[] = Array.from({ length: maxPlayers.length }).map((_, i) => getSameSideColumn(i, 1).toString());
 
         setTileFlagsColor(currentPlayers, tileFlags);
-        dispatch(updateGame({ target: 'flags', value: tileFlags }));
         dispatch(updateQueuePlayers(currentPlayers));
         dispatch(toggleGame({ started: true }));
         dispatch(updateGame({ target: 'history', value: ['Game started'] }));

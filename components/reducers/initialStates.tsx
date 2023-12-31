@@ -16,7 +16,6 @@ export type TGame = {
     round: TRound;
     ranking: string[];
     history: string[];
-    flags: string[];
 };
 
 /**
@@ -34,8 +33,7 @@ export const initialGameState: TGame = {
         phase: 'unstarted'
     },
     ranking: [],
-    history: [],
-    flags: []
+    history: []
 };
 
 export type TDice = {
@@ -64,6 +62,7 @@ export type TTile = {
     edge: boolean;
     path: number;
     index: number;
+    flag: string;
 };
 
 export type TilePayload<K extends keyof TTile> = {

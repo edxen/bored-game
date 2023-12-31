@@ -89,6 +89,7 @@ const generateTiles: TGenerateTiles = ({ columns, rows }) => {
             edge,
             path,
             type: assignType(edge, index, path, vector),
+            flag: '',
             occupants: []
         };
     });
