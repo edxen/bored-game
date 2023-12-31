@@ -25,7 +25,7 @@ const HandlePlayerActions = ({ dispatch, game, player, tiles, getTile }: Omit<TH
             if (!player.flags.includes(obtainableFlag)) {
                 dispatch(setPlayer({ id: player.id, flags: [...player.flags, obtainableFlag] }));
             }
-            dispatch(updateGame({ target: 'history', value: [`${player.name} landed on flag`] }));
+            dispatch(updateGame({ target: 'history', value: [`${player.name} landed on flag zone, ${obtainableFlag.replace(/^bg-(\w+)-\d+$/, '$1')} flag collected`] }));
         }
     };
 
