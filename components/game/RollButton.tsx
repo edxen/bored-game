@@ -89,7 +89,7 @@ const RollButton = () => {
                                                 )
                                             )}
                                         </div>
-                                        <button className={buttonClass} onClick={() => handleExtra('cancel')}>
+                                        <button className={buttonClass} onClick={() => handleExtra({ key: 'cancel', force: 0 })}>
                                             Cancel
                                         </button>
                                     </div>

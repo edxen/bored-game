@@ -12,7 +12,7 @@ const CardOptions = () => {
 
     const click = (value: TPlayer['type']) => {
         if (players.length < maxPlayers.length) {
-            const newPlayer = getUniquePlayer(players);
+            const newPlayer = getUniquePlayer(players, {});
             dispatch(setPlayers([...players, newPlayer]));
             dispatch(setPlayer({ id: newPlayer.id, type: value }));
         }

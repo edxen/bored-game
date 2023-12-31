@@ -16,7 +16,7 @@ const Menu = () => {
     const { players } = GetData();
     const [nav, setNav] = useState<'menu' | 'start'>('menu');
 
-    const initializeMenu = () => {
+    const InitializeMenu = () => {
         useEffect(() => {
             if (!config.customPlayer.enabled) {
                 dispatch(setPlayers(defaultPlayers(2)));
@@ -24,7 +24,7 @@ const Menu = () => {
         }, []); // eslint-disable-line react-hooks/exhaustive-deps
     };
 
-    initializeMenu();
+    InitializeMenu();
 
 
     const handleBack = () => {
