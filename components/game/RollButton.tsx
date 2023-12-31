@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Image from 'next/image';
 
-import { updateGame, updatePhase } from '../reducers/gameReducer';
+import { updatePhase } from '../reducers/gameReducer';
 import GetData from '../hooks/GetData';
 import { setDice } from '../reducers/diceReducer';
 import config from '../configuration';
 import { setPlayer } from '../reducers/playersReducer';
 import { TPlayerActions, playerActions } from '../logic/createPlayer';
+import HandleExtra from '../logic/handleTurn/handleExtra';
 
 const RollButton = () => {
     const dispatch = useDispatch();
     const { game, dice, getPlayerData } = GetData();
     const { phase, queue } = game.round;
     const player = getPlayerData(queue[0]);
+    const { handleExtra, start } = HandleExtra({ dispatch, player });
 
     const handleRoll = () => {
         dispatch(updatePhase({ phase: 'roll' }));
@@ -29,34 +31,11 @@ const RollButton = () => {
 
     const [exactMenuDisplay, setExactMenuDisplay] = useState<boolean>(false);
 
-    const start = (key: keyof TPlayerActions) => {
-        dispatch(setPlayer({ id: player.id, extra: false, actions: { ...player.actions, [key]: false } }));
-        dispatch(updateGame({ target: 'history', value: [`Extra Action: ${player.name} used ${playerActions[key]}`] }));
-        dispatch(setDice({ current: '' }));
-        dispatch(updatePhase({ phase: 'roll' }));
-    };
-
-    const handleExtra = (key: string) => {
-        switch (key) {
-            case 'exact':
-                setExactMenuDisplay(true);
-                break;
-            case 'high':
-                dispatch(setDice({ min: 4, max: 3 }));
-                start(key);
-                break;
-            case 'low':
-                dispatch(setDice({ min: 1, max: 3 }));
-                start(key);
-                break;
-            case 'extra':
-                dispatch(updatePhase({ phase: 'roll' }));
-                start(key);
-                break;
-            case 'cancel':
-                dispatch(updatePhase({ phase: 'end' }));
-                dispatch(updateGame({ target: 'history', value: [`${player.name} skipped extra action`] }));
-                break;
+    const handleExtraActions = (key: string) => {
+        if (key === 'exact') {
+            setExactMenuDisplay(true);
+        } else {
+            handleExtra(key);
         }
     };
 
@@ -101,7 +80,7 @@ const RollButton = () => {
                                             {Object.entries(player.actions).map(([key, value]) =>
                                                 value === true && (
                                                     <div key={key} className="flex flex-grow max-w-[140px]">
-                                                        <button className={actionClass} onClick={() => handleExtra(key)}>
+                                                        <button className={actionClass} onClick={() => handleExtraActions(key)}>
                                                             <Image src={`/images/dice/dice-${playerActions[key as keyof TPlayerActions].replace(' ', '-').toLowerCase()}.png`} alt={`${key} dice`} width="20" height="20" className='' />
                                                             <span>Use</span>
                                                             <span>{playerActions[key as keyof TPlayerActions]}</span>

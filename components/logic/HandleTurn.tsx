@@ -4,14 +4,12 @@ import { THandleGameProps } from './HandleGame';
 import GetData from '../hooks/GetData';
 
 import { TDice, TTile } from '../reducers/initialStates';
-import { setDice } from '../reducers/diceReducer';
-import { setPlayer } from '../reducers/playersReducer';
-import { updateGame, updatePhase } from '../reducers/gameReducer';
 
 import HandleDiceRoll from './handleTurn/handleDiceRoll';
 import HandlePlayerActions from './handleTurn/handlePlayerActions';
 import HandleExtraActions from './handleTurn/handleExtraActions';
-import { TPlayer, TPlayerActions, playerActions } from './createPlayer';
+import { TPlayer } from './createPlayer';
+import HandleExtra from './handleTurn/handleExtra';
 
 export interface THandleTurnProps {
     dispatch: THandleGameProps['dispatch'];
@@ -22,7 +20,7 @@ export interface THandleTurnProps {
 
 export const randomizedNumber = ({ min = 1, max = 6 }: Partial<Pick<TDice, 'min' | 'max'>>) => Math.floor(Math.random() * max) + min;
 
-const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) => {
+const HandleTurn = ({ dispatch, game, tiles, dice }: THandleGameProps) => {
     const { round } = game;
     const { phase, queue } = round;
     const { getPlayerData, getTile } = GetData();
@@ -40,47 +38,11 @@ const HandleTurn = ({ dispatch, game, players, tiles, dice }: THandleGameProps) 
                 HandleExtraActions({ dispatch, player, queue, getTile });
                 break;
             case 'extra':
-                const start = (key: keyof TPlayerActions) => {
-                    dispatch(setPlayer({ id: player.id, extra: false, actions: { ...player.actions, [key]: false } }));
-                    dispatch(updateGame({ target: 'history', value: [`Extra Action: ${player.name} used ${playerActions[key]}`] }));
-                    dispatch(setDice({ display: '' }));
-                    dispatch(updatePhase({ phase: 'roll' }));
-                };
-
-                const handleExtra = (key: string) => {
-                    switch (key) {
-                        case 'exact':
-                            start(key);
-                            break;
-                        case 'high':
-                            dispatch(setDice({ min: 4, max: 3 }));
-                            start(key);
-                            break;
-                        case 'low':
-                            dispatch(setDice({ min: 1, max: 3 }));
-                            start(key);
-                            break;
-                        case 'extra':
-                            dispatch(updatePhase({ phase: 'roll' }));
-                            start(key);
-                            break;
-                        case 'cancel':
-                            dispatch(updatePhase({ phase: 'end' }));
-                            dispatch(updateGame({ target: 'history', value: [`${player.name} skipped extra action`] }));
-                            break;
-                    }
-                };
-
-                if (player.type === 'computer') {
-                    const keys = ['cancel'];
-                    Object.entries(player.actions).forEach(([key, value]) => value && keys.push(key));
-                    const key = keys[Math.floor(Math.random() * keys.length)];
-                    handleExtra(key);
-                }
-
+                const { handleExtraAI } = HandleExtra({ dispatch, player });
+                handleExtraAI();
                 break;
         }
     }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
-export default HandleTurn;;;;
+export default HandleTurn;

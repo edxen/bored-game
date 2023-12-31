@@ -3,7 +3,7 @@ import { updateGame, updatePhase } from "@/components/reducers/gameReducer";
 import { setPlayer } from "@/components/reducers/playersReducer";
 import { setDice } from "@/components/reducers/diceReducer";
 import config from "@/components/configuration";
-import { TPlayer, TPlayerActions, playerActions } from "../createPlayer";
+import { TPlayerActions, playerActions } from "../createPlayer";
 
 const HandleExtraActions = ({ dispatch, player, queue }: Omit<THandleTurnProps, 'dice'> & { queue: string[]; }) => {
 
