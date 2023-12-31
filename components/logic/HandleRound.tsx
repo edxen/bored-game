@@ -26,7 +26,9 @@ const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'disp
             dispatch(setPlayer({ id: currentPlayer.id, extra: true }));
 
             if (!currentPlayer.skip) {
-                if (currentPlayer?.type === 'computer') {
+                if (currentPlayer.type === 'computer') {
+                    dispatch(updatePhase({ phase: 'roll' }));
+                } else if (currentPlayer.auto) {
                     dispatch(updatePhase({ phase: 'roll' }));
                 }
             } else {

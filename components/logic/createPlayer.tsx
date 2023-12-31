@@ -48,6 +48,7 @@ export type TPlayer = {
   flags: string[];
   actions: TPlayerActions;
   extra?: boolean;
+  auto: boolean;
 };
 
 const defaultPlayer = (): TPlayer => {
@@ -71,7 +72,8 @@ const defaultPlayer = (): TPlayer => {
       exact: false,
       high: false,
       low: false
-    }
+    },
+    auto: false
   } as TPlayer;
 };
 
