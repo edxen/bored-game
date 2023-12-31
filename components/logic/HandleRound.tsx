@@ -64,7 +64,6 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
                 }
             });
         }
-
     };
 
     useEffect(() => {
@@ -76,6 +75,10 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
 
             const extra = currentPlayer.actions && Object.values(currentPlayer.actions).some((value) => value === true);
             switch (true) {
+                case (currentPlayer.flags.length === 4):
+                    dispatch(updateQueuePlayers([currentPlayer.id]));
+                    dispatch(updatePhase({ phase: 'end' }));
+                    break;
                 case currentPlayer.skip:
                     dispatch(updatePhase({ phase: 'end' }));
                     break;
