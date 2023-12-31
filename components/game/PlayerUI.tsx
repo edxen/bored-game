@@ -36,11 +36,10 @@ const PlayerUI = () => {
                                         <div className='flex bg-white p-1 rounded-lg flex-nowrap h-6 w-full'>
                                             <Image src='/images/icons/icon-flag.png' alt="dice" width="20" height="20" className='object-contain h-auto w-auto' />
                                             <div className="flex flex-grow justify-evenly gap-0.5">
-                                                {player.flags.map((color: string, i, arr) => (
+                                                {!player.dead && player.flags.map((color: string) => (
                                                     <div key={color} className={`${color} flex font-medium p-1.5 rounded-full`}>
                                                     </div>
-                                                ))
-                                                }
+                                                ))}
                                             </div>
                                         </div>
                                     </div>
@@ -48,11 +47,9 @@ const PlayerUI = () => {
                                         <div className='flex bg-white p-1 rounded-lg flex-nowrap h-6 w-full'>
                                             <Image src='/images/icons/icon-dice.png' alt="dice" width="20" height="20" className='object-contain h-auto w-auto' />
                                             <div className="flex flex-grow justify-evenly gap-0.5">
-                                                {
-                                                    player.actions && Object.entries(player.actions).map(([key, value]) => value && (
-                                                        <Image key={key} src={`/images/dice/dice-${playerActions[key as keyof TPlayerActions].replace(' ', '-').toLowerCase()}.png`} alt="dice" width="20" height="20" className='object-contain' />
-                                                    ))
-                                                }
+                                                {!player.dead && player.actions && Object.entries(player.actions).map(([key, value]) => value && (
+                                                    <Image key={key} src={`/images/dice/dice-${playerActions[key as keyof TPlayerActions].replace(' ', '-').toLowerCase()}.png`} alt="dice" width="20" height="20" className='h-auto w-auto object-contain' />
+                                                ))}
                                             </div>
                                         </div>
                                     </div>

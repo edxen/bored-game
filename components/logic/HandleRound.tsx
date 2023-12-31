@@ -8,7 +8,7 @@ import { updatePhase } from '../reducers/gameReducer';
 import { TTile } from '../reducers/initialStates';
 import { setPlayer } from '../reducers/playersReducer';
 import config from '../configuration';
-import { TPlayer } from './createPlayer';
+import { TPlayer, TPlayerActions } from './createPlayer';
 
 const HandlePreTurn = ({ dispatch, game, players }: Pick<THandleGameProps, 'dispatch' | 'game' | 'players'>) => {
     const { phase, queue } = game.round;
@@ -48,6 +48,13 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
             queue.forEach(queuePlayer => {
                 const deadPlayer = getPlayerData(queuePlayer);
                 if (deadPlayer.dead) {
+                    const getDeadPlayerFlags = deadPlayer.flags.filter(flag => !currentPlayer.flags.includes(flag));
+                    const getDeadPlayerActions = Object.entries(deadPlayer.actions).reduce((list: { [key: string]: boolean; }, action) => {
+                        const [key, value] = action;
+                        if (value) list[key] = true;
+                        return list;
+                    }, {});
+                    dispatch(setPlayer({ id: currentPlayer.id, flags: [...currentPlayer.flags, ...getDeadPlayerFlags], actions: { ...currentPlayer.actions, ...getDeadPlayerActions } }));
                     dispatch(updateGame({ target: 'ranking', value: [deadPlayer.id] }));
                     dispatch(updateGame({ target: 'history', value: [`${currentPlayer.name} eliminated ${deadPlayer.name}`] }));
                     const remainingQueuePlayers = queue.filter(queuePlayer => queuePlayer !== deadPlayer.id);
