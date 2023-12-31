@@ -38,7 +38,7 @@ const HandleTurn = ({ dispatch, game, tiles, dice }: THandleGameProps) => {
                 HandleExtraActions({ dispatch, player, queue, getTile });
                 break;
             case 'extra':
-                const { handleExtraAI } = HandleExtra({ dispatch, player });
+                const { handleExtraAI } = HandleExtra({ dispatch, player, tiles, getTile });
                 handleExtraAI();
                 break;
         }

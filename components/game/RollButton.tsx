@@ -12,10 +12,10 @@ import HandleExtra from '../logic/handleTurn/handleExtra';
 
 const RollButton = () => {
     const dispatch = useDispatch();
-    const { game, dice, getPlayerData } = GetData();
+    const { game, tiles, dice, getPlayerData, getTile } = GetData();
     const { phase, queue } = game.round;
     const player = getPlayerData(queue[0]);
-    const { handleExtra, start } = HandleExtra({ dispatch, player });
+    const { handleExtra, start } = HandleExtra({ dispatch, player, tiles, getTile });
 
     const handleRoll = () => {
         dispatch(updatePhase({ phase: 'roll' }));
@@ -35,7 +35,7 @@ const RollButton = () => {
         if (key === 'exact') {
             setExactMenuDisplay(true);
         } else {
-            handleExtra(key);
+            handleExtra({ key, force: 0 });
         }
     };
 
