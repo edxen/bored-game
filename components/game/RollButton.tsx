@@ -122,7 +122,7 @@ const RollButton = () => {
                         }
                         <div className={`${player.type !== 'human' ? 'hidden' : ''}`}>
                             <label className='has-[:checked]:bg-red-500 hover:bg-red-500 hover:text-white has-[:checked]:text-white flex justify-center items-center gap-1 border rounded-xl px-4 py-2 cursor-pointer'>
-                                <input type='checkbox' checked={player.auto} className="hidden border rounded-xl p-2 peer" onClick={toggleAutoRoll} />
+                                <input type='checkbox' checked={player.auto} className="hidden border rounded-xl p-2 peer" onChange={toggleAutoRoll} />
                                 <div className="hidden peer-checked:inline">
                                     <span>Auto Roll? On</span>
                                 </div>
