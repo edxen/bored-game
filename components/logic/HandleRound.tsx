@@ -58,7 +58,7 @@ const HandlePostTurn = ({ dispatch, game, players, getTile }: Pick<THandleGamePr
                     }, {});
                     dispatch(setPlayer({ id: currentPlayer.id, flags: [...currentPlayer.flags, ...getDeadPlayerFlags], actions: { ...currentPlayer.actions, ...getDeadPlayerActions } }));
                     dispatch(updateGame({ target: 'ranking', value: [deadPlayer.id] }));
-                    dispatch(updateGame({ target: 'history', value: [`${currentPlayer.name} eliminated ${deadPlayer.name}`] }));
+                    dispatch(updateGame({ target: 'history', value: [`${currentPlayer.name} killed ${deadPlayer.name} and stolen all ${deadPlayer.name}'s flags ${Object.keys(getDeadPlayerActions).length !== 0 ? 'and extra actions' : ''} `] }));
                     const remainingQueuePlayers = queue.filter(queuePlayer => queuePlayer !== deadPlayer.id);
                     dispatch(updateQueuePlayers(remainingQueuePlayers));
                 }
